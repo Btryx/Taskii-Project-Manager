@@ -1,0 +1,37 @@
+.formInfo{
+  margin: 1em;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
+}
+
+label{
+  margin-right: 20px;
+  font-family: Roboto;
+  min-width: 90px;
+}
+
+h1{
+  font-family: Roboto;
+  text-align: center;
+}
+
+input {
+  padding: 0.8em;
+  font-family: Roboto;
+  border-radius: 5px;
+}
+
+.cont{
+  background: white;
+  width: 300px;
+  padding: 1em;
+  margin: 23vh auto;
+  border: 2px solid black;
+  border-radius: 10px;
+}
+
+button{
+  margin-left: 120px;
+}

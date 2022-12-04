@@ -6,6 +6,7 @@ import {EditTaskComponent} from "./edit-task/edit-task.component";
 import {TodoTasksComponent} from "./todo-tasks/todo-tasks.component";
 import {FinishedTasksComponent} from "./finished-tasks/finished-tasks.component";
 import {DueTasksComponent} from "./due-tasks/due-tasks.component";
+import {LoginComponent} from "./login/login.component";
 
 const routes: Routes = [
   { path: 'tasks', component: TaskListComponent },
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'todo-tasks', component: TodoTasksComponent },
   { path: 'finished-tasks', component: FinishedTasksComponent },
   { path: 'due-tasks', component: DueTasksComponent },
+  { path: 'login', component: LoginComponent },
   { path: '', redirectTo: 'tasks', pathMatch: 'full' }
 ];
 

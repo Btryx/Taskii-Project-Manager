@@ -1,0 +1,22 @@
+<div class="cont">
+  <form>
+    <h1>Login</h1>
+    <div class="formInfo">
+      <label>
+        Username:
+      </label>
+      <input placeholder="Username" name="username" [(ngModel)]="username">
+    </div>
+    <div class="formInfo">
+      <label>
+        Password:
+      </label>
+      <input  type="password" placeholder="Your password" name="password" [(ngModel)]="password">
+    </div>
+
+    <div class="footer">
+      <button type="submit" class="mat-raised-button" (click)="handleLogin()"
+              [disabled]=" !username || !password">Ok</button>
+    </div>
+  </form>
+</div>

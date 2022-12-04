@@ -24,6 +24,7 @@ import { TodoTasksComponent } from './todo-tasks/todo-tasks.component';
 import { FinishedTasksComponent } from './finished-tasks/finished-tasks.component'
 import {DueTasksComponent} from "./due-tasks/due-tasks.component";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     DeleteTaskComponent,
     TodoTasksComponent,
     FinishedTasksComponent,
-    DueTasksComponent
+    DueTasksComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
