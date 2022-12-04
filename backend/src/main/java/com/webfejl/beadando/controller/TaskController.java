@@ -1,6 +1,7 @@
 package com.webfejl.beadando.controller;
 
-import com.webfejl.beadando.entity.TaskDTO;
+import com.webfejl.beadando.model.TaskDTO;
+import com.webfejl.beadando.model.User;
 import com.webfejl.beadando.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -8,13 +9,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:4200")
 public class TaskController {
 
     @Autowired
     private TaskService service;
 
+
+    @GetMapping(produces = "application/json")
+    @RequestMapping({ "/validateLogin" })
+    public User validateLogin() {
+        return new User("User successfully authenticated");
+    }
 
     @GetMapping("/tasks/all")
     public List<TaskDTO> selectAllTasks(){

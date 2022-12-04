@@ -1,6 +1,5 @@
-package com.webfejl.beadando.entity;
+package com.webfejl.beadando.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
@@ -8,7 +7,6 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.sql.Date;
-import java.util.Objects;
 import java.util.UUID;
 
 @Data

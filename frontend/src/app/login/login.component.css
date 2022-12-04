@@ -25,11 +25,10 @@ input {
 
 .cont{
   background: white;
-  width: 300px;
   padding: 1em;
   margin: 23vh auto;
-  border: 2px solid black;
   border-radius: 10px;
+  max-width: 300px;
 }
 
 button{

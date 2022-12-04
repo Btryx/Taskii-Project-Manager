@@ -7,6 +7,7 @@ import {TodoTasksComponent} from "./todo-tasks/todo-tasks.component";
 import {FinishedTasksComponent} from "./finished-tasks/finished-tasks.component";
 import {DueTasksComponent} from "./due-tasks/due-tasks.component";
 import {LoginComponent} from "./login/login.component";
+import {LogoutComponent} from "./logout/logout.component";
 
 const routes: Routes = [
   { path: 'tasks', component: TaskListComponent },
@@ -15,8 +16,9 @@ const routes: Routes = [
   { path: 'todo-tasks', component: TodoTasksComponent },
   { path: 'finished-tasks', component: FinishedTasksComponent },
   { path: 'due-tasks', component: DueTasksComponent },
-  { path: 'login', component: LoginComponent },
-  { path: '', redirectTo: 'tasks', pathMatch: 'full' }
+  { path: "login",component: LoginComponent},
+  { path: "logout",component: LogoutComponent},
+  { path: '', redirectTo: 'login', pathMatch: 'full' }
 ];
 
 @NgModule({

@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {TaskService} from "./task.service";
 import {Router} from "@angular/router";
+import {AuthService} from "./login/auth.service";
 
 @Component({
   selector: 'app-root',
@@ -10,7 +11,7 @@ import {Router} from "@angular/router";
 export class AppComponent implements OnInit{
   title = 'To-do Notes';
 
-  constructor(public taskService : TaskService, public router: Router) { }
+  constructor(public router: Router, public loginService: AuthService) { }
 
   ngOnInit(): void {
   }
