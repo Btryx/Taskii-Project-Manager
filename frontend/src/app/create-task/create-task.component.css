@@ -1,0 +1,30 @@
+#add-task-card{
+  margin: 15vh auto;
+  width: 25vw;
+  height: 50vh;
+  text-align: center;
+  background: rgba(49, 45, 45, 0.78);
+  box-shadow: 0 0 3px 5px rgba(0, 0, 0, 0.52);
+  border-radius: 10px;
+}
+
+.content{
+  display: flex;
+  flex-direction: column;
+}
+
+.input-field{
+  width: 20vw;
+  align-self: center;
+  margin: 0.5em;
+}
+
+::ng-deep .mat-focused .mat-form-field-label {
+  color: white !important;
+}
+
+.actions-container{
+  display: flex;
+  justify-content: space-evenly;
+}
+

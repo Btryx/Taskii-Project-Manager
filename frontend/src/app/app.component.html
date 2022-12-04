@@ -1,0 +1,16 @@
+<p>
+  <mat-toolbar style="height: 75px; background: rgba(49, 45, 45, 0.78);">
+    <span style="margin-left: 1em">Your Tasks</span>
+    <span class="task-spacer1"></span>
+    <button mat-button class="nav-buttons" style="background: dodgerblue" [routerLink]="['/tasks']">ALL</button>
+    <button mat-button class="nav-buttons" style="background: #ffd21e" [routerLink]="['/todo-tasks']">TODO</button>
+    <button mat-button class="nav-buttons" style="background: #31bd13" [routerLink]="['/finished-tasks']">FINISHED</button>
+    <button mat-button class="nav-buttons" style="background: #af3030" [routerLink]="['/due-tasks']">DUE</button>
+    <span class="task-spacer2"></span>
+    <span class="task-spacer3"></span>
+    <button mat-button class="task-icon" style="background: grey" (click)="openAddTask()">
+      Add Task
+    </button>
+  </mat-toolbar>
+</p>
+<router-outlet></router-outlet>
