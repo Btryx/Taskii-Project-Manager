@@ -13,19 +13,24 @@ import {DeleteTaskComponent} from "../delete-task/delete-task.component";
 })
 export class TodoTasksComponent implements OnInit {
 
-  public tasks: Task[] = [];
+  public tasks: Task[];
+  public requestCompleteOrFailed: boolean;
 
   constructor(public taskService : TaskService, public router: Router,
               private dialog: MatDialog) { }
 
   ngOnInit(): void {
+    this.requestCompleteOrFailed = false;
     this.getTaskList();
   }
 
+
   getTaskList(){
     this.taskService.getAllTasks().subscribe( tasks => {
-      this.tasks = tasks;
-    })
+        this.tasks = tasks;
+      },
+      () => this.requestCompleteOrFailed = true,
+      () => this.requestCompleteOrFailed = true)
   }
 
   openEditTask(task : Task){

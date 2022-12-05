@@ -10,7 +10,7 @@
             [routerLink]="['/finished-tasks']">FINISHED</button>
     <button mat-button class="nav-buttons" style="background: #af3030"
             [routerLink]="['/due-tasks']">DUE</button>
-    <button mat-button class="task-icon" style="background: grey"
+    <button mat-button class="task-icon" style="background: grey" [disabled]="!loginService.isUserLoggedIn()"
             (click)="openAddTask()">Add Task</button>
     <span class="task-spacer2"></span>
     <span class="task-spacer3"></span>

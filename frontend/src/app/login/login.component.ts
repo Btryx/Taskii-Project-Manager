@@ -11,6 +11,7 @@ export class LoginComponent implements OnInit {
   username = ''
   password = ''
   invalidLogin = false
+  errorMessage = 'Invalid Credentials';
 
   constructor(private router: Router,
               private authService: AuthService) { }

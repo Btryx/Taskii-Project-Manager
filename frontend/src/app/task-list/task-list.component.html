@@ -19,7 +19,7 @@
     </mat-card-actions>
   </mat-card>
 </div>
-<div *ngIf="!tasks">
+<div *ngIf="!tasks && requestCompleteOrFailed">
   <mat-card class="no-task-card" >
     <mat-card-content>
       <p class="noTasksText">Login to see your tasks!</p>
