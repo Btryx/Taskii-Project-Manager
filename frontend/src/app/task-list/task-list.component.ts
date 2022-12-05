@@ -5,6 +5,7 @@ import {Router} from "@angular/router";
 import {EditTaskComponent} from "../edit-task/edit-task.component";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {DeleteTaskComponent} from "../delete-task/delete-task.component";
+import {delay} from "rxjs";
 
 @Component({
   selector: 'app-task-list',

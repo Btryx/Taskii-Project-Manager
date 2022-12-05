@@ -27,20 +27,33 @@ export class AuthService {
       map(
         userData => {
           sessionStorage.setItem('username',username);
-          return userData;
+          this.username = username;
+          this.password = password;
+          this.registerSuccessfulLogin(username, password);
         }
       )
 
     );
   }
 
+  registerSuccessfulLogin(username, password) {
+    sessionStorage.setItem(this.USER_NAME_SESSION_ATTRIBUTE_NAME, username)
+  }
+
   isUserLoggedIn() {
     let user = sessionStorage.getItem('username')
-    console.log(!(user === null))
     return !(user === null)
   }
 
   logOut() {
     sessionStorage.removeItem('username')
+    this.username = null;
+    this.password = null;
+  }
+
+  getLoggedInUserName() {
+    let user = sessionStorage.getItem('username')
+    if (user === null) return ''
+    return user
   }
 }
