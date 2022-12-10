@@ -38,6 +38,7 @@ export class AuthService {
 
   registerSuccessfulLogin(username, password) {
     sessionStorage.setItem(this.USER_NAME_SESSION_ATTRIBUTE_NAME, username)
+    sessionStorage.setItem(this.password, password)
   }
 
   isUserLoggedIn() {
@@ -47,6 +48,7 @@ export class AuthService {
 
   logOut() {
     sessionStorage.removeItem('username')
+    sessionStorage.removeItem('password')
     this.username = null;
     this.password = null;
   }
@@ -56,4 +58,5 @@ export class AuthService {
     if (user === null) return ''
     return user
   }
+
 }
