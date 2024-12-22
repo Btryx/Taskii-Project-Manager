@@ -1,4 +1,4 @@
-package com.webfejl.beadando.model;
+package com.webfejl.beadando.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @Table("tasks")
-public class TaskDTO {
+public class Task {
 
     @Id
     private @Column("task_id") String taskId= UUID.randomUUID().toString();
@@ -22,7 +22,7 @@ public class TaskDTO {
     private @Column("task_date") Date taskDate;
     private @Column("task_desc") String taskDesc;
 
-    public TaskDTO(String taskTitle, String taskStatus, int taskPriority, Date taskDate, String taskDesc) {
+    public Task(String taskTitle, String taskStatus, int taskPriority, Date taskDate, String taskDesc) {
         this.taskTitle = taskTitle;
         this.taskStatus = taskStatus;
         this.taskPriority = taskPriority;

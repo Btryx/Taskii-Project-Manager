@@ -1,7 +1,9 @@
-package com.webfejl.beadando;
+package com.webfejl.beadando.config;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+
+import com.webfejl.beadando.BeadandoApplication;
 
 public class ServletInitializer extends SpringBootServletInitializer {
 

@@ -1,18 +1,26 @@
 package com.webfejl.beadando.service;
 
-import com.webfejl.beadando.model.TaskDTO;
-
 import java.util.List;
+
+import com.webfejl.beadando.dto.TaskDTO;
 
 public interface TaskService {
 
     List<TaskDTO> findAll();
 
-   TaskDTO findItem(String id);
+    TaskDTO findTask(String id);
 
-    int createItem(TaskDTO taskDTO);
+    List<TaskDTO> findTasksByStatus(String status);
 
-    int updateItem(TaskDTO taskDTO, String id);
+    List<TaskDTO> findTasksByPriority(int priority);
 
-    int deleteItem(String id);
+    List<TaskDTO> sortTasksByTitle();
+
+    List<TaskDTO> sortTasksByDate();
+
+    int createTask(TaskDTO task);
+
+    int updateTask(TaskDTO task, String id);
+
+    int deleteTask(String id);
 }

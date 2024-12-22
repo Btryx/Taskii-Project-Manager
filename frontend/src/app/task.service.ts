@@ -19,7 +19,7 @@ export class TaskService {
 
   getAllTasks(): Observable<Task[]>{
     this.username = this.authService.getLoggedInUserName();
-    this.password = "kutya";
+    this.password = this.authService.getLoggedInPassword();
     console.log(this.username)
     const headers = new HttpHeaders({ Authorization: 'Basic ' + btoa(this.username + ':' + this.password) });
     return this.httpClient.get<Task[]>(this.URLAll, {headers});
@@ -27,28 +27,28 @@ export class TaskService {
 
   getTask(id: string): Observable<Object>{
     this.username = this.authService.getLoggedInUserName();
-    this.password = "kutya";
+    this.password = this.authService.getLoggedInPassword();
     const headers = new HttpHeaders({ Authorization: 'Basic ' + btoa(this.username + ':' + this.password) });
     return this.httpClient.get(`${this.URL}/${id}`,{headers});
   }
 
   createTask(task: Task): Observable<Object>{
     this.username = this.authService.getLoggedInUserName();
-    this.password = "kutya";
+    this.password = this.authService.getLoggedInPassword();
     const headers = new HttpHeaders({ Authorization: 'Basic ' + btoa(this.username + ':' + this.password) });
-    return this.httpClient.post(this.URLAll, task,{headers});
+    return this.httpClient.post(this.URLAll, task, {headers});
   }
 
   updateTask(id: string, task: Task): Observable<Object>{
     this.username = this.authService.getLoggedInUserName();
-    this.password = "kutya";
+    this.password = this.authService.getLoggedInPassword();
     const headers = new HttpHeaders({ Authorization: 'Basic ' + btoa(this.username + ':' + this.password) });
-    return this.httpClient.put(`${this.URL}/${id}`, task,{headers});
+    return this.httpClient.put(`${this.URL}/${id}`, task, {headers});
   }
 
   deleteTask(id: string): Observable<Object>{
     this.username = this.authService.getLoggedInUserName();
-    this.password = "kutya";
+    this.password = this.authService.getLoggedInPassword();
     const headers = new HttpHeaders({ Authorization: 'Basic ' + btoa(this.username + ':' + this.password) });
     return this.httpClient.delete(`${this.URL}/${id}`,{headers})
   }

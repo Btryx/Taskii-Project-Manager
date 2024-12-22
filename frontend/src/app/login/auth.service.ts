@@ -26,7 +26,8 @@ export class AuthService {
     return this.httpClient.get<User>('http://localhost:8082/api/validateLogin',{headers}).pipe(
       map(
         userData => {
-          sessionStorage.setItem('username',username);
+          sessionStorage.setItem('username', username);
+          sessionStorage.setItem('password', password);
           this.username = username;
           this.password = password;
           this.registerSuccessfulLogin(username, password);
@@ -58,5 +59,11 @@ export class AuthService {
     if (user === null) return ''
     return user
   }
+
+    getLoggedInPassword() {
+      let pw = sessionStorage.getItem('password')
+      if (pw === null) return ''
+      return pw
+    }
 
 }

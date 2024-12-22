@@ -1,40 +1,75 @@
 package com.webfejl.beadando.service;
 
-import com.webfejl.beadando.model.TaskDTO;
-import com.webfejl.beadando.repository.TaskRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.webfejl.beadando.dto.TaskDTO;
+import com.webfejl.beadando.repository.TaskRepository;
+import com.webfejl.beadando.util.TaskMapper;
+import com.webfejl.beadando.entity.Task;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskServiceImp implements TaskService {
 
-    @Autowired
-    private TaskRepo taskRepo;
+    private final TaskRepository taskRepository;
+
+    public TaskServiceImp(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
+    }
 
     @Override
     public List<TaskDTO> findAll() {
-        return taskRepo.getAllTasks();
+        return taskRepository.getAllTasks()
+        .stream()
+        .map(TaskMapper::toDTO)
+        .collect(Collectors.toList());
     }
 
     @Override
-    public TaskDTO findItem(String id) {
-        return taskRepo.getTaskById(id);
+    public TaskDTO findTask(String id) {
+        return TaskMapper.toDTO(taskRepository.getTaskById(id));
     }
 
     @Override
-    public int createItem(TaskDTO taskDTO) {
-        return taskRepo.createTask(taskDTO);
+    public int createTask(TaskDTO taskDTO) {
+        Task task = TaskMapper.toEntity(taskDTO);
+        return taskRepository.createTask(task);
     }
 
     @Override
-    public int updateItem(TaskDTO taskDTO, String id) {
-        return taskRepo.editTask(taskDTO, id);
+    public List<TaskDTO> findTasksByStatus(String status) {
+        List<Task> tasks = taskRepository.findByStatus(status);
+        return tasks.stream().map(TaskMapper::toDTO).collect(Collectors.toList());
     }
 
     @Override
-    public int deleteItem(String id) {
-        return taskRepo.deleteTask(id);
+    public List<TaskDTO> findTasksByPriority(int priority) {
+        List<Task> tasks = taskRepository.findByPriority(priority);
+        return tasks.stream().map(TaskMapper::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TaskDTO> sortTasksByTitle(String order) {
+        List<Task> tasks = taskRepository.sortByTitle(order);
+        return tasks.stream().map(TaskMapper::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TaskDTO> sortTasksByDate(String order) {
+        List<Task> tasks = taskRepository.sortByDate(order);
+        return tasks.stream().map(TaskMapper::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public int updateTask(TaskDTO taskDTO, String id) {
+        Task task = TaskMapper.toEntity(taskDTO);
+        return taskRepository.editTask(task, id);
+    }
+
+    @Override
+    public int deleteTask(String id) {
+        return taskRepository.deleteTask(id);
     }
 }
