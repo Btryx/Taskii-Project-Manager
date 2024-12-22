@@ -51,14 +51,14 @@ public class TaskServiceImp implements TaskService {
     }
 
     @Override
-    public List<TaskDTO> sortTasksByTitle(String order) {
-        List<Task> tasks = taskRepository.sortByTitle(order);
+    public List<TaskDTO> sortTasksByTitle() {
+        List<Task> tasks = taskRepository.sortByTitle();
         return tasks.stream().map(TaskMapper::toDTO).collect(Collectors.toList());
     }
 
     @Override
-    public List<TaskDTO> sortTasksByDate(String order) {
-        List<Task> tasks = taskRepository.sortByDate(order);
+    public List<TaskDTO> sortTasksByDate() {
+        List<Task> tasks = taskRepository.sortByDate();
         return tasks.stream().map(TaskMapper::toDTO).collect(Collectors.toList());
     }
 

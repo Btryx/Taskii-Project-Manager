@@ -12,7 +12,8 @@ public class TaskMapper {
                 task.getTaskStatus(),
                 task.getTaskPriority(),
                 task.getTaskDate(),
-                task.getTaskDesc()
+                task.getTaskDesc(),
+                task.getProjectId()
         );
     }
 
@@ -23,6 +24,7 @@ public class TaskMapper {
         task.setTaskPriority(taskDTO.getTaskPriority());
         task.setTaskDate(taskDTO.getTaskDate());
         task.setTaskDesc(taskDTO.getTaskDesc());
+        task.setProjectId(taskDTO.getProjectId());
         return task;
     }
 }

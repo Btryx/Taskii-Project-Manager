@@ -1,6 +1,5 @@
 package com.webfejl.beadando.repository;
 
-import com.webfejl.beadando.dto.TaskDTO;
 import com.webfejl.beadando.entity.Task;
 import com.webfejl.beadando.query.TaskQuery;
 
