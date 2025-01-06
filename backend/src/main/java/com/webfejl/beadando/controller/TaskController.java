@@ -1,7 +1,7 @@
 package com.webfejl.beadando.controller;
 
 
-import com.webfejl.beadando.dto.AuthenticationResponse;
+import com.webfejl.beadando.http.AuthenticationResponse;
 import com.webfejl.beadando.dto.TaskDTO;
 import com.webfejl.beadando.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;

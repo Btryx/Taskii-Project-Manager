@@ -1,4 +1,4 @@
-package com.webfejl.beadando.dto;
+package com.webfejl.beadando.http;
 
 public class AuthenticationResponse {
     private String message;

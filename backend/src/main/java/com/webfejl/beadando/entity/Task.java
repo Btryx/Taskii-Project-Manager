@@ -13,7 +13,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Table("tasks")
 public class Task {
-
     @Id
     private @Column("task_id") String taskId= UUID.randomUUID().toString();
     private @Column("task_title") String taskTitle;
@@ -22,14 +21,4 @@ public class Task {
     private @Column("task_date") Date taskDate;
     private @Column("task_desc") String taskDesc;
     private @Column("project_id") int projectId;
-
-    public Task(String taskTitle, String taskStatus, int taskPriority, Date taskDate, String taskDesc, int projectId) {
-        this.taskTitle = taskTitle;
-        this.taskStatus = taskStatus;
-        this.taskPriority = taskPriority;
-        this.taskDate = taskDate;
-        this.taskDesc = taskDesc;
-        this.projectId = projectId;
-    }
-
 }
