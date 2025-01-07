@@ -11,6 +11,7 @@ export class TaskService {
 
   private URL = "http://localhost:8082/api/tasks";
   private URLAll = "http://localhost:8082/api/tasks/all"
+  private URLStatus = "http://localhost:8082/api/tasks/status"
 
   username: string = "";
   password: string = "";
@@ -18,38 +19,39 @@ export class TaskService {
   constructor(private httpClient: HttpClient, private authService: AuthService) { }
 
   getAllTasks(): Observable<Task[]>{
-    this.username = this.authService.getLoggedInUserName();
-    this.password = this.authService.getLoggedInPassword();
-    console.log(this.username)
-    const headers = new HttpHeaders({ Authorization: 'Basic ' + btoa(this.username + ':' + this.password) });
+    const headers = this.getHeaders();
     return this.httpClient.get<Task[]>(this.URLAll, {headers});
   }
 
+  getTasksByStatus(status: string): Observable<Task[]>{
+    const headers = this.getHeaders();
+    return this.httpClient.get<Task[]>(`${this.URLStatus}/${status}`, {headers});
+  }
+
   getTask(id: string): Observable<Object>{
-    this.username = this.authService.getLoggedInUserName();
-    this.password = this.authService.getLoggedInPassword();
-    const headers = new HttpHeaders({ Authorization: 'Basic ' + btoa(this.username + ':' + this.password) });
+    const headers = this.getHeaders();
     return this.httpClient.get(`${this.URL}/${id}`,{headers});
   }
 
   createTask(task: Task): Observable<Object>{
-    this.username = this.authService.getLoggedInUserName();
-    this.password = this.authService.getLoggedInPassword();
-    const headers = new HttpHeaders({ Authorization: 'Basic ' + btoa(this.username + ':' + this.password) });
+    const headers = this.getHeaders();
     return this.httpClient.post(this.URLAll, task, {headers});
   }
 
   updateTask(id: string, task: Task): Observable<Object>{
-    this.username = this.authService.getLoggedInUserName();
-    this.password = this.authService.getLoggedInPassword();
-    const headers = new HttpHeaders({ Authorization: 'Basic ' + btoa(this.username + ':' + this.password) });
+    const headers = this.getHeaders();
     return this.httpClient.put(`${this.URL}/${id}`, task, {headers});
   }
 
   deleteTask(id: string): Observable<Object>{
+    const headers = this.getHeaders();
+    return this.httpClient.delete(`${this.URL}/${id}`,{headers})
+  }
+
+  private getHeaders() {
     this.username = this.authService.getLoggedInUserName();
     this.password = this.authService.getLoggedInPassword();
     const headers = new HttpHeaders({ Authorization: 'Basic ' + btoa(this.username + ':' + this.password) });
-    return this.httpClient.delete(`${this.URL}/${id}`,{headers})
+    return headers;
   }
 }

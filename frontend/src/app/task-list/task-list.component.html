@@ -1,28 +1,41 @@
-
 <div class="container">
-  <mat-card class="task-card" *ngFor="let task of tasks">
-    <i class="material-icons x" (click)="deleteTask(task)">close</i>
-    <mat-card-header>
-      <div mat-card-avatar class="task-header-image"></div>
-      <mat-card-title>{{task.taskTitle | uppercase}}</mat-card-title>
-      <mat-card-subtitle>STATUS:  {{task.taskStatus | uppercase}}</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-      <p class="priority">PRIORITY: {{task.taskPriority}}</p>
-      <p>{{task.taskDesc}}</p>
-    </mat-card-content>
-    <mat-card-actions>
-      <div class="actions-container">
-      <button mat-button style="background: grey" (click)="openEditTask(task)">EDIT TASK</button>
-      <button mat-button style="background: dodgerblue">{{task.taskDate}}</button>
-      </div>
-    </mat-card-actions>
-  </mat-card>
+  <div  *ngFor="let task of tasks">
+    <mat-card class="task-card" *ngIf="status === 'ALL' || task.taskStatus === status">
+      <i class="material-icons x" (click)="deleteTask(task)">close</i>
+      <mat-card-header>
+        <div mat-card-avatar class="task-header-image"></div>
+        <mat-card-title>{{task.taskTitle | uppercase}}</mat-card-title>
+        <mat-card-subtitle>STATUS:  {{task.taskStatus | uppercase}}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p class="priority">PRIORITY: {{task.taskPriority}}</p>
+        <p>{{task.taskDesc}}</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <div class="actions-container">
+          <button mat-button style="background: grey" (click)="openEditTask(task)">EDIT TASK</button>
+          <button mat-button style="background: dodgerblue">{{task.taskDate}}</button>
+        </div>
+      </mat-card-actions>
+    </mat-card>
+  </div>
 </div>
 <div *ngIf="!tasks && requestCompleteOrFailed">
-  <mat-card class="no-task-card" >
+  <mat-card class="no-task-card" [ngClass]="{'auth-error': errorType === 'auth'}">
     <mat-card-content>
-      <p class="noTasksText">Login to see your tasks!</p>
+      <mat-icon *ngIf="errorType === 'auth'">lock</mat-icon>
+      <mat-icon *ngIf="errorType === 'loading'">error</mat-icon>
+      <p class="noTasksText">{{ errorMessage }}</p>
+      <button mat-button *ngIf="errorType === 'auth'"
+              [routerLink]="['/login']"
+              color="primary">
+        Log In
+      </button>
+      <button mat-button *ngIf="errorType === 'loading'"
+              (click)="getTaskList()"
+              color="primary">
+        Try Again
+      </button>
     </mat-card-content>
   </mat-card>
 </div>

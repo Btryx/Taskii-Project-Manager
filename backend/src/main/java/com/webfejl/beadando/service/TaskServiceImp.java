@@ -40,6 +40,9 @@ public class TaskServiceImp implements TaskService {
 
     @Override
     public List<TaskDTO> findTasksByStatus(String status) {
+        if (status == null) {
+            return findAll();
+        }
         List<Task> tasks = taskRepository.findByStatus(status);
         return tasks.stream().map(TaskMapper::toDTO).collect(Collectors.toList());
     }

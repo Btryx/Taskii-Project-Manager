@@ -20,11 +20,11 @@ export class CreateTaskComponent implements OnInit {
   addTask(){
     this.taskService.createTask(this.newTask).subscribe( data => {
       this.newTask = new Task();
-      this.router.navigate(['/tasks']);
+      this.router.navigate(['/tasks', 'ALL']);
     })
   }
 
   goBack() {
-    this.router.navigate(['/tasks']);
+    this.router.navigate(['/tasks', 'ALL']);
   }
 }

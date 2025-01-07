@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import {TaskService} from "../task.service";
 import {Task} from "../task";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {EditTaskComponent} from "../edit-task/edit-task.component";
-import {MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {MatDialog} from "@angular/material/dialog";
 import {DeleteTaskComponent} from "../delete-task/delete-task.component";
+import { AuthService } from '../login/auth.service';
 
 @Component({
   selector: 'app-task-list',
@@ -12,25 +13,81 @@ import {DeleteTaskComponent} from "../delete-task/delete-task.component";
   styleUrls: ['./task-list.component.css']
 })
 export class TaskListComponent implements OnInit {
-
-
   public tasks: Task[];
-  public requestCompleteOrFailed: boolean;
+  public status: string;
 
-  constructor(public taskService : TaskService, public router: Router,
-              private dialog: MatDialog) { }
+  public requestCompleteOrFailed: boolean;
+  public errorMessage: string = '';
+  public errorType: 'auth' | 'loading' | null = null;
+
+  constructor(public taskService : TaskService,
+              public router: Router,
+              private dialog: MatDialog,
+              public authService: AuthService,
+              private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.requestCompleteOrFailed = false;
-    this.getTaskList();
+    this.route.params.subscribe(params => {
+      this.status = params['status'] || 'ALL';
+      this.getTaskList();
+    });
   }
 
-  getTaskList(){
-    this.taskService.getAllTasks().subscribe( tasks => {
-      this.tasks = tasks;
-    },
-      () => this.requestCompleteOrFailed = true,
-      () => this.requestCompleteOrFailed = true)
+  getTaskList() {
+    console.log('Current status:', this.status);
+
+    if (!this.authService.isUserLoggedIn()) {
+      this.errorType = 'auth';
+      this.errorMessage = 'Please log in to view your tasks';
+      this.requestCompleteOrFailed = true;
+      return;
+    }
+
+    const handleError = (error: any) => {
+      this.errorType = 'loading';
+      this.requestCompleteOrFailed = true;
+
+      if (error.status === 401) {
+        this.errorMessage = 'Your session has expired. Please log in again.';
+        this.router.navigate(['/login']);
+      } else if (error.status === 400) {
+        this.errorMessage = 'Invalid request. Please try again.';
+      } else if (error.status === 404) {
+        this.errorMessage = 'No tasks found for the selected filter.';
+      } else {
+        this.errorMessage = 'Unable to load tasks. Please try again later.';
+      }
+      console.error('Error:', error);
+    };
+
+    if (this.status && this.status !== 'ALL') {
+      this.taskService.getTasksByStatus(this.status).subscribe(
+        tasks => {
+          this.tasks = tasks;
+          this.errorType = null;
+          this.errorMessage = '';
+        },
+        error => {
+          console.error('Error:', error);
+          this.requestCompleteOrFailed = true;
+        },
+        () => this.requestCompleteOrFailed = true
+      );
+    } else {
+      this.taskService.getAllTasks().subscribe(
+        tasks => {
+          this.tasks = tasks;
+          this.errorType = null;
+          this.errorMessage = '';
+        },
+        error => {
+          console.error('Error:', error);
+          this.requestCompleteOrFailed = true;
+        },
+        () => this.requestCompleteOrFailed = true
+      );
+    }
   }
 
   openEditTask(task : Task){

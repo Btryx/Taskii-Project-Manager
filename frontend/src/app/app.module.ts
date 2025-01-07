@@ -20,9 +20,6 @@ import { CreateTaskComponent } from './create-task/create-task.component';
 import {MatSelectModule} from "@angular/material/select";
 import { EditTaskComponent } from './edit-task/edit-task.component';
 import { DeleteTaskComponent } from './delete-task/delete-task.component';
-import { TodoTasksComponent } from './todo-tasks/todo-tasks.component';
-import { FinishedTasksComponent } from './finished-tasks/finished-tasks.component'
-import {DueTasksComponent} from "./due-tasks/due-tasks.component";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
@@ -34,9 +31,6 @@ import { LogoutComponent } from './logout/logout.component';
     CreateTaskComponent,
     EditTaskComponent,
     DeleteTaskComponent,
-    TodoTasksComponent,
-    FinishedTasksComponent,
-    DueTasksComponent,
     LoginComponent,
     LogoutComponent
   ],

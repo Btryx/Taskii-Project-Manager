@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
+import {Router} from "@angular/router";
 import {AuthService} from "./auth.service";
 
 @Component({
@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
   checkLogin() {
     (this.authService.authenticate(this.username, this.password).subscribe(
         data => {
-          this.router.navigate(['tasks'])
+          this.router.navigate(['/tasks', 'ALL']);
           this.invalidLogin = false
         },
         error => {

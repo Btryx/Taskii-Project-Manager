@@ -20,5 +20,5 @@ public class Task {
     private @Column("task_priority") int taskPriority;
     private @Column("task_date") Date taskDate;
     private @Column("task_desc") String taskDesc;
-    private @Column("project_id") int projectId;
+    private @Column("project_id") Integer projectId;
 }

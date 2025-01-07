@@ -14,5 +14,5 @@ public class TaskDTO {
     private int taskPriority;
     private Date taskDate;
     private String taskDesc;
-    private int projectId;
+    private Integer projectId;
 }

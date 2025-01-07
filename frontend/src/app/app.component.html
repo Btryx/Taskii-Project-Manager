@@ -1,16 +1,18 @@
 <p>
   <mat-toolbar style="height: 75px; background: rgba(49, 45, 45, 0.78);">
-    <span style="margin-left: 1em">Your Tasks</span>
+    <span *ngIf="loginService.isUserLoggedIn()" style="margin-left: 1em">Your Tasks</span>
+    <span *ngIf="!loginService.isUserLoggedIn()" style="margin-left: 1em">Taskee</span>
     <span class="task-spacer1"></span>
-    <button mat-button class="nav-buttons" style="background: dodgerblue"
-            [routerLink]="['/tasks']">ALL</button>
-    <button mat-button class="nav-buttons" style="background: #ffd21e"
-            [routerLink]="['/todo-tasks']" >TODO</button>
-    <button mat-button class="nav-buttons" style="background: #31bd13"
-            [routerLink]="['/finished-tasks']">FINISHED</button>
-    <button mat-button class="nav-buttons" style="background: #af3030"
-            [routerLink]="['/due-tasks']">DUE</button>
-    <button mat-button class="task-icon" style="background: grey" [disabled]="!loginService.isUserLoggedIn()"
+    <mat-form-field *ngIf="loginService.isUserLoggedIn()" appearance="fill">
+      <mat-label>Status</mat-label>
+      <mat-select [value]="'ALL'" (selectionChange)="onFilterChange($event)">
+        <mat-option value="ALL">All</mat-option>
+        <mat-option value="To-do">To-do</mat-option>
+        <mat-option value="Finished">Finished</mat-option>
+        <mat-option value="Due">Due</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-button class="task-icon" style="background: #15ae4b" *ngIf="loginService.isUserLoggedIn()"
             (click)="openAddTask()">Add Task</button>
     <span class="task-spacer2"></span>
     <span class="task-spacer3"></span>
