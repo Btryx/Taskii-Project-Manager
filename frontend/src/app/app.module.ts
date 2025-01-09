@@ -23,6 +23,7 @@ import { DeleteTaskComponent } from './delete-task/delete-task.component';
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { LogoutComponent } from './logout/logout.component';
     FormsModule,
     MatInputModule,
     MatSelectModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    DragDropModule
   ],
   providers: [],
   bootstrap: [AppComponent]

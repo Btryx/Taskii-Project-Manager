@@ -11,6 +11,6 @@ public class ProjectDTO {
     private Integer projectId;
     private String projectName;
     private Date createdAt;
-    private boolean active;
-    private int parentId;
+    private Boolean active;
+    private Integer parentId;
 }

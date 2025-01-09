@@ -17,7 +17,7 @@ public class Project {
     private @Column("project_id") String projectId= UUID.randomUUID().toString();
     private @Column("project_name") String projectName;
     private @Column("created_at") Date createdAt;
-    private @Column("active") boolean active;
-    private @Column("parent_id") int parentId;
+    private @Column("active") Boolean active;
+    private @Column("parent_id") Integer parentId;
 }
 

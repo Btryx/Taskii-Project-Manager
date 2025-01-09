@@ -1,25 +1,95 @@
-<div class="container">
-  <div  *ngFor="let task of tasks">
-    <mat-card class="task-card" *ngIf="status === 'ALL' || task.taskStatus === status">
-      <i class="material-icons x" (click)="deleteTask(task)">close</i>
-      <mat-card-header>
-        <div mat-card-avatar class="task-header-image"></div>
-        <mat-card-title>{{task.taskTitle | uppercase}}</mat-card-title>
-        <mat-card-subtitle>STATUS:  {{task.taskStatus | uppercase}}</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <p class="priority">PRIORITY: {{task.taskPriority}}</p>
-        <p>{{task.taskDesc}}</p>
-      </mat-card-content>
-      <mat-card-actions>
-        <div class="actions-container">
-          <button mat-button style="background: grey" (click)="openEditTask(task)">EDIT TASK</button>
-          <button mat-button style="background: dodgerblue">{{task.taskDate}}</button>
-        </div>
-      </mat-card-actions>
-    </mat-card>
+<div class="kanban-container" *ngIf="tasks && tasks.length > 0">
+  <div class="kanban-column">
+    <h2>To Do</h2>
+    <div
+      cdkDropList
+      #todoList="cdkDropList"
+      [cdkDropListData]="todoTasks"
+      [cdkDropListConnectedTo]="[finishedList, dueList]"
+      class="task-list"
+      id="todo-list"
+      (cdkDropListDropped)="drop($event)">
+      <mat-card class="task-card" *ngFor="let task of todoTasks" cdkDrag>
+        <i class="material-icons x" (click)="deleteTask(task)">close</i>
+        <mat-card-header>
+          <div mat-card-avatar class="task-header-image"></div>
+          <mat-card-title>{{task.taskTitle | uppercase}}</mat-card-title>
+          <mat-card-subtitle>PRIORITY: {{task.taskPriority}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>{{task.taskDesc}}</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <div class="actions-container">
+            <button mat-button style="background: grey" (click)="openEditTask(task)">EDIT</button>
+            <button mat-button style="background: dodgerblue">{{task.taskDate}}</button>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="kanban-column">
+    <h2>Finished</h2>
+    <div
+      cdkDropList
+      #finishedList="cdkDropList"
+      [cdkDropListData]="finishedTasks"
+      [cdkDropListConnectedTo]="[todoList, dueList]"
+      class="task-list"
+      id="finished-list"
+      (cdkDropListDropped)="drop($event)">
+      <mat-card class="task-card" *ngFor="let task of finishedTasks" cdkDrag>
+        <i class="material-icons x" (click)="deleteTask(task)">close</i>
+        <mat-card-header>
+          <div mat-card-avatar class="task-header-image"></div>
+          <mat-card-title>{{task.taskTitle | uppercase}}</mat-card-title>
+          <mat-card-subtitle>PRIORITY: {{task.taskPriority}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>{{task.taskDesc}}</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <div class="actions-container">
+            <button mat-button style="background: grey" (click)="openEditTask(task)">EDIT</button>
+            <button mat-button style="background: dodgerblue">{{task.taskDate}}</button>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="kanban-column">
+    <h2>Due</h2>
+    <div
+    cdkDropList
+    #dueList="cdkDropList"
+    [cdkDropListData]="dueTasks"
+    [cdkDropListConnectedTo]="[todoList, finishedList]"
+    class="task-list"
+    id="due-list"
+    (cdkDropListDropped)="drop($event)">
+      <mat-card class="task-card" *ngFor="let task of dueTasks" cdkDrag>
+        <i class="material-icons x" (click)="deleteTask(task)">close</i>
+        <mat-card-header>
+          <div mat-card-avatar class="task-header-image"></div>
+          <mat-card-title>{{task.taskTitle | uppercase}}</mat-card-title>
+          <mat-card-subtitle>PRIORITY: {{task.taskPriority}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>{{task.taskDesc}}</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <div class="actions-container">
+            <button mat-button style="background: grey" (click)="openEditTask(task)">EDIT</button>
+            <button mat-button style="background: dodgerblue">{{task.taskDate}}</button>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </div>
   </div>
 </div>
+
 <div *ngIf="!tasks && requestCompleteOrFailed">
   <mat-card class="no-task-card" [ngClass]="{'auth-error': errorType === 'auth'}">
     <mat-card-content>

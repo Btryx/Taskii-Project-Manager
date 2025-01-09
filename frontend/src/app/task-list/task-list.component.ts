@@ -6,6 +6,7 @@ import {EditTaskComponent} from "../edit-task/edit-task.component";
 import {MatDialog} from "@angular/material/dialog";
 import {DeleteTaskComponent} from "../delete-task/delete-task.component";
 import { AuthService } from '../login/auth.service';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-task-list',
@@ -14,8 +15,11 @@ import { AuthService } from '../login/auth.service';
 })
 export class TaskListComponent implements OnInit {
   public tasks: Task[];
-  public status: string;
+  public todoTasks: Task[] = [];
+  public finishedTasks: Task[] = [];
+  public dueTasks: Task[] = [];
 
+  public status: string;
   public requestCompleteOrFailed: boolean;
   public errorMessage: string = '';
   public errorType: 'auth' | 'loading' | null = null;
@@ -65,6 +69,7 @@ export class TaskListComponent implements OnInit {
       this.taskService.getTasksByStatus(this.status).subscribe(
         tasks => {
           this.tasks = tasks;
+          this.sortTasksByStatus();
           this.errorType = null;
           this.errorMessage = '';
         },
@@ -78,6 +83,7 @@ export class TaskListComponent implements OnInit {
       this.taskService.getAllTasks().subscribe(
         tasks => {
           this.tasks = tasks;
+          this.sortTasksByStatus();
           this.errorType = null;
           this.errorMessage = '';
         },
@@ -109,6 +115,56 @@ export class TaskListComponent implements OnInit {
         this.ngOnInit();
       })
     })
+  }
+
+  sortTasksByStatus() {
+    this.todoTasks = this.tasks.filter(task => task.taskStatus === 'To-do');
+    this.finishedTasks = this.tasks.filter(task => task.taskStatus === 'Finished');
+    this.dueTasks = this.tasks.filter(task => task.taskStatus === 'Due');
+  }
+
+  drop(event: CdkDragDrop<Task[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+
+      // Update the task status based on the new container
+      const task = event.container.data[event.currentIndex];
+      const newStatus = this.getStatusFromContainerId(event.container.id);
+      task.taskStatus = newStatus;
+
+      // Update in backend
+      this.taskService.updateTask(task.taskId, task).subscribe(
+        () => {
+          // Task updated successfully
+        },
+        error => {
+          // Handle error and potentially revert the move
+          console.error('Error updating task:', error);
+          transferArrayItem(
+            event.container.data,
+            event.previousContainer.data,
+            event.currentIndex,
+            event.previousIndex
+          );
+        }
+      );
+    }
+  }
+
+  getStatusFromContainerId(containerId: string): string {
+    switch (containerId) {
+      case 'todo-list': return 'To-do';
+      case 'finished-list': return 'Finished';
+      case 'due-list': return 'Due';
+      default: return 'To-do';
+    }
   }
 
   deleteTask(task) {
