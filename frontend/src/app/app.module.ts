@@ -24,6 +24,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ProjectsComponent } from './projects/projects.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     EditTaskComponent,
     DeleteTaskComponent,
     LoginComponent,
-    LogoutComponent
+    LogoutComponent,
+    ProjectsComponent
   ],
   imports: [
     BrowserModule,

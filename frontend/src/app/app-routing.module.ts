@@ -5,11 +5,13 @@ import {CreateTaskComponent} from "./create-task/create-task.component";
 import {EditTaskComponent} from "./edit-task/edit-task.component";
 import {LoginComponent} from "./login/login.component";
 import {LogoutComponent} from "./logout/logout.component";
+import { ProjectsComponent } from './projects/projects.component';
 
 const routes: Routes = [
   { path: 'tasks/:status', component: TaskListComponent },
   { path: 'create-task', component: CreateTaskComponent },
   { path: 'edit-task', component: EditTaskComponent },
+  { path: 'projects', component: ProjectsComponent },
   { path: "login",component: LoginComponent},
   { path: "logout",component: LogoutComponent},
   { path: '', redirectTo: 'login', pathMatch: 'full' }

@@ -1,9 +1,9 @@
 <p>
   <mat-toolbar style="height: 75px; background: rgba(49, 45, 45, 0.78);">
-    <span *ngIf="loginService.isUserLoggedIn()" style="margin-left: 1em">Your Tasks</span>
+    <span *ngIf="loginService.isUserLoggedIn()" style="margin-left: 1em">{{currentPage}}</span>
     <span *ngIf="!loginService.isUserLoggedIn()" style="margin-left: 1em">Taskee</span>
     <span class="task-spacer1"></span>
-    <mat-form-field *ngIf="loginService.isUserLoggedIn()" appearance="fill">
+    <mat-form-field *ngIf="loginService.isUserLoggedIn() && currentPage=='Tasks'" appearance="fill">
       <mat-label>Status</mat-label>
       <mat-select [value]="TaskStatus.ALL" (selectionChange)="onFilterChange($event)">
         <mat-option [value]="TaskStatus.ALL">All</mat-option>
@@ -13,8 +13,10 @@
         <mat-option [value]="TaskStatus.DUE">Due</mat-option>
       </mat-select>
     </mat-form-field>
-    <button mat-button class="task-icon" style="background: #15ae4b" *ngIf="loginService.isUserLoggedIn()"
+    <button mat-button class="task-icon" style="background: #15ae4b; margin-right: 3em" *ngIf="loginService.isUserLoggedIn() && currentPage=='Tasks'"
             (click)="openAddTask()">Add Task</button>
+    <button mat-button class="task-icon" style="background: #224ff3" *ngIf="loginService.isUserLoggedIn() && currentPage=='Tasks'"
+            (click)="toProjects()">Projects</button>
     <span class="task-spacer2"></span>
     <span class="task-spacer3"></span>
     <button mat-button class="nav-buttons" *ngIf="!loginService.isUserLoggedIn()" style="background: #656964"
