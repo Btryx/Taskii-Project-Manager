@@ -1,3 +1,4 @@
+import { TaskStatus } from './../task-status.enum';
 import { Component, OnInit } from '@angular/core';
 import {Task} from "../task";
 import {TaskService} from "../task.service";
@@ -11,7 +12,7 @@ import {Router} from "@angular/router";
 export class CreateTaskComponent implements OnInit {
 
   newTask: Task = new Task();
-
+  TaskStatus = TaskStatus;
   constructor(private taskService: TaskService, private router : Router) { }
 
   ngOnInit(): void {

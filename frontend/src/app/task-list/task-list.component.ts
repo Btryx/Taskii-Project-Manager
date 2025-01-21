@@ -7,6 +7,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {DeleteTaskComponent} from "../delete-task/delete-task.component";
 import { AuthService } from '../login/auth.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { TaskStatus } from '../task-status.enum';
 
 @Component({
   selector: 'app-task-list',
@@ -16,6 +17,7 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 export class TaskListComponent implements OnInit {
   public tasks: Task[];
   public todoTasks: Task[] = [];
+  public inProgressTasks: Task[] = [];
   public finishedTasks: Task[] = [];
   public dueTasks: Task[] = [];
 
@@ -119,6 +121,7 @@ export class TaskListComponent implements OnInit {
 
   sortTasksByStatus() {
     this.todoTasks = this.tasks.filter(task => task.taskStatus === 'To-do');
+    this.inProgressTasks = this.tasks.filter(task => task.taskStatus === 'In Progress');
     this.finishedTasks = this.tasks.filter(task => task.taskStatus === 'Finished');
     this.dueTasks = this.tasks.filter(task => task.taskStatus === 'Due');
   }
@@ -136,8 +139,8 @@ export class TaskListComponent implements OnInit {
 
       // Update the task status based on the new container
       const task = event.container.data[event.currentIndex];
-      const newStatus = this.getStatusFromContainerId(event.container.id);
-      task.taskStatus = newStatus;
+      const newStatus : TaskStatus = this.getStatusFromContainerId(event.container.id);
+      task.taskStatus = newStatus
 
       // Update in backend
       this.taskService.updateTask(task.taskId, task).subscribe(
@@ -158,12 +161,13 @@ export class TaskListComponent implements OnInit {
     }
   }
 
-  getStatusFromContainerId(containerId: string): string {
+  getStatusFromContainerId(containerId: string): TaskStatus {
     switch (containerId) {
-      case 'todo-list': return 'To-do';
-      case 'finished-list': return 'Finished';
-      case 'due-list': return 'Due';
-      default: return 'To-do';
+      case 'todo-list': return TaskStatus.TODO;
+      case 'finished-list': return TaskStatus.FINISHED;
+      case 'due-list': return TaskStatus.DUE;
+      case 'inProgress-list': return TaskStatus.IN_PROGRESS;
+      default: return TaskStatus.TODO;
     }
   }
 

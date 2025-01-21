@@ -5,11 +5,41 @@
       cdkDropList
       #todoList="cdkDropList"
       [cdkDropListData]="todoTasks"
-      [cdkDropListConnectedTo]="[finishedList, dueList]"
+      [cdkDropListConnectedTo]="[inProgressList, finishedList, dueList]"
       class="task-list"
       id="todo-list"
       (cdkDropListDropped)="drop($event)">
       <mat-card class="task-card" *ngFor="let task of todoTasks" cdkDrag>
+        <i class="material-icons x" (click)="deleteTask(task)">close</i>
+        <mat-card-header>
+          <div mat-card-avatar class="task-header-image"></div>
+          <mat-card-title>{{task.taskTitle | uppercase}}</mat-card-title>
+          <mat-card-subtitle>PRIORITY: {{task.taskPriority}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>{{task.taskDesc}}</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <div class="actions-container">
+            <button mat-button style="background: grey" (click)="openEditTask(task)">EDIT</button>
+            <button mat-button style="background: dodgerblue">{{task.taskDate}}</button>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="kanban-column">
+    <h2>In progress</h2>
+    <div
+      cdkDropList
+      #inProgressList="cdkDropList"
+      [cdkDropListData]="inProgressTasks"
+      [cdkDropListConnectedTo]="[todoList, finishedList, dueList]"
+      class="task-list"
+      id="inProgress-list"
+      (cdkDropListDropped)="drop($event)">
+      <mat-card class="task-card" *ngFor="let task of inProgressTasks" cdkDrag>
         <i class="material-icons x" (click)="deleteTask(task)">close</i>
         <mat-card-header>
           <div mat-card-avatar class="task-header-image"></div>
@@ -35,7 +65,7 @@
       cdkDropList
       #finishedList="cdkDropList"
       [cdkDropListData]="finishedTasks"
-      [cdkDropListConnectedTo]="[todoList, dueList]"
+      [cdkDropListConnectedTo]="[todoList, inProgressList, dueList]"
       class="task-list"
       id="finished-list"
       (cdkDropListDropped)="drop($event)">
@@ -65,7 +95,7 @@
     cdkDropList
     #dueList="cdkDropList"
     [cdkDropListData]="dueTasks"
-    [cdkDropListConnectedTo]="[todoList, finishedList]"
+    [cdkDropListConnectedTo]="[todoList, inProgressList, finishedList]"
     class="task-list"
     id="due-list"
     (cdkDropListDropped)="drop($event)">

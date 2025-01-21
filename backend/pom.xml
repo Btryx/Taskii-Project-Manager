@@ -11,7 +11,7 @@
 	<groupId>com.webfejl</groupId>
 	<artifactId>beadando</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>beadando</name>
 	<description>To-do notes</description>
 	<properties>

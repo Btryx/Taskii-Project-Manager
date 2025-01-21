@@ -3,6 +3,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {TaskService} from "../task.service";
 import {Task} from "../task";
 import {Router} from "@angular/router";
+import { TaskStatus } from './../task-status.enum';
 
 @Component({
   selector: 'app-edit-task',
@@ -17,6 +18,7 @@ export class EditTaskComponent implements OnInit {
   public taskDesc: string;
   public taskDate: Date;
   public taskTitle: string;
+  TaskStatus = TaskStatus;
 
   constructor(private taskService: TaskService, private router: Router,
               public dialogRef: MatDialogRef<EditTaskComponent>, @Inject(MAT_DIALOG_DATA) public data: Task) { }

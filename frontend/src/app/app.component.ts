@@ -3,6 +3,7 @@ import {TaskService} from "./task.service";
 import {Router} from "@angular/router";
 import {AuthService} from "./login/auth.service";
 import { MatSelectChange } from '@angular/material/select';
+import { TaskStatus } from './task-status.enum';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +12,7 @@ import { MatSelectChange } from '@angular/material/select';
 })
 export class AppComponent implements OnInit{
   title = 'To-do Notes';
+  readonly TaskStatus = TaskStatus;
 
   constructor(public router: Router, public loginService: AuthService) { }
 

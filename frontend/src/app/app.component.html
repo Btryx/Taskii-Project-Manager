@@ -5,11 +5,12 @@
     <span class="task-spacer1"></span>
     <mat-form-field *ngIf="loginService.isUserLoggedIn()" appearance="fill">
       <mat-label>Status</mat-label>
-      <mat-select [value]="'ALL'" (selectionChange)="onFilterChange($event)">
-        <mat-option value="ALL">All</mat-option>
-        <mat-option value="To-do">To-do</mat-option>
-        <mat-option value="Finished">Finished</mat-option>
-        <mat-option value="Due">Due</mat-option>
+      <mat-select [value]="TaskStatus.ALL" (selectionChange)="onFilterChange($event)">
+        <mat-option [value]="TaskStatus.ALL">All</mat-option>
+        <mat-option [value]="TaskStatus.TODO">To-do</mat-option>
+        <mat-option [value]="TaskStatus.IN_PROGRESS">In Progress</mat-option>
+        <mat-option [value]="TaskStatus.FINISHED">Finished</mat-option>
+        <mat-option [value]="TaskStatus.DUE">Due</mat-option>
       </mat-select>
     </mat-form-field>
     <button mat-button class="task-icon" style="background: #15ae4b" *ngIf="loginService.isUserLoggedIn()"

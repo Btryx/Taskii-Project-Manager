@@ -1,27 +1,24 @@
 .task-card {
-  width: 300px;
-  min-width: 210px;
-  margin: 4em 3em 0 3em;
+  margin: 0 0 10px 0;
+  width: calc(100% - 3em);
+  min-width: unset;
   padding: 1.5em;
-  box-shadow: 0 0 3px 5px rgba(0, 0, 0, 0.52);
+  box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.52);
   border-radius: 5px;
   background: rgba(49, 45, 45, 0.87);
-  margin-bottom: 10px;
   cursor: move;
 }
-
 
 .task-header-image {
   background-image: url('https://freeiconshop.com/wp-content/uploads/edd/task-done-flat.png');
   background-size: cover;
 }
 
-.container{
+.container {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
   flex: 1 0 21%;
-  margin-left: 7em;
 }
 
 .actions-container{
@@ -33,9 +30,9 @@
   font-size: larger;
 }
 
-.x{
+.x {
   position: absolute;
-  left: 310px;
+  right: 10px;
   top: 10px;
   cursor: pointer;
 }
@@ -54,10 +51,11 @@
   min-width: 200px;
   background: #4a4545;
   border-radius: 4px;
-  padding: 15px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
 }
+
 
 .kanban-column h2 {
   margin: 0 0 15px 0;
@@ -74,7 +72,9 @@
   min-height: 100px;
   background: #4a4545;
   border-radius: 4px;
-  padding: 10px;
+  padding: 5px;
+  scrollbar-width: thin;  /* "thin" or "none" */
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;  /* thumb and track color */
 }
 
 .cdk-drag-preview {
@@ -95,4 +95,22 @@
 
 .task-list.cdk-drop-list-dragging .task-card:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* Webkit browsers (Chrome, Safari, newer Edge) scrollbars */
+.task-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.task-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.task-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.task-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
