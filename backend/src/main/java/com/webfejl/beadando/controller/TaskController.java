@@ -1,74 +1,72 @@
 package com.webfejl.beadando.controller;
 
 
-import com.webfejl.beadando.http.AuthenticationResponse;
+import com.webfejl.beadando.auth.AuthenticationResponse;
 import com.webfejl.beadando.dto.TaskDTO;
 import com.webfejl.beadando.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/tasks")
 @CrossOrigin(origins = "http://localhost:4200")
 public class TaskController {
 
+    private final TaskService taskService;
+
     @Autowired
-    private TaskService service;
-
-
-    @GetMapping(produces = "application/json")
-    @RequestMapping({ "/validateLogin" })
-    public AuthenticationResponse validateLogin() {
-        return new AuthenticationResponse("User successfully authenticated");
+    public TaskController(TaskService taskService) {
+        this.taskService = taskService;
     }
 
-    @GetMapping("/tasks/all")
-    public List<TaskDTO> getAllTasks(){
-        return service.findAll();
+    @GetMapping("/all")
+    public ResponseEntity<List<TaskDTO>> getAllTasks() {
+        return ResponseEntity.ok(taskService.findAll());
     }
 
-    @GetMapping("/tasks/{id}")
-    public TaskDTO getTaskById(@PathVariable String id){
-        return service.findTask(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<TaskDTO> getTaskById(@PathVariable String id) {
+        return ResponseEntity.ok(taskService.findTask(id));
     }
 
-    @GetMapping("/tasks/status/{status}")
-    public List<TaskDTO> getTasksByStatus(@PathVariable String status) {
-        return service.findTasksByStatus(status);
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<TaskDTO>> getTasksByStatus(@PathVariable String status) {
+        return ResponseEntity.ok(taskService.findTasksByStatus(status));
     }
 
-    // Filter by Priority
-    @GetMapping("/tasks/priority/{priority}")
-    public List<TaskDTO> getTasksByPriority(@PathVariable int priority) {
-        return service.findTasksByPriority(priority);
+    @GetMapping("/priority/{priority}")
+    public ResponseEntity<List<TaskDTO>> getTasksByPriority(@PathVariable int priority) {
+        return ResponseEntity.ok(taskService.findTasksByPriority(priority));
     }
 
-    // Sort by Title
-    @GetMapping("/tasks/sort/title")
-    public List<TaskDTO> getTasksSortedByTitle() {
-        return service.sortTasksByTitle();
+    @GetMapping("/sort/title")
+    public ResponseEntity<List<TaskDTO>> getTasksSortedByTitle() {
+        return ResponseEntity.ok(taskService.sortTasksByTitle());
     }
 
-    // Sort by Date
-    @GetMapping("/tasks/sort/date")
-    public List<TaskDTO> getTasksSortedByDate() {
-        return service.sortTasksByDate();
+    @GetMapping("/sort/date")
+    public ResponseEntity<List<TaskDTO>> getTasksSortedByDate() {
+        return ResponseEntity.ok(taskService.sortTasksByDate());
     }
 
-    @PostMapping("/tasks/all")
-    public void createTask(@RequestBody TaskDTO task){
-        service.createTask(task);
+    @PostMapping("/all")
+    public ResponseEntity<TaskDTO> createTask(@RequestBody TaskDTO task){
+        return ResponseEntity.ok(taskService.createTask(task));
     }
 
-    @PutMapping("/tasks/{id}")
-    public void updateTask(@PathVariable String id, @RequestBody TaskDTO task){
-        service.updateTask(task, id);
+    @PutMapping("/{id}")
+    public ResponseEntity<TaskDTO> updateTask(
+            @PathVariable String id,
+            @RequestBody TaskDTO task) {
+        return ResponseEntity.ok(taskService.updateTask(task, id));
     }
 
-    @DeleteMapping("/tasks/{id}")
-    public void deleteTask(@PathVariable String id){
-        service.deleteTask(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTask(@PathVariable String id) {
+        taskService.deleteTask(id);
+        return ResponseEntity.noContent().build();
     }
 }

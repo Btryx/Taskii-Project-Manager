@@ -24,7 +24,9 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { ProjectsComponent } from './projects/projects.component';
+import { ProjectListComponent } from './project-list/project-list.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,7 @@ import { ProjectsComponent } from './projects/projects.component';
     DeleteTaskComponent,
     LoginComponent,
     LogoutComponent,
-    ProjectsComponent
+    ProjectListComponent
   ],
   imports: [
     BrowserModule,
@@ -54,7 +56,9 @@ import { ProjectsComponent } from './projects/projects.component';
     MatInputModule,
     MatSelectModule,
     MatCheckboxModule,
-    DragDropModule
+    DragDropModule,
+    MatProgressSpinnerModule,
+    MatMenuModule
   ],
   providers: [],
   bootstrap: [AppComponent]

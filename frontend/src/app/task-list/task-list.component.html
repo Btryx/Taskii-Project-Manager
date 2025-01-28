@@ -1,4 +1,4 @@
-<div class="kanban-container" *ngIf="tasks && tasks.length > 0">
+<div class="kanban-container">
   <div class="kanban-column">
     <h2>To Do</h2>
     <div
@@ -22,7 +22,7 @@
         <mat-card-actions>
           <div class="actions-container">
             <button mat-button style="background: grey" (click)="openEditTask(task)">EDIT</button>
-            <button mat-button style="background: dodgerblue">{{task.taskDate}}</button>
+            <button mat-button style="background: dodgerblue">{{task.taskDate | date : 'yyyy-MM-dd'}}</button>
           </div>
         </mat-card-actions>
       </mat-card>
@@ -52,7 +52,7 @@
         <mat-card-actions>
           <div class="actions-container">
             <button mat-button style="background: grey" (click)="openEditTask(task)">EDIT</button>
-            <button mat-button style="background: dodgerblue">{{task.taskDate}}</button>
+            <button mat-button style="background: dodgerblue">{{task.taskDate | date : 'yyyy-MM-dd'}}</button>
           </div>
         </mat-card-actions>
       </mat-card>
@@ -82,7 +82,7 @@
         <mat-card-actions>
           <div class="actions-container">
             <button mat-button style="background: grey" (click)="openEditTask(task)">EDIT</button>
-            <button mat-button style="background: dodgerblue">{{task.taskDate}}</button>
+            <button mat-button style="background: dodgerblue">{{task.taskDate | date : 'yyyy-MM-dd'}}</button>
           </div>
         </mat-card-actions>
       </mat-card>
@@ -112,7 +112,7 @@
         <mat-card-actions>
           <div class="actions-container">
             <button mat-button style="background: grey" (click)="openEditTask(task)">EDIT</button>
-            <button mat-button style="background: dodgerblue">{{task.taskDate}}</button>
+            <button mat-button style="background: dodgerblue">{{task.taskDate | date : 'yyyy-MM-dd'}}</button>
           </div>
         </mat-card-actions>
       </mat-card>

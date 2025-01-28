@@ -3,5 +3,6 @@ export class Project {
   projectName: string;
   createdAt: Date;
   active: boolean;
-  parentId: number;
+  parentId: string;
+  userId: string;
 }

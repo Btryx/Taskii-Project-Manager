@@ -1,7 +1,9 @@
 package com.webfejl.beadando.util;
 
 import com.webfejl.beadando.dto.TaskDTO;
+import com.webfejl.beadando.entity.Project;
 import com.webfejl.beadando.entity.Task;
+import com.webfejl.beadando.repository.ProjectRepository;
 
 public class TaskMapper {
 
@@ -13,18 +15,19 @@ public class TaskMapper {
                 task.getTaskPriority(),
                 task.getTaskDate(),
                 task.getTaskDesc(),
-                task.getProjectId()
+                task.getProject() != null ? task.getProject().getProjectId() : null
         );
     }
 
-    public static Task toEntity(TaskDTO taskDTO) {
-        Task task = new Task();
-        task.setTaskTitle(taskDTO.getTaskTitle());
-        task.setTaskStatus(taskDTO.getTaskStatus());
-        task.setTaskPriority(taskDTO.getTaskPriority());
-        task.setTaskDate(taskDTO.getTaskDate());
-        task.setTaskDesc(taskDTO.getTaskDesc());
-        task.setProjectId(taskDTO.getProjectId());
+    public static Task toEntity(TaskDTO taskDTO, Task task, ProjectRepository projectRepository) {
+        task.setTaskId(taskDTO.taskId());
+        task.setTaskTitle(taskDTO.taskTitle());
+        task.setTaskStatus(taskDTO.taskStatus());
+        task.setTaskPriority(taskDTO.taskPriority());
+        task.setTaskDate(taskDTO.taskDate());
+        task.setTaskDesc(taskDTO.taskDesc());
+        Project project = projectRepository.findById(taskDTO.projectId()).orElseThrow(() -> new RuntimeException("Project not found"));
+        task.setProject(project);
         return task;
     }
 }

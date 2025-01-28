@@ -19,6 +19,8 @@ export class CreateTaskComponent implements OnInit {
   }
 
   addTask(){
+    //todo
+    this.newTask.projectId = "1";
     this.taskService.createTask(this.newTask).subscribe( data => {
       this.newTask = new Task();
       this.router.navigate(['/tasks', 'ALL']);

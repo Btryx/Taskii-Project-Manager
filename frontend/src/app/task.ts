@@ -5,5 +5,5 @@ export class Task {
   taskPriority: number;
   taskDate: Date;
   taskDesc: string;
-  projectId: number;
+  projectId: string;
 }

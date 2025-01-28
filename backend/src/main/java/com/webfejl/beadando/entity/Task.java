@@ -1,24 +1,53 @@
 package com.webfejl.beadando.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.Hibernate;
+import org.hibernate.annotations.UuidGenerator;
 
-import java.sql.Date;
-import java.util.UUID;
+import java.sql.Timestamp;
+import java.util.Objects;
 
-@Data
-@NoArgsConstructor
-@Table("tasks")
+@Getter
+@Setter
+@Entity
+@Table(name = "tasks")
 public class Task {
+
     @Id
-    private @Column("task_id") String taskId= UUID.randomUUID().toString();
-    private @Column("task_title") String taskTitle;
-    private @Column("task_status") String taskStatus;
-    private @Column("task_priority") int taskPriority;
-    private @Column("task_date") Date taskDate;
-    private @Column("task_desc") String taskDesc;
-    private @Column("project_id") Integer projectId;
+    @UuidGenerator
+    @Column(name = "task_id", updatable = false, nullable = false)
+    private String taskId;
+
+    @Column(name = "task_title", nullable = false)
+    private String taskTitle;
+
+    @Column(name = "task_status", nullable = false)
+    private String taskStatus;
+
+    @Column(name = "task_priority", nullable = false)
+    private Integer taskPriority;
+
+    @Column(name = "task_date", nullable = false)
+    private Timestamp taskDate;
+
+    @Column(name = "task_desc")
+    private String taskDesc;
+
+    @ManyToOne
+    @JoinColumn(name = "project_id", nullable = false)
+    private Project project;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Task task = (Task) o;
+        return taskId != null && Objects.equals(taskId, task.taskId);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

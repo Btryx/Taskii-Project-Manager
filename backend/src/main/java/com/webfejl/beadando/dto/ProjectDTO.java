@@ -1,16 +1,12 @@
 package com.webfejl.beadando.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import java.sql.Timestamp;
 
-import java.util.Date;
-
-@Data
-@AllArgsConstructor
-public class ProjectDTO {
-    private Integer projectId;
-    private String projectName;
-    private Date createdAt;
-    private Boolean active;
-    private Integer parentId;
+public record ProjectDTO(
+        String projectId,
+        String projectName,
+        Timestamp createdAt,
+        Boolean active,
+        String parentId,
+        String userId) {
 }

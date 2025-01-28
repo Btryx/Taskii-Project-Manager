@@ -3,15 +3,16 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Task} from "./task";
 import {AuthService} from "./login/auth.service";
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TaskService {
 
-  private URL = "http://localhost:8082/api/tasks";
-  private URLAll = "http://localhost:8082/api/tasks/all"
-  private URLStatus = "http://localhost:8082/api/tasks/status"
+  private URL = `${environment.apiBaseUrl}/api/tasks`;
+  private URLAll = `${environment.apiBaseUrl}/api/tasks/all`;
+  private URLStatus = `${environment.apiBaseUrl}/api/tasks/status`;
 
   username: string = "";
   password: string = "";

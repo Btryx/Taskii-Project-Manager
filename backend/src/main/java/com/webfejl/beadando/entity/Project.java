@@ -1,23 +1,52 @@
 package com.webfejl.beadando.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.Hibernate;
+import org.hibernate.annotations.UuidGenerator;
 
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Objects;
 import java.util.UUID;
 
-@Data
-@NoArgsConstructor
-@Table("projects")
+@Getter
+@Setter
+@Entity
+@Table(name = "projects")
 public class Project {
+
     @Id
-    private @Column("project_id") String projectId= UUID.randomUUID().toString();
-    private @Column("project_name") String projectName;
-    private @Column("created_at") Date createdAt;
-    private @Column("active") Boolean active;
-    private @Column("parent_id") Integer parentId;
+    @UuidGenerator
+    @Column(name = "project_id", updatable = false, nullable = false)
+    private String projectId = UUID.randomUUID().toString();
+
+    @Column(name = "project_name", nullable = false)
+    private String projectName;
+
+    @Column(name = "created_at", nullable = false)
+    private Timestamp createdAt;
+
+    @Column(name = "active", nullable = false)
+    private Boolean active;
+
+    @Column(name = "parent_id")
+    private String parentId;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Project project = (Project) o;
+        return projectId != null && Objects.equals(projectId, project.projectId);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
 
