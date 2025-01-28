@@ -10,7 +10,22 @@
 }
 
 .task-header-image {
-  background-image: url('https://freeiconshop.com/wp-content/uploads/edd/task-done-flat.png');
+  background-image: url('src/assets/task-done-flat.png');
+  background-size: cover;
+}
+
+.task-header-image-empty {
+  background-image: url('src/assets/task-empty-flat.png');
+  background-size: cover;
+}
+
+.task-header-image-progress {
+  background-image: url('src/assets/task-progress-flat.png');
+  background-size: cover;
+}
+
+.task-header-image-warn {
+  background-image: url('src/assets/task-warn-flat.png');
   background-size: cover;
 }
 

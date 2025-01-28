@@ -120,10 +120,10 @@ export class TaskListComponent implements OnInit {
   }
 
   sortTasksByStatus() {
-    this.todoTasks = this.tasks.filter(task => task.taskStatus === 'To-do');
-    this.inProgressTasks = this.tasks.filter(task => task.taskStatus === 'In Progress');
-    this.finishedTasks = this.tasks.filter(task => task.taskStatus === 'Finished');
-    this.dueTasks = this.tasks.filter(task => task.taskStatus === 'Due');
+    this.todoTasks = this.tasks.filter(task => task.taskStatus === TaskStatus.TODO);
+    this.inProgressTasks = this.tasks.filter(task => task.taskStatus === TaskStatus.IN_PROGRESS);
+    this.finishedTasks = this.tasks.filter(task => task.taskStatus === TaskStatus.FINISHED);
+    this.dueTasks = this.tasks.filter(task => task.taskStatus === TaskStatus.DUE);
   }
 
   drop(event: CdkDragDrop<Task[]>) {

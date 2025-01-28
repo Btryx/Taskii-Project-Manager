@@ -12,7 +12,7 @@
       <mat-card class="task-card" *ngFor="let task of todoTasks" cdkDrag>
         <i class="material-icons x" (click)="deleteTask(task)">close</i>
         <mat-card-header>
-          <div mat-card-avatar class="task-header-image"></div>
+          <div mat-card-avatar class="task-header-image-empty"></div>
           <mat-card-title>{{task.taskTitle | uppercase}}</mat-card-title>
           <mat-card-subtitle>PRIORITY: {{task.taskPriority}}</mat-card-subtitle>
         </mat-card-header>
@@ -30,7 +30,7 @@
   </div>
 
   <div class="kanban-column">
-    <h2>In progress</h2>
+    <h2>In Progress</h2>
     <div
       cdkDropList
       #inProgressList="cdkDropList"
@@ -42,7 +42,7 @@
       <mat-card class="task-card" *ngFor="let task of inProgressTasks" cdkDrag>
         <i class="material-icons x" (click)="deleteTask(task)">close</i>
         <mat-card-header>
-          <div mat-card-avatar class="task-header-image"></div>
+          <div mat-card-avatar class="task-header-image-progress"></div>
           <mat-card-title>{{task.taskTitle | uppercase}}</mat-card-title>
           <mat-card-subtitle>PRIORITY: {{task.taskPriority}}</mat-card-subtitle>
         </mat-card-header>
@@ -60,7 +60,7 @@
   </div>
 
   <div class="kanban-column">
-    <h2>Finished</h2>
+    <h2>Done</h2>
     <div
       cdkDropList
       #finishedList="cdkDropList"
@@ -102,7 +102,7 @@
       <mat-card class="task-card" *ngFor="let task of dueTasks" cdkDrag>
         <i class="material-icons x" (click)="deleteTask(task)">close</i>
         <mat-card-header>
-          <div mat-card-avatar class="task-header-image"></div>
+          <div mat-card-avatar class="task-header-image-warn"></div>
           <mat-card-title>{{task.taskTitle | uppercase}}</mat-card-title>
           <mat-card-subtitle>PRIORITY: {{task.taskPriority}}</mat-card-subtitle>
         </mat-card-header>

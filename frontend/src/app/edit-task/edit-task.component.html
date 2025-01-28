@@ -8,10 +8,10 @@
         <mat-form-field appearance="legacy" class="input-field">
           <mat-label>Status</mat-label>
           <mat-select [(ngModel)]="taskStatus" name="status" required>
-            <mat-option [value]="TaskStatus.TODO">To-do</mat-option>
-            <mat-option [value]="TaskStatus.IN_PROGRESS">In Progress</mat-option>
-            <mat-option [value]="TaskStatus.FINISHED">Finished</mat-option>
-            <mat-option [value]="TaskStatus.DUE">Due</mat-option>
+            <mat-option [value]="TaskStatus.TODO">{{TaskStatus.TODO}}</mat-option>
+            <mat-option [value]="TaskStatus.IN_PROGRESS">{{TaskStatus.IN_PROGRESS}}</mat-option>
+            <mat-option [value]="TaskStatus.FINISHED">{{TaskStatus.FINISHED}}</mat-option>
+            <mat-option [value]="TaskStatus.DUE">{{TaskStatus.DUE}}</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field appearance="legacy" class="input-field">

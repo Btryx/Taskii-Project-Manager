@@ -6,11 +6,11 @@
     <mat-form-field *ngIf="loginService.isUserLoggedIn() && currentPage=='Tasks'" appearance="fill">
       <mat-label>Status</mat-label>
       <mat-select [value]="TaskStatus.ALL" (selectionChange)="onFilterChange($event)">
-        <mat-option [value]="TaskStatus.ALL">All</mat-option>
-        <mat-option [value]="TaskStatus.TODO">To-do</mat-option>
-        <mat-option [value]="TaskStatus.IN_PROGRESS">In Progress</mat-option>
-        <mat-option [value]="TaskStatus.FINISHED">Finished</mat-option>
-        <mat-option [value]="TaskStatus.DUE">Due</mat-option>
+        <mat-option [value]="TaskStatus.ALL">{{TaskStatus.ALL}}</mat-option>
+        <mat-option [value]="TaskStatus.TODO">{{TaskStatus.TODO}}</mat-option>
+        <mat-option [value]="TaskStatus.IN_PROGRESS">{{TaskStatus.IN_PROGRESS}}</mat-option>
+        <mat-option [value]="TaskStatus.FINISHED">{{TaskStatus.FINISHED}}</mat-option>
+        <mat-option [value]="TaskStatus.DUE">{{TaskStatus.DUE}}</mat-option>
       </mat-select>
     </mat-form-field>
     <button mat-button class="task-icon" style="background: #15ae4b; margin-right: 3em" *ngIf="loginService.isUserLoggedIn() && currentPage=='Tasks'"
