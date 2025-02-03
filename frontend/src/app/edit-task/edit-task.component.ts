@@ -11,11 +11,11 @@ interface TaskDialogData extends Task {
 @Component({
   selector: 'app-edit-task',
   templateUrl: './edit-task.component.html',
-  styleUrls: ['./edit-task.component.css']
+  styleUrls: ['./edit-task.component.css'],
 })
 export class EditTaskComponent implements OnInit {
   taskForm: FormGroup;
-  taskStatuses = Object.values(TaskStatus);
+  taskStatuses = Object.values(TaskStatus).filter((status) => status !== 'ALL');
   priorities = [1, 2, 3, 4, 5];
 
   constructor(
@@ -34,7 +34,7 @@ export class EditTaskComponent implements OnInit {
       taskDesc: this.data.taskDesc,
       taskStatus: this.data.taskStatus,
       taskPriority: this.data.taskPriority,
-      projectId: this.data.projectId
+      projectId: this.data.projectId,
     });
   }
 
@@ -46,7 +46,7 @@ export class EditTaskComponent implements OnInit {
       taskPriority: ['', Validators.required],
       taskDate: ['', Validators.required],
       taskDesc: ['', [Validators.required, Validators.maxLength(300)]],
-      projectId: ['']
+      projectId: [''],
     });
   }
 

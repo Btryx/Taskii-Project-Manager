@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
-import { Router } from "@angular/router";
-import { AuthService } from "./auth.service";
+import { Router } from '@angular/router';
+import { AuthService } from './auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
   username = '';
@@ -16,10 +16,7 @@ export class LoginComponent {
   errorMessage = '';
   hidePassword = true;
 
-  constructor(
-    private router: Router,
-    private authService: AuthService
-  ) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   checkLogin() {
     if (!this.username || !this.password) {
@@ -30,10 +27,9 @@ export class LoginComponent {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.authService.authenticate(this.username, this.password)
-      .pipe(
-        finalize(() => this.isLoading = false)
-      )
+    this.authService
+      .authenticate(this.username, this.password)
+      .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
           this.router.navigate(['/projects']);
@@ -44,9 +40,11 @@ export class LoginComponent {
           } else if (error.status === 0) {
             this.errorMessage = 'Invalid username or password';
           } else {
-            this.errorMessage = `Login failed: ${error.error?.message || 'Please try again later'}`;
+            this.errorMessage = `Login failed: ${
+              error.error?.message || 'Please try again later'
+            }`;
           }
-        }
+        },
       });
   }
 }

@@ -10,24 +10,25 @@ import { TaskService } from '../task.service';
 @Component({
   selector: 'app-project-list',
   templateUrl: './project-list.component.html',
-  styleUrls: ['./project-list.component.css']
+  styleUrls: ['./project-list.component.css'],
 })
 export class ProjectListComponent implements OnInit {
-
-  public projects: Project[]
+  public projects: Project[];
   public requestCompleteOrFailed: boolean;
   public errorMessage: string = '';
   public errorType: 'auth' | 'loading' | null = null;
 
-  constructor(private projectService : ProjectService,
-              private taskService: TaskService,
-              private router: Router,
-              private dialog: MatDialog,
-              private authService: AuthService,
-              private route: ActivatedRoute) { }
+  constructor(
+    private projectService: ProjectService,
+    private taskService: TaskService,
+    private router: Router,
+    private dialog: MatDialog,
+    private authService: AuthService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       this.getProjectList();
     });
   }
@@ -41,26 +42,26 @@ export class ProjectListComponent implements OnInit {
     }
 
     this.projectService.getAllProjects().subscribe(
-      projects => {
+      (projects) => {
         this.projects = projects;
         this.errorType = null;
         this.errorMessage = '';
       },
-      error => {
+      (error) => {
         console.error('Error:', error);
         this.requestCompleteOrFailed = true;
       },
-      () => this.requestCompleteOrFailed = true
+      () => (this.requestCompleteOrFailed = true)
     );
   }
 
   createProject() {
     // Implement project creation logic
     const dialogRef = this.dialog.open(ProjectCreateDialogComponent, {
-      width: '500px'
+      width: '500px',
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.getProjectList();
       }
@@ -68,7 +69,7 @@ export class ProjectListComponent implements OnInit {
   }
 
   editProject(project: Project) {
-/*     const dialogRef = this.dialog.open(ProjectEditDialogComponent, {
+    /*     const dialogRef = this.dialog.open(ProjectEditDialogComponent, {
       width: '500px',
       data: { project }
     });
@@ -87,18 +88,18 @@ export class ProjectListComponent implements OnInit {
 
   openProjectTasks(project: Project) {
     // Update URL query parameters without reloading the page
-    this.router.navigate(["tasks/filter"], {
+    this.router.navigate(['tasks/filter'], {
       queryParams: {
         projectId: project.projectId,
         status: null,
-        priority:  null
+        priority: null,
       },
-      queryParamsHandling: 'merge'
+      queryParamsHandling: 'merge',
     });
   }
 
   deleteProject(project: Project) {
-/*     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    /*     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '400px',
       data: {
         title: 'Delete Project',

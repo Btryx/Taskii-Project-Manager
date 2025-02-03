@@ -6,7 +6,7 @@ import { Project } from '../project';
 @Component({
   selector: 'app-create-project',
   templateUrl: './create-project.component.html',
-  styleUrls: ['./create-project.component.css']
+  styleUrls: ['./create-project.component.css'],
 })
 export class ProjectCreateDialogComponent {
   project: Project = {
@@ -15,7 +15,7 @@ export class ProjectCreateDialogComponent {
     createdAt: new Date(),
     active: true,
     parentId: '',
-    userId: ''
+    userId: '',
   };
 
   isLoading = false;
@@ -37,7 +37,7 @@ export class ProjectCreateDialogComponent {
       () => {
         this.dialogRef.close(true);
       },
-      error => {
+      (error) => {
         this.errorMessage = 'Failed to create project. Please try again.';
         this.isLoading = false;
       }
