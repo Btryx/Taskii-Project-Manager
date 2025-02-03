@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../login/auth.service';
 import { Project } from '../project';
-import { ProjectCreateDialogComponent } from '../create-project/create-project.component';
+import { ProjectEditDialogComponent } from '../edit-project/edit-project.component';
 import { TaskService } from '../task.service';
 
 @Component({
@@ -28,7 +28,12 @@ export class ProjectListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
+    this.route.params.subscribe(() => {
+      this.getProjectList();
+    });
+
+    this.projectService.projectCreated$.subscribe(() => {
+      console.log('Project list updated due to creation');
       this.getProjectList();
     });
   }
@@ -57,13 +62,21 @@ export class ProjectListComponent implements OnInit {
 
   createProject() {
     // Implement project creation logic
-    const dialogRef = this.dialog.open(ProjectCreateDialogComponent, {
+    const dialogRef = this.dialog.open(ProjectEditDialogComponent, {
       width: '500px',
+      data: { ...new Project(), title: 'Create project' },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.getProjectList();
+        this.projectService.createProject(result).subscribe({
+          next: () => {
+            console.log('Project successfully created!');
+          },
+          error: (error) => {
+            console.error('Error creating project:', error);
+          },
+        })
       }
     });
   }
@@ -83,11 +96,17 @@ export class ProjectListComponent implements OnInit {
 
   toggleProjectStatus(project: Project) {
     project.active = !project.active;
-    // Implement status update logic
+    this.projectService.updateProject(project.projectId, project).subscribe({
+      next: () => {
+        console.log('Project successfully updated!');
+      },
+      error: (error) => {
+        console.error('Error updating project:', error);
+      },
+    })
   }
 
   openProjectTasks(project: Project) {
-    // Update URL query parameters without reloading the page
     this.router.navigate(['tasks/filter'], {
       queryParams: {
         projectId: project.projectId,

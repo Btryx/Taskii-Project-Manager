@@ -73,12 +73,22 @@
 
 
 .kanban-column h2 {
-  margin: 0 0 15px 0;
+  margin: 0 0 10px 0;
   padding: 10px;
   text-align: center;
   background: #4a4545;
   color: white;
   border-radius: 4px;
+}
+
+h1 {
+  margin: 0 0 10px 0;
+  padding: 10px;
+  text-align: center;
+  color: white;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-weight: bold;
+  font-size: xx-large;
 }
 
 .task-list {

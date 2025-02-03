@@ -2,6 +2,7 @@
   padding: 24px;
   max-width: 1200px;
   margin: 0 auto;
+  color: #ffffff;
 }
 
 /* Loading State */
@@ -15,7 +16,7 @@
 }
 
 .loading-state p {
-  color: #666;
+  color: #e0e0e0;
   font-size: 16px;
 }
 
@@ -23,9 +24,9 @@
 .error-container {
   text-align: center;
   padding: 48px 24px;
-  background: #fff;
+  background: #1e1e1e;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 .error-icon {
@@ -48,31 +49,30 @@
   font-size: 24px;
   font-weight: 500;
   margin: 0;
-  color: #333;
+  color: #ffffff;
 }
 
-/* Project Grid */
 .project-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 24px;
 }
 
-/* Project Cards */
 .project-card {
-  background: white;
+  background: #1e1e1e;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .project-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
 }
 
 .project-card.inactive {
   opacity: 0.7;
+  background: #262626;
 }
 
 .project-card-header {
@@ -80,14 +80,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #333;
 }
 
 .project-card-header h3 {
   margin: 0;
   font-size: 18px;
   font-weight: 500;
-  color: #333;
+  color: #ffffff;
 }
 
 .project-card-content {
@@ -96,7 +96,7 @@
 }
 
 .project-id, .project-date {
-  color: #666;
+  color: #b0b0b0;
   font-size: 14px;
   margin: 4px 0;
 }
@@ -108,13 +108,14 @@
   gap: 8px;
   margin-top: 12px;
   font-size: 14px;
+  color: #e0e0e0;
 }
 
 .status-indicator {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #ccc;
+  background: #666;
 }
 
 .status-indicator.active {
@@ -125,21 +126,21 @@
 .empty-state {
   text-align: center;
   padding: 48px 24px;
-  background: #4a4545;
+  background: #1e1e1e;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 .empty-state mat-icon {
   font-size: 48px;
   height: 48px;
   width: 48px;
-  color: #fff;
+  color: #e0e0e0;
   margin-bottom: 16px;
 }
 
 .empty-state p {
-  color: #fff;
+  color: #e0e0e0;
   margin-bottom: 24px;
 }
 
@@ -148,13 +149,11 @@
   .projects-container {
     padding: 16px;
   }
-
   .projects-header {
     flex-direction: column;
     gap: 16px;
     align-items: stretch;
   }
-
   .project-grid {
     grid-template-columns: 1fr;
   }
@@ -164,3 +163,21 @@
 .delete-action {
   color: #f44336;
 }
+
+/* Material Overrides for Dark Theme */
+::ng-deep .mat-menu-panel {
+  background: #262626;
+}
+
+::ng-deep .mat-menu-item {
+  color: #ffffff;
+}
+
+::ng-deep .mat-menu-item .mat-icon {
+  color: #e0e0e0;
+}
+
+::ng-deep .mat-menu-item:hover:not([disabled]) {
+  background: rgba(255, 255, 255, 0.04);
+}
+

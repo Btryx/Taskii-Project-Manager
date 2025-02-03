@@ -7,6 +7,8 @@ import com.webfejl.beadando.repository.UserRepository;
 import com.webfejl.beadando.util.ProjectMapper;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,6 +38,7 @@ public class ProjectService {
 
     public ProjectDTO createProject(ProjectDTO projectDTO) {
         Project project = ProjectMapper.toEntity(projectDTO, new Project(), userRepository);
+        project.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         Project savedProject = projectRepository.save(project);
         return ProjectMapper.toDTO(savedProject);
     }

@@ -29,6 +29,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { ProjectEditDialogComponent } from './edit-project/edit-project.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     DeleteTaskComponent,
     LoginComponent,
     LogoutComponent,
+    ProjectEditDialogComponent,
     ProjectListComponent,
   ],
   imports: [

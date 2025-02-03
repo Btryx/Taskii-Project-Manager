@@ -1,6 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { TaskService } from '../task.service';
-import { Router } from '@angular/router';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Task } from '../task';
 

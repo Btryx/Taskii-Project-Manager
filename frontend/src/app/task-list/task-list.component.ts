@@ -12,6 +12,8 @@ import {
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { TaskStatus } from '../task-status.enum';
+import { Project } from '../project';
+import { ProjectService } from '../project.service';
 
 @Component({
   selector: 'app-task-list',
@@ -26,6 +28,7 @@ export class TaskListComponent implements OnInit {
   public dueTasks: Task[] = [];
 
   projectId!: string;
+  project: Project
   status?: string;
   priority?: number;
 
@@ -35,9 +38,9 @@ export class TaskListComponent implements OnInit {
 
   constructor(
     public taskService: TaskService,
-    public router: Router,
+    private projectService: ProjectService,
     private dialog: MatDialog,
-    public authService: AuthService,
+    private authService: AuthService,
     private route: ActivatedRoute
   ) {}
 
@@ -52,6 +55,11 @@ export class TaskListComponent implements OnInit {
 
       if (this.projectId) {
         this.getFilteredTasks();
+        this.projectService.getProject(this.projectId).subscribe(result => {
+          if (result) {
+            this.project = result
+          }
+        });
       }
     });
 
