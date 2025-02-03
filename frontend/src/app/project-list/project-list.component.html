@@ -57,7 +57,7 @@
           </mat-menu>
         </div>
 
-        <div class="project-card-content">
+        <div class="project-card-content" (click)="openProjectTasks(project)">
           <p class="project-id">ID: {{ project.projectId }}</p>
           <p class="project-date">Created: {{ project.createdAt | date:'mediumDate' }}</p>
           <div class="project-status">

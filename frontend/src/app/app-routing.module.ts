@@ -8,8 +8,8 @@ import {LogoutComponent} from "./logout/logout.component";
 import { ProjectListComponent } from './project-list/project-list.component';
 
 const routes: Routes = [
-  { path: 'tasks/:status', component: TaskListComponent },
-  { path: 'create-task', component: CreateTaskComponent },
+  { path: 'tasks/filter', component: TaskListComponent },
+  { path: 'create-task/:projectId', component: CreateTaskComponent },
   { path: 'edit-task', component: EditTaskComponent },
   { path: 'projects', component: ProjectListComponent },
   { path: "login",component: LoginComponent},

@@ -1,9 +1,28 @@
-form{
-  display: flex;
-  flex-direction: column;
+.container {
+  padding: 1.5rem;
+  max-width: 500px;
+  margin: 0 auto;
 }
 
-.actions-container{
+.title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+.input-field {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+textarea {
+  resize: none;
+}
+
+.actions-container {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
 }

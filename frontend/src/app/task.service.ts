@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Task} from "./task";
 import {AuthService} from "./login/auth.service";
@@ -12,26 +12,24 @@ export class TaskService {
 
   private URL = `${environment.apiBaseUrl}/api/tasks`;
   private URLAll = `${environment.apiBaseUrl}/api/tasks/all`;
-  private URLStatus = `${environment.apiBaseUrl}/api/tasks/status`;
 
   username: string = "";
   password: string = "";
 
   constructor(private httpClient: HttpClient, private authService: AuthService) { }
 
-  getAllTasks(): Observable<Task[]>{
-    const headers = this.getHeaders();
-    return this.httpClient.get<Task[]>(this.URLAll, {headers});
-  }
+  getTaskList(projectId: string, status?: string, priority?: number): Observable<Task[]> {
+    let params = new HttpParams().set('projectId', projectId);
 
-  getTasksByStatus(status: string): Observable<Task[]>{
+    if (status) params = params.set('status', status);
+    if (priority !== undefined) params = params.set('priority', priority.toString());
     const headers = this.getHeaders();
-    return this.httpClient.get<Task[]>(`${this.URLStatus}/${status}`, {headers});
+    return this.httpClient.get<Task[]>(`${this.URL}/filter`, {headers, params });
   }
 
   getTask(id: string): Observable<Object>{
     const headers = this.getHeaders();
-    return this.httpClient.get(`${this.URL}/${id}`,{headers});
+    return this.httpClient.get(`${this.URL}/${id}`, {headers});
   }
 
   createTask(task: Task): Observable<Object>{

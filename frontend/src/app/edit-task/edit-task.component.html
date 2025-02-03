@@ -1,41 +1,65 @@
 <div class="container">
-  <form>
-      <h1 style="text-align: center">Edit Task</h1>
-        <mat-form-field appearance="legacy" class="input-field">
-          <mat-label>Task Title</mat-label>
-          <input matInput [(ngModel)]="taskTitle" name="title" required maxlength="20">
-        </mat-form-field>
-        <mat-form-field appearance="legacy" class="input-field">
-          <mat-label>Status</mat-label>
-          <mat-select [(ngModel)]="taskStatus" name="status" required>
-            <mat-option [value]="TaskStatus.TODO">{{TaskStatus.TODO}}</mat-option>
-            <mat-option [value]="TaskStatus.IN_PROGRESS">{{TaskStatus.IN_PROGRESS}}</mat-option>
-            <mat-option [value]="TaskStatus.FINISHED">{{TaskStatus.FINISHED}}</mat-option>
-            <mat-option [value]="TaskStatus.DUE">{{TaskStatus.DUE}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field appearance="legacy" class="input-field">
-          <mat-label>Priority</mat-label>
-          <mat-select [(ngModel)]="taskPriority" name="priority" required>
-            <mat-option value=1>1</mat-option>
-            <mat-option value=2>2</mat-option>
-            <mat-option value=3>3</mat-option>
-            <mat-option value=4>4</mat-option>
-            <mat-option value=5>5</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field appearance="legacy" class="input-field">
-          <mat-label>Due Date</mat-label>
-          <input matInput type="date" name="date" [(ngModel)]="taskDate" required>
-        </mat-form-field>
-        <mat-form-field appearance="legacy" class="input-field">
-          <mat-label>Description</mat-label>
-          <input matInput name="desc" [(ngModel)]="taskDesc" maxlength="40" required>
-        </mat-form-field>
-        <div class="actions-container">
-          <button mat-button (click)="save()" type="submit" id="submitButton" style="background: grey"
-          [disabled]="!taskTitle">SUBMIT</button>
-        </div>
+  <h1 class="title">{{ data.title }}</h1>
+
+  <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" class="input-field">
+      <mat-label>Task Title</mat-label>
+      <input matInput formControlName="taskTitle" maxlength="100">
+      <mat-error *ngIf="taskForm.get('taskTitle')?.errors?.['required']">
+        Title is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="input-field">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="taskStatus">
+        <mat-option *ngFor="let status of taskStatuses" [value]="status">
+          {{status}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="taskForm.get('taskStatus')?.errors?.['required']">
+        Status is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="input-field">
+      <mat-label>Priority</mat-label>
+      <mat-select formControlName="taskPriority">
+        <mat-option *ngFor="let priority of priorities" [value]="priority">
+          {{priority}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="taskForm.get('taskPriority')?.errors?.['required']">
+        Priority is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="input-field">
+      <mat-label>Deadline</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="taskDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="taskForm.get('taskDate')?.errors?.['required']">
+        Deadline is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="input-field">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="taskDesc" maxlength="300" rows="3"></textarea>
+      <mat-error *ngIf="taskForm.get('taskDesc')?.errors?.['required']">
+        Description is required
+      </mat-error>
+    </mat-form-field>
+
+    <div class="actions-container">
+      <button mat-button type="button" (click)="onCancel()">
+        Cancel
+      </button>
+      <button mat-raised-button color="primary" type="submit"
+              [disabled]="taskForm.invalid || taskForm.pristine">
+        Save
+      </button>
+    </div>
   </form>
 </div>
-

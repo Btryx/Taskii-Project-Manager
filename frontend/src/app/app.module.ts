@@ -27,6 +27,9 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ProjectListComponent } from './project-list/project-list.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -58,7 +61,10 @@ import { MatMenuModule } from '@angular/material/menu';
     MatCheckboxModule,
     DragDropModule,
     MatProgressSpinnerModule,
-    MatMenuModule
+    MatMenuModule,
+    ReactiveFormsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

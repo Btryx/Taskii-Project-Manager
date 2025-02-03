@@ -1,7 +1,6 @@
 package com.webfejl.beadando.service;
 
 import com.webfejl.beadando.dto.TaskDTO;
-import com.webfejl.beadando.entity.Project;
 import com.webfejl.beadando.entity.Task;
 import com.webfejl.beadando.repository.ProjectRepository;
 import com.webfejl.beadando.repository.TaskRepository;
@@ -22,8 +21,8 @@ public class TaskService {
         this.projectRepository = projectRepository;
     }
 
-    public List<TaskDTO> findAll() {
-        return taskRepository.findAll()
+    public List<TaskDTO> findAll(String projectId, String status, Integer priority) {
+        return taskRepository.filterTasks(projectId, status, priority)
                 .stream()
                 .map(TaskMapper::toDTO)
                 .collect(Collectors.toList());
@@ -39,20 +38,6 @@ public class TaskService {
         Task task = TaskMapper.toEntity(taskDTO, new Task(), projectRepository);
         Task savedTask = taskRepository.save(task);
         return TaskMapper.toDTO(savedTask);
-    }
-
-    public List<TaskDTO> findTasksByStatus(String status) {
-        return taskRepository.findByStatus(status)
-                .stream()
-                .map(TaskMapper::toDTO)
-                .collect(Collectors.toList());
-    }
-
-    public List<TaskDTO> findTasksByPriority(int priority) {
-        return taskRepository.findByPriority(priority)
-                .stream()
-                .map(TaskMapper::toDTO)
-                .collect(Collectors.toList());
     }
 
     public List<TaskDTO> sortTasksByTitle() {

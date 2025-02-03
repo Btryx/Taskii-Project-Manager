@@ -2,7 +2,7 @@ import { TaskStatus } from './../task-status.enum';
 import { Component, OnInit } from '@angular/core';
 import {Task} from "../task";
 import {TaskService} from "../task.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-create-task',
@@ -13,21 +13,37 @@ export class CreateTaskComponent implements OnInit {
 
   newTask: Task = new Task();
   TaskStatus = TaskStatus;
-  constructor(private taskService: TaskService, private router : Router) { }
+  projectId: string;
+  constructor(private taskService: TaskService, private router : Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      this.projectId = params['projectId'];
+    });
   }
 
   addTask(){
-    //todo
-    this.newTask.projectId = "1";
+    this.newTask.projectId = this.projectId;
     this.taskService.createTask(this.newTask).subscribe( data => {
-      this.newTask = new Task();
-      this.router.navigate(['/tasks', 'ALL']);
+      this.router.navigate(["tasks/filter"], {
+        queryParams: {
+          projectId: this.projectId,
+          status: null,
+          priority:  null
+        },
+        queryParamsHandling: 'merge'
+      });
     })
   }
 
   goBack() {
-    this.router.navigate(['/tasks', 'ALL']);
+    this.router.navigate(["tasks/filter"], {
+      queryParams: {
+        projectId: this.projectId,
+        status: null,
+        priority:  null
+      },
+      queryParamsHandling: 'merge'
+    });
   }
 }

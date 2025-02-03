@@ -21,7 +21,10 @@ export class TaskListComponent implements OnInit {
   public finishedTasks: Task[] = [];
   public dueTasks: Task[] = [];
 
-  public status: string;
+  projectId!: string;
+  status?: string;
+  priority?: number;
+
   public requestCompleteOrFailed: boolean;
   public errorMessage: string = '';
   public errorType: 'auth' | 'loading' | null = null;
@@ -34,13 +37,18 @@ export class TaskListComponent implements OnInit {
 
   ngOnInit(): void {
     this.requestCompleteOrFailed = false;
-    this.route.params.subscribe(params => {
-      this.status = params['status'] || 'ALL';
-      this.getTaskList();
+    this.route.queryParams.subscribe(params => {
+      this.projectId = params['projectId']; // Required
+      this.status = params['status']; // Optional
+      this.priority = params['priority'] ? Number(params['priority']) : undefined; // Optional
+
+      if (this.projectId) {
+        this.getFilteredTasks();
+      }
     });
   }
 
-  getTaskList() {
+  getFilteredTasks(): void {
     console.log('Current status:', this.status);
 
     if (!this.authService.isUserLoggedIn()) {
@@ -50,73 +58,42 @@ export class TaskListComponent implements OnInit {
       return;
     }
 
-    const handleError = (error: any) => {
-      this.errorType = 'loading';
-      this.requestCompleteOrFailed = true;
-
-      if (error.status === 401) {
-        this.errorMessage = 'Your session has expired. Please log in again.';
-        this.router.navigate(['/login']);
-      } else if (error.status === 400) {
-        this.errorMessage = 'Invalid request. Please try again.';
-      } else if (error.status === 404) {
-        this.errorMessage = 'No tasks found for the selected filter.';
-      } else {
-        this.errorMessage = 'Unable to load tasks. Please try again later.';
-      }
-      console.error('Error:', error);
-    };
-
-    if (this.status && this.status !== 'ALL') {
-      this.taskService.getTasksByStatus(this.status).subscribe(
-        tasks => {
-          this.tasks = tasks;
-          this.sortTasksByStatus();
-          this.errorType = null;
-          this.errorMessage = '';
-        },
-        error => {
-          console.error('Error:', error);
-          this.requestCompleteOrFailed = true;
-        },
-        () => this.requestCompleteOrFailed = true
-      );
-    } else {
-      this.taskService.getAllTasks().subscribe(
-        tasks => {
-          this.tasks = tasks;
-          this.sortTasksByStatus();
-          this.errorType = null;
-          this.errorMessage = '';
-        },
-        error => {
-          console.error('Error:', error);
-          this.requestCompleteOrFailed = true;
-        },
-        () => this.requestCompleteOrFailed = true
-      );
-    }
+    this.taskService.getTaskList(this.projectId, this.status, this.priority).subscribe(
+      data => {
+      this.tasks = data;
+      this.sortTasksByStatus();
+      this.errorType = null;
+      this.errorMessage = '';
+      },
+      error => {
+        console.error('Error:', error);
+        this.requestCompleteOrFailed = true;
+      },
+      () => this.requestCompleteOrFailed = true
+    );
   }
 
-  openEditTask(task : Task){
-    let dialogRef = this.dialog.open(EditTaskComponent, {
-      width: '400px',
-      height: '430px',
-      data:{
-        taskId: task.taskId,
-        taskTitle: task.taskTitle,
-        taskDate: task.taskDate,
-        taskStatus: task.taskStatus,
-        taskPriority: task.taskPriority,
-        taskDesc: task.taskDesc,
+  openEditTask(task: Task) {
+    const dialogRef = this.dialog.open(EditTaskComponent, {
+      width: '500px',
+      data: {
+        ...task,
+        title: 'Edit Task'
       }
-    })
+    });
 
-    dialogRef.afterClosed().subscribe( result => {
-      this.taskService.updateTask(task.taskId, result).subscribe( () => {
-        this.ngOnInit();
-      })
-    })
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.taskService.updateTask(task.taskId, result).subscribe({
+          next: () => {
+            this.getFilteredTasks();
+          },
+          error: (error) => {
+            console.error('Error updating task:', error);
+          }
+        });
+      }
+    });
   }
 
   sortTasksByStatus() {

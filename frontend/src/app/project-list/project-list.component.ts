@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../login/auth.service';
 import { Project } from '../project';
 import { ProjectCreateDialogComponent } from '../create-project/create-project.component';
+import { TaskService } from '../task.service';
 
 @Component({
   selector: 'app-project-list',
@@ -18,10 +19,11 @@ export class ProjectListComponent implements OnInit {
   public errorMessage: string = '';
   public errorType: 'auth' | 'loading' | null = null;
 
-  constructor(public projectService : ProjectService,
-              public router: Router,
+  constructor(private projectService : ProjectService,
+              private taskService: TaskService,
+              private router: Router,
               private dialog: MatDialog,
-              public authService: AuthService,
+              private authService: AuthService,
               private route: ActivatedRoute) { }
 
   ngOnInit(): void {
@@ -31,14 +33,12 @@ export class ProjectListComponent implements OnInit {
   }
 
   getProjectList() {
-
     if (!this.authService.isUserLoggedIn()) {
       this.errorType = 'auth';
       this.errorMessage = 'Please log in to view your projects';
       this.requestCompleteOrFailed = true;
       return;
     }
-
 
     this.projectService.getAllProjects().subscribe(
       projects => {
@@ -83,6 +83,18 @@ export class ProjectListComponent implements OnInit {
   toggleProjectStatus(project: Project) {
     project.active = !project.active;
     // Implement status update logic
+  }
+
+  openProjectTasks(project: Project) {
+    // Update URL query parameters without reloading the page
+    this.router.navigate(["tasks/filter"], {
+      queryParams: {
+        projectId: project.projectId,
+        status: null,
+        priority:  null
+      },
+      queryParamsHandling: 'merge'
+    });
   }
 
   deleteProject(project: Project) {

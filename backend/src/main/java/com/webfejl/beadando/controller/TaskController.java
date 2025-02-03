@@ -3,6 +3,7 @@ package com.webfejl.beadando.controller;
 
 import com.webfejl.beadando.auth.AuthenticationResponse;
 import com.webfejl.beadando.dto.TaskDTO;
+import com.webfejl.beadando.entity.Project;
 import com.webfejl.beadando.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,24 +23,18 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<TaskDTO>> getAllTasks() {
-        return ResponseEntity.ok(taskService.findAll());
+    @GetMapping("/filter")
+    public ResponseEntity<List<TaskDTO>> filterTasks(
+            @RequestParam String projectId,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) Integer priority
+    ) {
+        return ResponseEntity.ok(taskService.findAll(projectId, status, priority));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<TaskDTO> getTaskById(@PathVariable String id) {
         return ResponseEntity.ok(taskService.findTask(id));
-    }
-
-    @GetMapping("/status/{status}")
-    public ResponseEntity<List<TaskDTO>> getTasksByStatus(@PathVariable String status) {
-        return ResponseEntity.ok(taskService.findTasksByStatus(status));
-    }
-
-    @GetMapping("/priority/{priority}")
-    public ResponseEntity<List<TaskDTO>> getTasksByPriority(@PathVariable int priority) {
-        return ResponseEntity.ok(taskService.findTasksByPriority(priority));
     }
 
     @GetMapping("/sort/title")

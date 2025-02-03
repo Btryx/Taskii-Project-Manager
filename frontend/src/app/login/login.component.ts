@@ -36,7 +36,7 @@ export class LoginComponent {
       )
       .subscribe({
         next: () => {
-          this.router.navigate(['/tasks', 'ALL']);
+          this.router.navigate(['/projects']);
         },
         error: (error: HttpErrorResponse) => {
           if (error.status === 401) {
