@@ -2,4 +2,4 @@
 
 ### Backend: Spring
 ### Frontend: Angular
-### Database: MySql
+### Database: MySQL
