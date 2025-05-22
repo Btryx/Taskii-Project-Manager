@@ -1,3 +1,5 @@
-# Webfejlesztes2022_Beadando
+# Task manager webapp
 
-### A to-do application with spring boot backend and angular frontend, and mySQL database
+### Backend: Spring
+### Frontend: Angular
+### Database: MySql
