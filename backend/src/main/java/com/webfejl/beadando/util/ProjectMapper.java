@@ -2,7 +2,11 @@ package com.webfejl.beadando.util;
 
 import com.webfejl.beadando.dto.ProjectDTO;
 import com.webfejl.beadando.entity.Project;
+import com.webfejl.beadando.entity.User;
 import com.webfejl.beadando.repository.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public class ProjectMapper {
 
@@ -23,8 +27,11 @@ public class ProjectMapper {
         project.setActive(projectDTO.active());
         project.setCreatedAt(projectDTO.createdAt());
         project.setParentId(projectDTO.parentId());
-        //todo: real user
-        project.setUser(userRepository.findById("1").orElseThrow(() -> new RuntimeException("User not found")));
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        project.setUser(userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found")));
+        System.out.println("Current user: " + username);
         return project;
     }
 }

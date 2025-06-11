@@ -2,9 +2,13 @@ package com.webfejl.beadando.service;
 
 import com.webfejl.beadando.dto.ProjectDTO;
 import com.webfejl.beadando.entity.Project;
+import com.webfejl.beadando.entity.User;
 import com.webfejl.beadando.repository.ProjectRepository;
 import com.webfejl.beadando.repository.UserRepository;
 import com.webfejl.beadando.util.ProjectMapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -24,7 +28,14 @@ public class ProjectService {
     }
 
     public List<ProjectDTO> findAll() {
-        return projectRepository.findAll()
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return projectRepository.findByUserId(user.getUserId())
                 .stream()
                 .map(ProjectMapper::toDTO)
                 .collect(Collectors.toList());

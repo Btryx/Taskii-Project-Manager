@@ -21,22 +21,20 @@ export class AuthService {
 
   constructor(private httpClient: HttpClient) { }
 
-  authenticate(username, password) {
-    const headers = new HttpHeaders({ Authorization: 'Basic ' + btoa(username + ':' + password) });
-    return this.httpClient.get<User>('http://localhost:8082/api/validateLogin',{headers}).pipe(
-      map(
-        userData => {
-          sessionStorage.setItem('username', username);
-          sessionStorage.setItem('password', password);
-          this.username = username;
-          this.password = password;
-          this.registerSuccessfulLogin(username, password);
-        }
-      )
-
+  authenticate(username: string, password: string) {
+    return this.httpClient.post('http://localhost:8082/api/login', {
+      username,
+      password
+    }).pipe(
+      map(() => {
+        sessionStorage.setItem('username', username);
+        sessionStorage.setItem('password', password);
+        this.registerSuccessfulLogin(username, password);
+      })
     );
   }
 
+  // TODO:  use token
   registerSuccessfulLogin(username, password) {
     sessionStorage.setItem(this.USER_NAME_SESSION_ATTRIBUTE_NAME, username)
     sessionStorage.setItem(this.password, password)

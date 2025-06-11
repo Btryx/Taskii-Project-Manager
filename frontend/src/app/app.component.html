@@ -1,7 +1,7 @@
 <p>
   <mat-toolbar style="height: 75px; background: rgba(49, 45, 45, 0.78);">
     <span *ngIf="loginService.isUserLoggedIn()" style="margin-left: 1em">{{currentPage}}</span>
-    <span *ngIf="!loginService.isUserLoggedIn()" style="margin-left: 1em">Bingu</span>
+    <span *ngIf="!loginService.isUserLoggedIn()" style="margin-left: 1em">Taskii</span>
     <span class="task-spacer1"></span>
     <mat-form-field *ngIf="loginService.isUserLoggedIn() && currentPage=='Tasks'" appearance="fill">
       <mat-label>Status</mat-label>
