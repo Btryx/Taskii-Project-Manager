@@ -5,11 +5,15 @@ import com.webfejl.beadando.auth.AuthenticationResponse;
 import com.webfejl.beadando.auth.LoginRequest;
 import com.webfejl.beadando.entity.User;
 import com.webfejl.beadando.repository.UserRepository;
+import com.webfejl.beadando.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +25,11 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @GetMapping(produces = "application/json")
     @RequestMapping({ "/validateLogin" })
@@ -37,20 +39,25 @@ public class AuthController {
 
     @PostMapping("/register")
     public User register(@RequestBody User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        return userService.createUser(user);
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
-        );
 
-        //todo: use jwt token
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+            );
 
-        return ResponseEntity.ok(new AuthenticationResponse("Login successful"));
+            //todo: use jwt token
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            return ResponseEntity.ok(new AuthenticationResponse("Login successful"));
+
+        } catch (AuthenticationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
 }
