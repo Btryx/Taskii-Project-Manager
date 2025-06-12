@@ -63,8 +63,10 @@ export class TaskService {
   }
 
   private getHeaders() {
-    this.username = this.authService.getLoggedInUserName();
-    this.password = this.authService.getLoggedInPassword();
-    return new HttpHeaders({ Authorization: 'Basic ' + btoa(this.username + ':' + this.password) });
+    const token = sessionStorage.getItem('jwt');
+    const headers = new HttpHeaders({
+      Authorization: 'Bearer ' + token,
+    });
+    return headers;
   }
 }

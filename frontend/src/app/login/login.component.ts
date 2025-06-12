@@ -34,16 +34,18 @@ export class LoginComponent {
         next: () => {
           this.router.navigate(['/projects']);
         },
-        error: (error: HttpErrorResponse) => {
-          if (error.status === 401) {
-            this.errorMessage = 'Invalid username or password';
-          } else if (error.status === 0) {
-            this.errorMessage = 'Invalid username or password';
-          } else {
-            this.errorMessage = `Login failed: ${
-              error.error?.message || 'Please try again later'
-            }`;
-          }
+         error: (error: HttpErrorResponse) => {
+           if (error.status === 401) {
+             this.errorMessage = 'Invalid username or password.';
+           } else if (error.status === 0) {
+             this.errorMessage = 'Unable to connect to the server.';
+           } else if (error.error?.message) {
+             this.errorMessage = error.error.message;
+           } else {
+             this.errorMessage = 'An unexpected error occurred. Please try again later.';
+           }
+
+         console.error('Login error:', error);
         },
       });
   }

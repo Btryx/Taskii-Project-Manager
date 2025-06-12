@@ -61,10 +61,9 @@ export class ProjectService {
   }
 
   private getHeaders() {
-    this.username = this.authService.getLoggedInUserName();
-    this.password = this.authService.getLoggedInPassword();
+    const token = sessionStorage.getItem('jwt');
     const headers = new HttpHeaders({
-      Authorization: 'Basic ' + btoa(this.username + ':' + this.password),
+      Authorization: 'Bearer ' + token,
     });
     return headers;
   }

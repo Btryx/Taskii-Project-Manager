@@ -1,0 +1,51 @@
+package com.webfejl.beadando.auth.jwt;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import java.util.HashMap;
+
+@Getter
+@Component
+public class JwtManager {
+
+    @Value("${jwt.secret}")
+    private String secret;
+
+    public String generateToken(String username) {
+        long EXPIRATION_TIME = 1000 * 60 * 60 * 24;
+        SecretKey key = getKey();
+        return Jwts.builder().setClaims(new HashMap<>())
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    private SecretKey getKey() {
+        return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public String extractUsername(String token) {
+        return Jwts.parserBuilder().setSigningKey(getKey()).build().parseClaimsJws(token).getBody().getSubject();
+    }
+
+    private boolean isTokenExpired(String token) {
+        Date expiration = Jwts.parserBuilder().setSigningKey(getKey()).build().parseClaimsJws(token).getBody().getExpiration();
+        return expiration.before(new Date());
+    }
+
+    public boolean validateToken(String token, String username) {
+        String tokenUsername = extractUsername(token);
+        return (tokenUsername.equals(username) && !isTokenExpired(token));
+    }
+
+}

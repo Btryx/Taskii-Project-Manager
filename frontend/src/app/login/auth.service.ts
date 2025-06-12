@@ -14,30 +14,22 @@ export class User{
 })
 export class AuthService {
 
-  USER_NAME_SESSION_ATTRIBUTE_NAME = 'authenticatedUser'
-
   public username: string;
-  public password: string;
 
   constructor(private httpClient: HttpClient) { }
 
   authenticate(username: string, password: string) {
-    return this.httpClient.post('http://localhost:8082/api/login', {
+    return this.httpClient.post<{ message: string }>('http://localhost:8082/api/login', {
       username,
       password
     }).pipe(
-      map(() => {
-        sessionStorage.setItem('username', username);
-        sessionStorage.setItem('password', password);
-        this.registerSuccessfulLogin(username, password);
+      map(response => {
+      sessionStorage.setItem('username', username);
+      sessionStorage.setItem('jwt', response.message);
+      console.log(response.message)
+      this.username = username;
       })
     );
-  }
-
-  // TODO:  use token
-  registerSuccessfulLogin(username, password) {
-    sessionStorage.setItem(this.USER_NAME_SESSION_ATTRIBUTE_NAME, username)
-    sessionStorage.setItem(this.password, password)
   }
 
   isUserLoggedIn() {
@@ -47,9 +39,8 @@ export class AuthService {
 
   logOut() {
     sessionStorage.removeItem('username')
-    sessionStorage.removeItem('password')
+    sessionStorage.removeItem('jwt')
     this.username = null;
-    this.password = null;
   }
 
   getLoggedInUserName() {
@@ -57,11 +48,4 @@ export class AuthService {
     if (user === null) return ''
     return user
   }
-
-    getLoggedInPassword() {
-      let pw = sessionStorage.getItem('password')
-      if (pw === null) return ''
-      return pw
-    }
-
 }
