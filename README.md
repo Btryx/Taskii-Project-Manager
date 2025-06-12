@@ -1,4 +1,4 @@
-# 🗂️ Kanban Task Manager Application
+# 🗂️ Taskii: Project Management app
 
 A full-stack Kanban-style project and task management application built with Angular, Spring Boot, and MySQL.
 
