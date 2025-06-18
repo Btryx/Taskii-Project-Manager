@@ -20,11 +20,6 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-    @GetMapping(produces = "application/json")
-    @RequestMapping({ "/validateLogin" })
-    public ResponseEntity<AuthenticationResponse> validateLogin() {
-        return ResponseEntity.ok(new AuthenticationResponse("User successfully authenticated"));
-    }
 
     @PostMapping("/register")
     public User register(@RequestBody User user) {

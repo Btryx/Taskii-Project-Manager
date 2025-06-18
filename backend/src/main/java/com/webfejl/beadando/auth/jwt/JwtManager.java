@@ -25,6 +25,8 @@ public class JwtManager {
         return Jwts.builder().setClaims(new HashMap<>())
                 .setSubject(username)
                 .setIssuedAt(new Date())
+                .setHeaderParam("typ", "JWT")
+                .setIssuer("beaolah")
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
