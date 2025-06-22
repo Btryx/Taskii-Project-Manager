@@ -79,17 +79,10 @@ CREATE TABLE collaborators (
 
 CREATE TABLE statuses (
     status_name VARCHAR(36) PRIMARY KEY,
-    order_number INT UNSIGNED
+    order_number INT UNSIGNED,
+    project_id VARCHAR(36) NOT NULL
 );
 
-INSERT INTO statuses (status_name, order_number)
-VALUES ('To do', 1); 
-
-INSERT INTO statuses (status_name, order_number)
-VALUES ('In progress', 2); 
-
-INSERT INTO statuses (status_name, order_number)
-VALUES ('Done', 3); 
 ```
 ## 🚀 Features
 
