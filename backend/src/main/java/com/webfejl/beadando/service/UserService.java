@@ -1,17 +1,19 @@
 package com.webfejl.beadando.service;
 
-import com.webfejl.beadando.auth.AuthenticationResponse;
 import com.webfejl.beadando.auth.LoginRequest;
 import com.webfejl.beadando.auth.jwt.JwtManager;
 import com.webfejl.beadando.entity.User;
+import com.webfejl.beadando.exception.UserCreationException;
 import com.webfejl.beadando.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.sql.SQLException;
 
 @Service
 public class UserService {
@@ -31,9 +33,28 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User createUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+    public User createUser(User user) throws UserCreationException, DataIntegrityViolationException {
+        try {
+            validateCreateUser(user);
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            return userRepository.save(user);
+        } catch (DataIntegrityViolationException e) {
+            throw new UserCreationException("Username already exists!");
+        }
+
+
+    }
+
+    private static void validateCreateUser(User user) throws UserCreationException {
+        if (user.getUsername() == null || user.getUsername().isEmpty() || user.getPassword() == null || user.getPassword().isEmpty()) {
+            throw new UserCreationException("Username or password field is empty!");
+        }
+        if (user.getPassword().length() < 10) {
+            throw new UserCreationException("Password must be at least 10 characters long!");
+        }
+        if (!user.getPassword().matches(".*\\d.*")) {
+            throw new UserCreationException("Password must contain at least one number!");
+        }
     }
 
     public String login(LoginRequest loginRequest) throws AuthenticationException {

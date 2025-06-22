@@ -38,7 +38,7 @@ class UserServiceTest {
     }
 
     @Test
-    void createUser_shouldEncodePasswordAndSaveUser() {
+    void createUser_shouldEncodePasswordAndSaveUser() throws Exception {
         User user = new User();
         user.setPassword("plainPassword");
 

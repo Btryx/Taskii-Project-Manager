@@ -3,6 +3,7 @@ package com.webfejl.beadando.controller;
 
 import com.webfejl.beadando.auth.AuthenticationResponse;
 import com.webfejl.beadando.auth.LoginRequest;
+import com.webfejl.beadando.auth.RegisterResponse;
 import com.webfejl.beadando.entity.User;
 import com.webfejl.beadando.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,14 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public User register(@RequestBody User user) {
-        return userService.createUser(user);
+    public RegisterResponse register(@RequestBody User user) {
+        User createdUser;
+        try {
+            createdUser = userService.createUser(user);
+        } catch (Exception e) {
+            return new RegisterResponse(false, null, e.getMessage());
+        }
+        return new RegisterResponse(true, createdUser, "Registration successful!");
     }
 
     @PostMapping("/login")
