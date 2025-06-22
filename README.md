@@ -76,6 +76,20 @@ CREATE TABLE collaborators (
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (project_id) REFERENCES projects(project_id)
 );
+
+CREATE TABLE statuses (
+    status_name VARCHAR(36) PRIMARY KEY,
+    order_number INT UNSIGNED
+);
+
+INSERT INTO statuses (status_name, order_number)
+VALUES ('To do', 1); 
+
+INSERT INTO statuses (status_name, order_number)
+VALUES ('In progress', 2); 
+
+INSERT INTO statuses (status_name, order_number)
+VALUES ('Done', 3); 
 ```
 ## 🚀 Features
 
