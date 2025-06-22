@@ -2,8 +2,10 @@ package com.webfejl.beadando.controller;
 
 
 import com.webfejl.beadando.dto.TaskDTO;
+import com.webfejl.beadando.exception.AuthorizationException;
 import com.webfejl.beadando.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,39 +29,67 @@ public class TaskController {
             @RequestParam(required = false) String status,
             @RequestParam(required = false) Integer priority
     ) {
-        return ResponseEntity.ok(taskService.findAll(projectId, status, priority));
+        try {
+            return ResponseEntity.ok(taskService.findAll(projectId, status, priority));
+        } catch (AuthorizationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<TaskDTO> getTaskById(@PathVariable String id) {
-        return ResponseEntity.ok(taskService.findTask(id));
+        try {
+            return ResponseEntity.ok(taskService.findTask(id));
+        } catch (AuthorizationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @GetMapping("/sort/title")
     public ResponseEntity<List<TaskDTO>> getTasksSortedByTitle() {
-        return ResponseEntity.ok(taskService.sortTasksByTitle());
+        try {
+            return ResponseEntity.ok(taskService.sortTasksByTitle());
+        } catch (AuthorizationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @GetMapping("/sort/date")
     public ResponseEntity<List<TaskDTO>> getTasksSortedByDate() {
-        return ResponseEntity.ok(taskService.sortTasksByDate());
+        try {
+            return ResponseEntity.ok(taskService.sortTasksByDate());
+        } catch (AuthorizationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @PostMapping("/all")
-    public ResponseEntity<TaskDTO> createTask(@RequestBody TaskDTO task){
-        return ResponseEntity.ok(taskService.createTask(task));
+    public ResponseEntity<TaskDTO> createTask(@RequestBody TaskDTO task) {
+        try {
+            return ResponseEntity.ok(taskService.createTask(task));
+        } catch (AuthorizationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<TaskDTO> updateTask(
             @PathVariable String id,
             @RequestBody TaskDTO task) {
-        return ResponseEntity.ok(taskService.updateTask(task, id));
+        try {
+            return ResponseEntity.ok(taskService.updateTask(task, id));
+        } catch (AuthorizationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable String id) {
-        taskService.deleteTask(id);
-        return ResponseEntity.noContent().build();
+        try {
+            taskService.deleteTask(id);
+            return ResponseEntity.noContent().build();
+        } catch (AuthorizationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 }

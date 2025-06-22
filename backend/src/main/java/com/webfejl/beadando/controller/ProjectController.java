@@ -31,7 +31,11 @@ public class ProjectController {
 
     @GetMapping("/all")
     public ResponseEntity<List<ProjectDTO>> getAllProjects() {
-        return ResponseEntity.ok(projectService.getAllAccessedProjects());
+        try {
+            return ResponseEntity.ok(projectService.getAllAccessedProjects());
+        } catch (AuthorizationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @GetMapping("/{id}")
@@ -47,20 +51,36 @@ public class ProjectController {
 
     @PostMapping("/all")
     public ResponseEntity<ProjectDTO> createProject(@RequestBody ProjectDTO project){
-        return ResponseEntity.ok(projectService.createProject(project));
+        try {
+            return ResponseEntity.ok(projectService.createProject(project));
+        } catch (AuthorizationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ProjectDTO> updateProject(
             @PathVariable String id,
             @RequestBody ProjectDTO project) {
-        return ResponseEntity.ok(projectService.updateProject(project, id));
+        try {
+            return ResponseEntity.ok(projectService.updateProject(project, id));
+        } catch (ProjectNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (AuthorizationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProject(@PathVariable String id) {
-        projectService.deleteProject(id);
-        return ResponseEntity.noContent().build();
+        try {
+            projectService.deleteProject(id);
+            return ResponseEntity.noContent().build();
+        } catch (ProjectNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (AuthorizationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @GetMapping("/{id}/collaborators")

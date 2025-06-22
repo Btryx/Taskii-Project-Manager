@@ -2,11 +2,16 @@ package com.webfejl.beadando.util;
 
 import com.webfejl.beadando.dto.ProjectDTO;
 import com.webfejl.beadando.entity.User;
+import com.webfejl.beadando.exception.AuthorizationException;
 import com.webfejl.beadando.repository.CollaboratorRepository;
 import com.webfejl.beadando.repository.ProjectRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ProjectAccessUtil {
@@ -37,5 +42,26 @@ public class ProjectAccessUtil {
                 .stream()
                 .map(ProjectMapper::toDTO)
                 .toList();
+    }
+
+    public static void checkIfUserIsLoggedIn(Optional<User> user) {
+        if (user.isEmpty()) {
+            throw new AuthorizationException("Please log in to access this content!");
+        }
+    }
+
+
+    public static String getUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = null;
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetails) {
+                username = ((UserDetails) principal).getUsername();
+            } else {
+                username = principal.toString();
+            }
+        }
+        return username;
     }
 }

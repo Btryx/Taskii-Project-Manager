@@ -21,7 +21,6 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-
     @PostMapping("/register")
     public RegisterResponse register(@RequestBody User user) {
         User createdUser;
