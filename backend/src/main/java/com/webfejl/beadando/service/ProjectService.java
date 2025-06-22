@@ -70,7 +70,7 @@ public class ProjectService {
         if (user.isEmpty()) {
             throw new AuthorizationException("Please log in to see this project!");
         }
-        if (projectAccessUtil.isProjectAccessGranted(project, user.get())) {
+        if (!projectAccessUtil.isProjectAccessGranted(project, user.get())) {
             throw new AuthorizationException("You don't have access to this project!");
         }
         return project;
