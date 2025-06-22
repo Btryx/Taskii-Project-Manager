@@ -50,7 +50,7 @@ public class ProjectControllerTest {
                 "user123"
         );
 
-        when(projectService.findAll()).thenReturn(List.of(project));
+        when(projectService.getAllAccessedProjects()).thenReturn(List.of(project));
 
         mockMvc.perform(get("/api/projects/all"))
                 .andExpect(status().isOk())

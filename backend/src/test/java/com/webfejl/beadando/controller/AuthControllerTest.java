@@ -1,6 +1,6 @@
 package com.webfejl.beadando.controller;
 
-import com.webfejl.beadando.auth.LoginRequest;
+import com.webfejl.beadando.request.LoginRequest;
 import com.webfejl.beadando.auth.jwt.JwtManager;
 import com.webfejl.beadando.entity.User;
 import com.webfejl.beadando.service.UserService;

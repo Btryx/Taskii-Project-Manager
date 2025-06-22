@@ -1,6 +1,6 @@
 package com.webfejl.beadando.security;
 
-import com.webfejl.beadando.auth.LoginRequest;
+import com.webfejl.beadando.request.LoginRequest;
 import com.webfejl.beadando.auth.jwt.JwtManager;
 import com.webfejl.beadando.service.UserService;
 import org.junit.jupiter.api.Test;

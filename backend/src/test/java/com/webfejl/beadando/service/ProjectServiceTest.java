@@ -83,7 +83,7 @@ public class ProjectServiceTest {
         try (MockedStatic<ProjectMapper> mockedMapper = Mockito.mockStatic(ProjectMapper.class)) {
             mockedMapper.when(() -> ProjectMapper.toDTO(mockProject)).thenReturn(mockDTO);
 
-            List<ProjectDTO> result = projectService.findAll();
+            List<ProjectDTO> result = projectService.getAllAccessedProjects();
 
             assertEquals(1, result.size());
             assertEquals(PROJECT_ID, result.get(0).projectId());

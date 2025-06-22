@@ -1,6 +1,6 @@
 package com.webfejl.beadando.service;
 
-import com.webfejl.beadando.auth.LoginRequest;
+import com.webfejl.beadando.request.LoginRequest;
 import com.webfejl.beadando.auth.jwt.JwtManager;
 import com.webfejl.beadando.entity.User;
 import com.webfejl.beadando.exception.UserCreationException;
@@ -12,8 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.sql.SQLException;
 
 @Service
 public class UserService {
@@ -41,8 +39,6 @@ public class UserService {
         } catch (DataIntegrityViolationException e) {
             throw new UserCreationException("Username already exists!");
         }
-
-
     }
 
     private static void validateCreateUser(User user) throws UserCreationException {
