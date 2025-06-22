@@ -3,6 +3,8 @@ package com.webfejl.beadando.service;
 import com.webfejl.beadando.entity.Collaborator;
 import com.webfejl.beadando.entity.Project;
 import com.webfejl.beadando.entity.User;
+import com.webfejl.beadando.exception.AuthorizationException;
+import com.webfejl.beadando.exception.ProjectNotFoundException;
 import com.webfejl.beadando.repository.CollaboratorRepository;
 import com.webfejl.beadando.repository.ProjectRepository;
 import com.webfejl.beadando.repository.UserRepository;
@@ -25,8 +27,9 @@ public class CollaboratorService {
 
     public Collaborator createCollaborator(String projectId, String userId) {
         Collaborator collaborator = new Collaborator();
-        collaborator.setUser(userRepository.getReferenceById(userId));
-        collaborator.setProject(projectRepository.getReferenceById(projectId));
+        collaborator.setUser(userRepository.findById(userId).orElseThrow(() -> new AuthorizationException("User not found!")));
+        collaborator.setProject(projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("Project not found!")));
+        //TODO: only create if collaborator isn't already added!
         return collaboratorRepository.save(collaborator);
     }
 
