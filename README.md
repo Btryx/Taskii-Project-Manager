@@ -58,6 +58,8 @@ CREATE TABLE projects (
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
+ALTER TABLE `projects` ADD UNIQUE `projects_uq_01`(`project_name`, `user_id`);
+
 CREATE TABLE tasks (
     task_id VARCHAR(36) PRIMARY KEY,
     task_title VARCHAR(100) NOT NULL,
