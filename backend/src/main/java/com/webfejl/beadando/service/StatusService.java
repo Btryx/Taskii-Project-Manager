@@ -32,6 +32,7 @@ public class StatusService {
 
     public List<StatusDto> getStatusesForProject(String projectId) throws AuthenticationException {
         User user = projectAccessUtil.getAuthenticatedUser();
+        projectAccessUtil.checkAccess(projectId, user);
         return statusRepository.findByProjectId(projectId).stream().map(StatusMapper::toDTO).toList();
     }
 

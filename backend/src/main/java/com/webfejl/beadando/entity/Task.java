@@ -22,6 +22,7 @@ public class Task {
     @Column(name = "task_title", nullable = false)
     private String taskTitle;
 
+    //TODO: this should be a foreign key to Status entity, change after fully migrating to dynamic statuses on frontend
     @Column(name = "task_status", nullable = false)
     private String taskStatus;
 
