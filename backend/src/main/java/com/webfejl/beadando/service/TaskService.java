@@ -10,6 +10,7 @@ import com.webfejl.beadando.repository.TaskRepository;
 import com.webfejl.beadando.repository.UserRepository;
 import com.webfejl.beadando.util.ProjectAccessUtil;
 import com.webfejl.beadando.util.TaskMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
@@ -54,6 +55,7 @@ public class TaskService {
         return task;
     }
 
+    @Transactional
     public TaskDTO createTask(TaskDTO taskDTO) throws AuthenticationException {
         User user = projectAccessUtil.getAuthenticatedUser();
         Task task = TaskMapper.toEntity(taskDTO, new Task(), projectRepository);
@@ -64,7 +66,7 @@ public class TaskService {
         return TaskMapper.toDTO(savedTask);
     }
 
-
+    @Transactional
     public TaskDTO updateTask(TaskDTO taskDTO, String id) throws AuthenticationException, TaskNotFoundException {
         User user = projectAccessUtil.getAuthenticatedUser();
         Task task = taskRepository.findById(id)
@@ -77,6 +79,7 @@ public class TaskService {
         return TaskMapper.toDTO(taskRepository.save(newTask));
     }
 
+    @Transactional
     public void deleteTask(String id) throws AuthenticationException, TaskNotFoundException {
         User user = projectAccessUtil.getAuthenticatedUser();
         Task task = taskRepository.findById(id)

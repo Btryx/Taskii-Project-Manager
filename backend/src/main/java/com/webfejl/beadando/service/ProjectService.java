@@ -11,6 +11,7 @@ import com.webfejl.beadando.repository.StatusRepository;
 import com.webfejl.beadando.repository.UserRepository;
 import com.webfejl.beadando.util.ProjectAccessUtil;
 import com.webfejl.beadando.util.ProjectMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -63,6 +64,7 @@ public class ProjectService {
         return project;
     }
 
+    @Transactional
     public ProjectDTO createProject(ProjectDTO projectDTO) throws AuthorizationException {
         projectAccessUtil.getAuthenticatedUser();
         Project project = ProjectMapper.toEntity(projectDTO, new Project(), userRepository);
@@ -88,12 +90,13 @@ public class ProjectService {
         statusRepository.save(inProgressStatus);
 
         Status doneStatus = new Status();
-        toDoStatus.setStatusName(DONE);
-        toDoStatus.setProject(savedProject);
-        toDoStatus.setOrderNumber(3);
+        doneStatus.setStatusName(DONE);
+        doneStatus.setProject(savedProject);
+        doneStatus.setOrderNumber(3);
         statusRepository.save(doneStatus);
     }
 
+    @Transactional
     public ProjectDTO updateProject(ProjectDTO projectDTO, String id) throws AuthorizationException, ProjectNotFoundException {
         User user = projectAccessUtil.getAuthenticatedUser();
 
@@ -106,6 +109,7 @@ public class ProjectService {
         return ProjectMapper.toDTO(projectRepository.save(newProject));
     }
 
+    @Transactional
     public void deleteProject(String id) throws AuthorizationException, ProjectNotFoundException {
         User user = projectAccessUtil.getAuthenticatedUser();
         if (!projectRepository.existsById(id)) {

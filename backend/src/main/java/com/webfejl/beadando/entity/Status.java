@@ -13,6 +13,9 @@ public class Status {
 
     @Id
     @UuidGenerator
+    @Column(name = "status_id", updatable = false, nullable = false)
+    private String statusId;
+
     @Column(name = "status_name", nullable = false)
     private String statusName;
 

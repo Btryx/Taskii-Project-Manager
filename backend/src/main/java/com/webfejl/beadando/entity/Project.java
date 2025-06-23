@@ -20,7 +20,7 @@ public class Project {
     @Column(name = "project_id", updatable = false, nullable = false)
     private String projectId = UUID.randomUUID().toString();
 
-    @Column(name = "project_name", nullable = false)
+    @Column(name = "project_name", nullable = false, unique = true)
     private String projectName;
 
     @Column(name = "created_at", nullable = false)

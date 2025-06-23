@@ -5,6 +5,7 @@ import com.webfejl.beadando.auth.jwt.JwtManager;
 import com.webfejl.beadando.entity.User;
 import com.webfejl.beadando.exception.UserCreationException;
 import com.webfejl.beadando.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -32,6 +33,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     public User createUser(User user) throws UserCreationException, DataIntegrityViolationException {
         try {
             validateCreateUser(user);

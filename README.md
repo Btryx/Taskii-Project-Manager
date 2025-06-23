@@ -78,7 +78,8 @@ CREATE TABLE collaborators (
 );
 
 CREATE TABLE statuses (
-    status_name VARCHAR(36) PRIMARY KEY,
+    status_id VARCHAR(36) PRIMARY KEY,
+    status_name VARCHAR(36),
     order_number INT UNSIGNED,
     project_id VARCHAR(36) NOT NULL
 );
