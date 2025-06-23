@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
+
 
 @RestController
 @RequestMapping("/api/projects")
@@ -29,78 +31,40 @@ public class ProjectController {
 
     @GetMapping("/all")
     public ResponseEntity<?> getAllProjects() {
-        try {
-            return ResponseEntity.ok(projectService.getAllAccessedProjects());
-        } catch (AuthorizationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        }
+        return ResponseEntity.ok(projectService.getAllAccessedProjects());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getProjectById(@PathVariable String id) {
-        try {
-            return ResponseEntity.ok(projectService.findProject(id));
-        } catch (ProjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (AuthorizationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        }
+        return ResponseEntity.ok(projectService.findProject(id));
     }
 
     @PostMapping("/all")
     public ResponseEntity<?> createProject(@RequestBody ProjectDTO project){
-        try {
-            return ResponseEntity.ok(projectService.createProject(project));
-        } catch (AuthorizationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        }
+        return ResponseEntity.ok(projectService.createProject(project));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateProject(
             @PathVariable String id,
             @RequestBody ProjectDTO project) {
-        try {
-            return ResponseEntity.ok(projectService.updateProject(project, id));
-        } catch (ProjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (AuthorizationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        }
+        return ResponseEntity.ok(projectService.updateProject(project, id));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProject(@PathVariable String id) {
-        try {
-            projectService.deleteProject(id);
-            return ResponseEntity.noContent().build();
-        } catch (ProjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (AuthorizationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        }
+        projectService.deleteProject(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}/collaborators")
     public ResponseEntity<?> getCollaborators(@PathVariable String id) {
-        try {
-            return ResponseEntity.ok(collaboratorService.getCollaborators(id));
-        } catch (AuthorizationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        }
+        return ResponseEntity.ok(collaboratorService.getCollaborators(id));
     }
 
     @PostMapping("/{id}/collaborator")
     public ResponseEntity<?> createCollaborator(@RequestBody CollaboratorRequest collaboratorRequest) {
-        try {
-            return ResponseEntity.ok(collaboratorService.createCollaborator(collaboratorRequest.getProjectId(), collaboratorRequest.getUserId()));
-        } catch (AuthorizationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        } catch (ProjectNotFoundException | UserNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        }
+        return ResponseEntity.ok(collaboratorService.createCollaborator(collaboratorRequest.getProjectId(), collaboratorRequest.getUserId()));
     }
 }
 

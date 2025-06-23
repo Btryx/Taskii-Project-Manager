@@ -38,9 +38,13 @@ public class UserService {
         try {
             validateCreateUser(user);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            return userRepository.save(user);
+            User saved = userRepository.save(user);
+
+            userRepository.flush();
+
+            return saved;
         } catch (DataIntegrityViolationException e) {
-            throw new UserCreationException("Username already exists!");
+            throw new UserCreationException("This username already exists!");
         }
     }
 

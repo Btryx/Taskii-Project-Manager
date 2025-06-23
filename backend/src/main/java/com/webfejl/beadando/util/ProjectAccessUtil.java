@@ -3,6 +3,7 @@ package com.webfejl.beadando.util;
 import com.webfejl.beadando.dto.ProjectDTO;
 import com.webfejl.beadando.entity.User;
 import com.webfejl.beadando.exception.AuthorizationException;
+import com.webfejl.beadando.exception.ProjectAccessDenied;
 import com.webfejl.beadando.exception.UserNotFoundException;
 import com.webfejl.beadando.repository.CollaboratorRepository;
 import com.webfejl.beadando.repository.ProjectRepository;
@@ -12,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,9 +35,9 @@ public class ProjectAccessUtil {
         return isOwner || isCollaborator;
     }
 
-    public void checkAccess(String projectId, User user) {
+    public void checkAccess(String projectId, User user) throws ProjectAccessDenied {
         if (!isProjectAccessGranted(projectId, user)) {
-            throw new AuthorizationException("You don't have access to this project!");
+            throw new ProjectAccessDenied("You don't have access to this project!");
         }
     }
 

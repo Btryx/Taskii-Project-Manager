@@ -1,6 +1,7 @@
 package com.webfejl.beadando.controller;
 
 import com.webfejl.beadando.auth.response.AuthenticationResponse;
+import com.webfejl.beadando.exception.UserCreationException;
 import com.webfejl.beadando.request.LoginRequest;
 import com.webfejl.beadando.auth.response.RegisterResponse;
 import com.webfejl.beadando.entity.User;

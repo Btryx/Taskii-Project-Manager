@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @RestController
@@ -30,55 +31,29 @@ public class TaskController {
             @RequestParam(required = false) String status,
             @RequestParam(required = false) Integer priority
     ) {
-        try {
-            return ResponseEntity.ok(taskService.findAll(projectId, status, priority));
-        } catch (AuthorizationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        }
+        return ResponseEntity.ok(taskService.findAll(projectId, status, priority));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getTaskById(@PathVariable String id) {
-        try {
-            return ResponseEntity.ok(taskService.findTask(id));
-        } catch (AuthorizationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        }  catch (TaskNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        return ResponseEntity.ok(taskService.findTask(id));
     }
 
     @PostMapping("/all")
     public ResponseEntity<?> createTask(@RequestBody TaskDTO task) {
-        try {
-            return ResponseEntity.ok(taskService.createTask(task));
-        } catch (AuthorizationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        }
+        return ResponseEntity.ok(taskService.createTask(task));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateTask(
             @PathVariable String id,
             @RequestBody TaskDTO task) {
-        try {
-            return ResponseEntity.ok(taskService.updateTask(task, id));
-        } catch (AuthorizationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        } catch (TaskNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        return ResponseEntity.ok(taskService.updateTask(task, id));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteTask(@PathVariable String id) {
-        try {
-            taskService.deleteTask(id);
-            return ResponseEntity.noContent().build();
-        } catch (AuthorizationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        } catch (TaskNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        taskService.deleteTask(id);
+        return ResponseEntity.noContent().build();
     }
 }
