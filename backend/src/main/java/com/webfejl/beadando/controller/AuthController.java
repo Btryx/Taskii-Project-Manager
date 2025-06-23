@@ -1,6 +1,5 @@
 package com.webfejl.beadando.controller;
 
-
 import com.webfejl.beadando.auth.response.AuthenticationResponse;
 import com.webfejl.beadando.request.LoginRequest;
 import com.webfejl.beadando.auth.response.RegisterResponse;
@@ -9,7 +8,7 @@ import com.webfejl.beadando.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -36,14 +35,11 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
             String token = userService.login(loginRequest);
-
-            if (token == null) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            }
             return ResponseEntity.ok(new AuthenticationResponse(token));
-
-        } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Username or password is incorrect!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Login failed. Please try again later.");
         }
     }
 

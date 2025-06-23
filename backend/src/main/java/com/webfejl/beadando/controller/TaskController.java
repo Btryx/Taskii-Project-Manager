@@ -3,6 +3,7 @@ package com.webfejl.beadando.controller;
 
 import com.webfejl.beadando.dto.TaskDTO;
 import com.webfejl.beadando.exception.AuthorizationException;
+import com.webfejl.beadando.exception.TaskNotFoundException;
 import com.webfejl.beadando.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ public class TaskController {
     }
 
     @GetMapping("/filter")
-    public ResponseEntity<List<TaskDTO>> filterTasks(
+    public ResponseEntity<?> filterTasks(
             @RequestParam String projectId,
             @RequestParam(required = false) String status,
             @RequestParam(required = false) Integer priority
@@ -32,64 +33,52 @@ public class TaskController {
         try {
             return ResponseEntity.ok(taskService.findAll(projectId, status, priority));
         } catch (AuthorizationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TaskDTO> getTaskById(@PathVariable String id) {
+    public ResponseEntity<?> getTaskById(@PathVariable String id) {
         try {
             return ResponseEntity.ok(taskService.findTask(id));
         } catch (AuthorizationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-    }
-
-    @GetMapping("/sort/title")
-    public ResponseEntity<List<TaskDTO>> getTasksSortedByTitle() {
-        try {
-            return ResponseEntity.ok(taskService.sortTasksByTitle());
-        } catch (AuthorizationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-    }
-
-    @GetMapping("/sort/date")
-    public ResponseEntity<List<TaskDTO>> getTasksSortedByDate() {
-        try {
-            return ResponseEntity.ok(taskService.sortTasksByDate());
-        } catch (AuthorizationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }  catch (TaskNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @PostMapping("/all")
-    public ResponseEntity<TaskDTO> createTask(@RequestBody TaskDTO task) {
+    public ResponseEntity<?> createTask(@RequestBody TaskDTO task) {
         try {
             return ResponseEntity.ok(taskService.createTask(task));
         } catch (AuthorizationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TaskDTO> updateTask(
+    public ResponseEntity<?> updateTask(
             @PathVariable String id,
             @RequestBody TaskDTO task) {
         try {
             return ResponseEntity.ok(taskService.updateTask(task, id));
         } catch (AuthorizationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        } catch (TaskNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable String id) {
+    public ResponseEntity<?> deleteTask(@PathVariable String id) {
         try {
             taskService.deleteTask(id);
             return ResponseEntity.noContent().build();
         } catch (AuthorizationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        } catch (TaskNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 }

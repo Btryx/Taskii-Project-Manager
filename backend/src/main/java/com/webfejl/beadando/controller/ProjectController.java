@@ -1,13 +1,12 @@
 package com.webfejl.beadando.controller;
 
-import com.webfejl.beadando.entity.Project;
+import com.webfejl.beadando.exception.UserNotFoundException;
 import com.webfejl.beadando.request.CollaboratorRequest;
 import com.webfejl.beadando.dto.ProjectDTO;
 import com.webfejl.beadando.exception.AuthorizationException;
 import com.webfejl.beadando.exception.ProjectNotFoundException;
 import com.webfejl.beadando.service.CollaboratorService;
 import com.webfejl.beadando.service.ProjectService;
-import com.webfejl.beadando.util.ProjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,11 +29,11 @@ public class ProjectController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<ProjectDTO>> getAllProjects() {
+    public ResponseEntity<?> getAllProjects() {
         try {
             return ResponseEntity.ok(projectService.getAllAccessedProjects());
         } catch (AuthorizationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
 
@@ -43,54 +42,66 @@ public class ProjectController {
         try {
             return ResponseEntity.ok(projectService.findProject(id));
         } catch (ProjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (AuthorizationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
 
     @PostMapping("/all")
-    public ResponseEntity<ProjectDTO> createProject(@RequestBody ProjectDTO project){
+    public ResponseEntity<?> createProject(@RequestBody ProjectDTO project){
         try {
             return ResponseEntity.ok(projectService.createProject(project));
         } catch (AuthorizationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProjectDTO> updateProject(
+    public ResponseEntity<?> updateProject(
             @PathVariable String id,
             @RequestBody ProjectDTO project) {
         try {
             return ResponseEntity.ok(projectService.updateProject(project, id));
         } catch (ProjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (AuthorizationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProject(@PathVariable String id) {
+    public ResponseEntity<?> deleteProject(@PathVariable String id) {
         try {
             projectService.deleteProject(id);
             return ResponseEntity.noContent().build();
         } catch (ProjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (AuthorizationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
 
     @GetMapping("/{id}/collaborators")
     public ResponseEntity<?> getCollaborators(@PathVariable String id) {
-        return ResponseEntity.ok(collaboratorService.getCollaborators(id));
+        try {
+            return ResponseEntity.ok(collaboratorService.getCollaborators(id));
+        } catch (AuthorizationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
     }
 
     @PostMapping("/{id}/collaborator")
     public ResponseEntity<?> createCollaborator(@RequestBody CollaboratorRequest collaboratorRequest) {
-        return ResponseEntity.ok(collaboratorService.createCollaborator(collaboratorRequest.getProjectId(), collaboratorRequest.getUserId()));
+        try {
+            return ResponseEntity.ok(collaboratorService.createCollaborator(collaboratorRequest.getProjectId(), collaboratorRequest.getUserId()));
+        } catch (AuthorizationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        } catch (ProjectNotFoundException | UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
     }
 }
 

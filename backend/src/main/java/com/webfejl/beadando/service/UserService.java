@@ -7,6 +7,7 @@ import com.webfejl.beadando.exception.UserCreationException;
 import com.webfejl.beadando.repository.UserRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -53,14 +54,17 @@ public class UserService {
         }
     }
 
-    public String login(LoginRequest loginRequest) throws AuthenticationException {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
-        );
-
-        if(authentication.isAuthenticated()) {
+    public String login(LoginRequest loginRequest) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getUsername(), loginRequest.getPassword()
+                    )
+            );
             return jwtManager.generateToken(loginRequest.getUsername());
+
+        } catch (AuthenticationException ex) {
+            throw new BadCredentialsException("Invalid username or password", ex);
         }
-        return null;
     }
 }

@@ -66,26 +66,6 @@ public class TaskControllerTest {
 
     @WithMockUser
     @Test
-    void getTasksSortedByTitleShouldReturnTasks() throws Exception {
-        when(taskService.sortTasksByTitle()).thenReturn(List.of(sampleTask));
-
-        mockMvc.perform(get("/api/tasks/sort/title"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].taskTitle").value("Sample Task"));
-    }
-
-    @WithMockUser
-    @Test
-    void getTasksSortedByDateShouldReturnTasks() throws Exception {
-        when(taskService.sortTasksByDate()).thenReturn(List.of(sampleTask));
-
-        mockMvc.perform(get("/api/tasks/sort/date"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].taskId").value("task123"));
-    }
-
-    @WithMockUser
-    @Test
     void createTaskShouldReturnCreatedTask() throws Exception {
         when(taskService.createTask(any(TaskDTO.class))).thenReturn(sampleTask);
 

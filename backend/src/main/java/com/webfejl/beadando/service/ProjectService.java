@@ -33,8 +33,6 @@ public class ProjectService {
     private final ProjectAccessUtil projectAccessUtil;
     private final StatusRepository statusRepository;
 
-    private final Optional<User> user;
-
     public static final String TO_DO = "To do";
     public static final String IN_PROGRESS = "In progress";
     public static final String DONE = "Done";
@@ -44,32 +42,29 @@ public class ProjectService {
         this.userRepository = userRepository;
         this.projectAccessUtil = projectAccessUtil;
         this.statusRepository = statusRepository;
-        user = this.userRepository.findByUsername(getUsername());
     }
 
     public List<ProjectDTO> getAllAccessedProjects() throws AuthorizationException {
-        checkIfUserIsLoggedIn(user);
+        User user = projectAccessUtil.getAuthenticatedUser();
 
-        List<ProjectDTO> ownProjects = projectAccessUtil.getOwnProjects(user.get());
-        List<ProjectDTO> collabProjects = projectAccessUtil.getCollabProjects(user.get());
+        List<ProjectDTO> ownProjects = projectAccessUtil.getOwnProjects(user);
+        List<ProjectDTO> collabProjects = projectAccessUtil.getCollabProjects(user);
 
         return Stream.concat(ownProjects.stream(), collabProjects.stream()).toList();
     }
 
     public ProjectDTO findProject(String id) throws ProjectNotFoundException, AuthorizationException {
-        checkIfUserIsLoggedIn(user);
+        User user = projectAccessUtil.getAuthenticatedUser();
         ProjectDTO project = projectRepository.findById(id)
                 .map(ProjectMapper::toDTO)
                 .orElseThrow(() -> new ProjectNotFoundException("Project not found with ID: " + id));
 
-        if (!projectAccessUtil.isProjectAccessGranted(project, user.get())) {
-            throw new AuthorizationException("You don't have access to this project!");
-        }
+        projectAccessUtil.checkAccess(id, user);
         return project;
     }
 
     public ProjectDTO createProject(ProjectDTO projectDTO) throws AuthorizationException {
-        checkIfUserIsLoggedIn(user);
+        projectAccessUtil.getAuthenticatedUser();
         Project project = ProjectMapper.toEntity(projectDTO, new Project(), userRepository);
         project.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         Project savedProject = projectRepository.save(project);
@@ -100,21 +95,24 @@ public class ProjectService {
     }
 
     public ProjectDTO updateProject(ProjectDTO projectDTO, String id) throws AuthorizationException, ProjectNotFoundException {
-        checkIfUserIsLoggedIn(user);
+        User user = projectAccessUtil.getAuthenticatedUser();
+
         Project project = projectRepository.findById(id)
                 .orElseThrow(() -> new ProjectNotFoundException("Project not found with ID: " + id));
 
-        Project newProject = ProjectMapper.toEntity(projectDTO, project, userRepository);
+        projectAccessUtil.checkAccess(id, user);
 
+        Project newProject = ProjectMapper.toEntity(projectDTO, project, userRepository);
         return ProjectMapper.toDTO(projectRepository.save(newProject));
     }
 
     public void deleteProject(String id) throws AuthorizationException, ProjectNotFoundException {
-        checkIfUserIsLoggedIn(user);
-
+        User user = projectAccessUtil.getAuthenticatedUser();
         if (!projectRepository.existsById(id)) {
             throw new ProjectNotFoundException("Project not found with ID: " + id);
         }
+        projectAccessUtil.checkAccess(id, user);
+
         projectRepository.deleteById(id);
     }
 }

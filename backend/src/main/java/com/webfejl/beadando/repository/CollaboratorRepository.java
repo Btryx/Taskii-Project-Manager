@@ -18,4 +18,6 @@ public interface CollaboratorRepository extends JpaRepository<Collaborator, Stri
 
     @Query("SELECT c.project FROM Collaborator c WHERE c.user.userId = :userId")
     List<Project> findProjectsByUserId(@Param("userId") String userId);
+
+    boolean existsByProject_ProjectIdAndUser_UserId(String projectId, String userId);
 }

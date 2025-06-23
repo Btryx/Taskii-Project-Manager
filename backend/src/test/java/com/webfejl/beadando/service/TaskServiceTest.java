@@ -101,33 +101,6 @@ class TaskServiceTest {
         }
     }
 
-
-    @Test
-    void sortTasksByTitle_shouldReturnSortedTasks() {
-        when(taskRepository.sortByTitle()).thenReturn(List.of(task));
-
-        try (MockedStatic<TaskMapper> mocked = mockStatic(TaskMapper.class)) {
-            mocked.when(() -> TaskMapper.toDTO(task)).thenReturn(taskDTO);
-
-            List<TaskDTO> result = taskService.sortTasksByTitle();
-
-            assertEquals("task1", result.get(0).taskId());
-        }
-    }
-
-    @Test
-    void sortTasksByDate_shouldReturnSortedTasks() {
-        when(taskRepository.sortByDate()).thenReturn(List.of(task));
-
-        try (MockedStatic<TaskMapper> mocked = mockStatic(TaskMapper.class)) {
-            mocked.when(() -> TaskMapper.toDTO(task)).thenReturn(taskDTO);
-
-            List<TaskDTO> result = taskService.sortTasksByDate();
-
-            assertEquals("task1", result.get(0).taskId());
-        }
-    }
-
     @Test
     void updateTask_shouldUpdateAndReturnDTO() {
         when(taskRepository.findById("task1")).thenReturn(Optional.of(task));

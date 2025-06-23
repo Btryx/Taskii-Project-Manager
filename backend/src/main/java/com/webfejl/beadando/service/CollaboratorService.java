@@ -5,9 +5,11 @@ import com.webfejl.beadando.entity.Project;
 import com.webfejl.beadando.entity.User;
 import com.webfejl.beadando.exception.AuthorizationException;
 import com.webfejl.beadando.exception.ProjectNotFoundException;
+import com.webfejl.beadando.exception.UserNotFoundException;
 import com.webfejl.beadando.repository.CollaboratorRepository;
 import com.webfejl.beadando.repository.ProjectRepository;
 import com.webfejl.beadando.repository.UserRepository;
+import com.webfejl.beadando.util.ProjectAccessUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,22 +20,36 @@ public class CollaboratorService {
     private final CollaboratorRepository collaboratorRepository;
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
+    private final ProjectAccessUtil projectAccessUtil;
 
-    public CollaboratorService(CollaboratorRepository collaboratorRepository, UserRepository userRepository, ProjectRepository projectRepository) {
+    public CollaboratorService(CollaboratorRepository collaboratorRepository, UserRepository userRepository, ProjectRepository projectRepository, ProjectAccessUtil projectAccessUtil) {
         this.collaboratorRepository = collaboratorRepository;
         this.userRepository = userRepository;
         this.projectRepository = projectRepository;
+        this.projectAccessUtil = projectAccessUtil;
     }
 
-    public Collaborator createCollaborator(String projectId, String userId) {
+    public Collaborator createCollaborator(String projectId, String userId) throws AuthorizationException, UserNotFoundException, ProjectNotFoundException, IllegalArgumentException {
+        User user = projectAccessUtil.getAuthenticatedUser();
+
         Collaborator collaborator = new Collaborator();
-        collaborator.setUser(userRepository.findById(userId).orElseThrow(() -> new AuthorizationException("User not found!")));
         collaborator.setProject(projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("Project not found!")));
-        //TODO: only create if collaborator isn't already added!
+        projectAccessUtil.checkAccess(projectId, user);
+
+        collaborator.setUser(userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found!")));
+
+        boolean alreadyCollaborator = collaboratorRepository
+                .existsByProject_ProjectIdAndUser_UserId(projectId, userId);
+        if (alreadyCollaborator) {
+            throw new IllegalArgumentException("This user is already a collaborator on the project.");
+        }
+
         return collaboratorRepository.save(collaborator);
     }
 
-    public List<User> getCollaborators(String projectId) {
+    public List<User> getCollaborators(String projectId) throws AuthorizationException {
+        User user = projectAccessUtil.getAuthenticatedUser();
+        projectAccessUtil.checkAccess(projectId, user);
         return collaboratorRepository.findUsersByProjectId(projectId);
     }
 }

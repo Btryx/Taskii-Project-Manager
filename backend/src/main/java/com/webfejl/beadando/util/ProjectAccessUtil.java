@@ -3,8 +3,10 @@ package com.webfejl.beadando.util;
 import com.webfejl.beadando.dto.ProjectDTO;
 import com.webfejl.beadando.entity.User;
 import com.webfejl.beadando.exception.AuthorizationException;
+import com.webfejl.beadando.exception.UserNotFoundException;
 import com.webfejl.beadando.repository.CollaboratorRepository;
 import com.webfejl.beadando.repository.ProjectRepository;
+import com.webfejl.beadando.repository.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,17 +19,24 @@ import java.util.Optional;
 public class ProjectAccessUtil {
     private final ProjectRepository projectRepository;
     private final CollaboratorRepository collaboratorRepository;
+    private final UserRepository userRepository;
 
-    public ProjectAccessUtil(ProjectRepository projectRepository, CollaboratorRepository collaboratorRepository) {
+    public ProjectAccessUtil(ProjectRepository projectRepository, CollaboratorRepository collaboratorRepository, UserRepository userRepository) {
         this.projectRepository = projectRepository;
         this.collaboratorRepository = collaboratorRepository;
+        this.userRepository = userRepository;
     }
 
-    public boolean isProjectAccessGranted(ProjectDTO projectDTO, User user) {
-        if (getOwnProjects(user).contains(projectDTO)) {
-            return true;
+    private boolean isProjectAccessGranted(String projectId, User user) {
+        boolean isOwner = projectRepository.existsByProjectIdAndUser_UserId(projectId, user.getUserId());
+        boolean isCollaborator = collaboratorRepository.existsByProject_ProjectIdAndUser_UserId(projectId, user.getUserId());
+        return isOwner || isCollaborator;
+    }
+
+    public void checkAccess(String projectId, User user) {
+        if (!isProjectAccessGranted(projectId, user)) {
+            throw new AuthorizationException("You don't have access to this project!");
         }
-        return getCollabProjects(user).contains(projectDTO);
     }
 
     public List<ProjectDTO> getOwnProjects(User user) {
@@ -50,6 +59,15 @@ public class ProjectAccessUtil {
         }
     }
 
+    public User getAuthenticatedUser() {
+        String username = getUsername();
+        if (username == null) {
+            throw new AuthorizationException("Please log in to access this content!");
+        }
+
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found for username: " + username));
+    }
 
     public static String getUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

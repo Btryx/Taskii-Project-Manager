@@ -3,9 +3,12 @@ package com.webfejl.beadando.service;
 import com.webfejl.beadando.dto.TaskDTO;
 import com.webfejl.beadando.entity.Task;
 import com.webfejl.beadando.entity.User;
+import com.webfejl.beadando.exception.AuthorizationException;
+import com.webfejl.beadando.exception.TaskNotFoundException;
 import com.webfejl.beadando.repository.ProjectRepository;
 import com.webfejl.beadando.repository.TaskRepository;
 import com.webfejl.beadando.repository.UserRepository;
+import com.webfejl.beadando.util.ProjectAccessUtil;
 import com.webfejl.beadando.util.TaskMapper;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
@@ -22,67 +25,65 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
-    private final Optional<User> user;
+    private final ProjectAccessUtil projectAccessUtil;
 
-    public TaskService(TaskRepository taskRepository, ProjectRepository projectRepository, UserRepository userRepository) {
+    public TaskService(TaskRepository taskRepository, ProjectRepository projectRepository, ProjectAccessUtil projectAccessUtil) {
         this.taskRepository = taskRepository;
         this.projectRepository = projectRepository;
-        user = userRepository.findByUsername(getUsername());
+        this.projectAccessUtil = projectAccessUtil;
     }
 
     public List<TaskDTO> findAll(String projectId, String status, Integer priority) throws AuthenticationException {
-        checkIfUserIsLoggedIn(user);
+        User user = projectAccessUtil.getAuthenticatedUser();
+        projectAccessUtil.checkAccess(projectId, user);
+
         return taskRepository.filterTasks(projectId, status, priority)
                 .stream()
                 .map(TaskMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
-    public TaskDTO findTask(String id) throws AuthenticationException {
-        checkIfUserIsLoggedIn(user);
-        return taskRepository.findById(id)
+    public TaskDTO findTask(String id) throws AuthenticationException, TaskNotFoundException {
+        User user = projectAccessUtil.getAuthenticatedUser();
+        TaskDTO task =  taskRepository.findById(id)
                 .map(TaskMapper::toDTO)
-                .orElseThrow(() -> new RuntimeException("Task not found with ID: " + id));
+                .orElseThrow(() -> new TaskNotFoundException("Task not found with ID: " + id));
+
+        projectAccessUtil.checkAccess(task.projectId(), user);
+
+        return task;
     }
 
     public TaskDTO createTask(TaskDTO taskDTO) throws AuthenticationException {
-        checkIfUserIsLoggedIn(user);
+        User user = projectAccessUtil.getAuthenticatedUser();
         Task task = TaskMapper.toEntity(taskDTO, new Task(), projectRepository);
+
+        projectAccessUtil.checkAccess(task.getProject().getProjectId(), user);
+
         Task savedTask = taskRepository.save(task);
         return TaskMapper.toDTO(savedTask);
     }
 
-    public List<TaskDTO> sortTasksByTitle() throws AuthenticationException {
-        checkIfUserIsLoggedIn(user);
-        return taskRepository.sortByTitle()
-                .stream()
-                .map(TaskMapper::toDTO)
-                .collect(Collectors.toList());
-    }
 
-    public List<TaskDTO> sortTasksByDate() throws AuthenticationException {
-        checkIfUserIsLoggedIn(user);
-        return taskRepository.sortByDate()
-                .stream()
-                .map(TaskMapper::toDTO)
-                .collect(Collectors.toList());
-    }
-
-    public TaskDTO updateTask(TaskDTO taskDTO, String id) throws AuthenticationException {
-        checkIfUserIsLoggedIn(user);
+    public TaskDTO updateTask(TaskDTO taskDTO, String id) throws AuthenticationException, TaskNotFoundException {
+        User user = projectAccessUtil.getAuthenticatedUser();
         Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found with ID: " + id));
+                .orElseThrow(() -> new TaskNotFoundException("Task not found with ID: " + id));
+
+        projectAccessUtil.checkAccess(task.getProject().getProjectId(), user);
 
         Task newTask = TaskMapper.toEntity(taskDTO, task, projectRepository);
 
         return TaskMapper.toDTO(taskRepository.save(newTask));
     }
 
-    public void deleteTask(String id) throws AuthenticationException {
-        checkIfUserIsLoggedIn(user);
-        if (!taskRepository.existsById(id)) {
-            throw new RuntimeException("Task not found with ID: " + id);
-        }
+    public void deleteTask(String id) throws AuthenticationException, TaskNotFoundException {
+        User user = projectAccessUtil.getAuthenticatedUser();
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new TaskNotFoundException("Task not found with ID: " + id));
+
+        projectAccessUtil.checkAccess(task.getProject().getProjectId(), user);
+
         taskRepository.deleteById(id);
     }
 }
