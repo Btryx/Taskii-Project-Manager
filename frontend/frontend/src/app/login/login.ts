@@ -32,7 +32,9 @@ export class Login {
         next: data => {
           let token = data.message;
           this.authService.setToken(token);
-          //this.router.navigate("projects");
+          console.log("Login successfull!!");
+          console.log(this.authService.getToken());
+          //this.router.navigate(["/projects"]);
         },
         error: (error: HttpErrorResponse) => {
           console.error(error);
@@ -45,5 +47,9 @@ export class Login {
   togglePasswordVisibility(event: MouseEvent) {
     this.hidePassword.set(!this.hidePassword());
     event.stopPropagation;
+  }
+
+  navigateToRegister() {
+    this.router.navigate(["/register"]);
   }
 }

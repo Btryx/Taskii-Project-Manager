@@ -8,10 +8,15 @@ import { Observable } from 'rxjs';
 export class Auth {
 
   private http = inject(HttpClient);
-  url = 'http://localhost:8082/api/login';
+  loginUrl = 'http://localhost:8082/api/login';
+  registerUrl = "http://localhost:8082/api/register"
 
   login(username: string, password: string): Observable<any> {
-    return this.http.post<any>(this.url, {username, password});
+    return this.http.post<any>(this.loginUrl, {username, password});
+  }
+
+  register(username: string, password: string): Observable<any> {
+    return this.http.post<any>(this.registerUrl, {username, password, enabled: true});
   }
 
   setToken(token: string) {
