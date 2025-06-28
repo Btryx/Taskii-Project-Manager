@@ -1,2 +1,8 @@
-
+<mat-toolbar>
+    <span>{{title}}</span>
+    <span class="toolbar-spacer"></span>
+    @if(isLoggedIn()){
+      <button mat-button class="nav-button" style="background: #656964" (click)="logOut()">Logout</button>
+    }
+</mat-toolbar>
 <router-outlet />

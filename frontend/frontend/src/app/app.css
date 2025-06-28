@@ -1,0 +1,10 @@
+
+.nav-button{
+  margin-right: 2em;
+  min-width: 80px;
+  float: right;
+}
+
+.toolbar-spacer {
+  flex: 1 1 auto;
+}
