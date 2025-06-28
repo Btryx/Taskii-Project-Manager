@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-import { Auth } from '../auth';
+import { Auth } from '../auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -32,9 +32,9 @@ export class Login {
         next: data => {
           let token = data.message;
           this.authService.setToken(token);
-          console.log("Login successfull!!");
+          console.log("Login successful!!");
           console.log(this.authService.getToken());
-          //this.router.navigate(["/projects"]);
+          this.router.navigate(["/projects"]);
         },
         error: (error: HttpErrorResponse) => {
           console.error(error);

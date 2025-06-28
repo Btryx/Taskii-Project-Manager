@@ -6,12 +6,14 @@ import com.webfejl.beadando.entity.Status;
 import com.webfejl.beadando.entity.User;
 import com.webfejl.beadando.exception.AuthorizationException;
 import com.webfejl.beadando.exception.ProjectNotFoundException;
+import com.webfejl.beadando.exception.UserCreationException;
 import com.webfejl.beadando.repository.ProjectRepository;
 import com.webfejl.beadando.repository.StatusRepository;
 import com.webfejl.beadando.repository.UserRepository;
 import com.webfejl.beadando.util.ProjectAccessUtil;
 import com.webfejl.beadando.util.ProjectMapper;
 import jakarta.transaction.Transactional;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -106,8 +108,17 @@ public class ProjectService {
 
         projectAccessUtil.checkAccess(id, user);
 
-        Project newProject = ProjectMapper.toEntity(projectDTO, project, userRepository);
-        return ProjectMapper.toDTO(projectRepository.save(newProject));
+        try{
+            Project newProject = ProjectMapper.toEntity(projectDTO, project, userRepository);
+            Project saved = projectRepository.save(newProject);
+            projectRepository.flush();
+
+            return ProjectMapper.toDTO(saved);
+        } catch (DataIntegrityViolationException e) {
+            throw new UserCreationException("You already have a project named: " + projectDTO.projectName());
+        }
+
+
     }
 
     @Transactional

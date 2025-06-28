@@ -1,7 +1,7 @@
 import { HttpHandlerFn, HttpInterceptorFn, HttpRequest } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { catchError, Observable } from "rxjs";
-import { Auth } from "./auth";
+import { Auth } from "./auth.service";
 import { Router } from "@angular/router";
 
 

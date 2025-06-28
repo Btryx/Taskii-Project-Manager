@@ -42,7 +42,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
             username = jwtManager.extractUsername(token);
-
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -59,7 +58,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
-
         filterChain.doFilter(request, response);
     }
 }
