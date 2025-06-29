@@ -5,7 +5,7 @@ import { ChangeDetectionStrategy, Component, inject, OnInit, signal, WritableSig
 import { MatIconModule } from '@angular/material/icon';
 import { ProjectDialog } from '../project-dialog/project-dialog';
 import { MatDialog } from '@angular/material/dialog';
-import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
+import { MatMenu, MatMenuTrigger, MatMenuItem } from '@angular/material/menu';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {MatButtonModule} from '@angular/material/button';
@@ -15,7 +15,7 @@ import {MatTableModule} from '@angular/material/table';
   selector: 'app-project-list',
   templateUrl: './project-list.component.html',
   styleUrls: ['./project-list.component.css'],
-  imports: [MatIconModule, MatMenu, MatMenuTrigger, CommonModule, MatProgressSpinnerModule, MatButtonModule, MatTableModule ],
+  imports: [MatIconModule, MatMenu, MatMenuTrigger, CommonModule, MatProgressSpinnerModule, MatButtonModule, MatTableModule, MatMenuItem ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectListComponent implements OnInit {
@@ -28,7 +28,7 @@ throw new Error('Method not implemented.');
   projects: WritableSignal<Project[]> = signal([]);
   errorMessage = signal('');
   isLoading = signal(true);
-  displayedColumns: string[] = ['name', 'active'];
+  displayedColumns: string[] = ['name', 'owner', 'created', 'active', 'menu'];
 
   ngOnInit() {
     this.getProjects();
