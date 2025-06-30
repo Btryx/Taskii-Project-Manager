@@ -15,34 +15,37 @@ import { Auth } from '../auth.service';
 import { Observable } from 'rxjs';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { ConfirmationDialog } from '../comformation-dialog/comformation-dialog';
+import { InfoPopup } from '../info-popup/info-popup';
+import { Router } from '@angular/router';
+import {MatSort, MatSortModule} from '@angular/material/sort';
 
 @Component({
   selector: 'app-project-list',
   templateUrl: './project-list.component.html',
   styleUrls: ['./project-list.component.css'],
   imports: [MatIconModule, MatMenu, MatMenuTrigger, CommonModule, MatProgressSpinnerModule, MatButtonModule,
-     MatPaginatorModule, MatMenuItem, MatPaginator, MatTableModule, MatInputModule, MatFormFieldModule],
+     MatPaginatorModule, MatMenuItem, MatPaginator, MatTableModule, MatInputModule, MatFormFieldModule, MatSort, MatSortModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectListComponent implements OnInit {
 
-  openProjectTasks(_t7: Project) {
-    throw new Error('Method not implemented.');
-  }
-
   private projectService : ProjectService = inject(ProjectService);
   private authService = inject(Auth);
   private dialog: MatDialog = inject(MatDialog);
+  private router : Router = inject(Router);
 
   projects: WritableSignal<Project[]> = signal([]);
   usernames = signal(new Map<string, string>);
 
-
   errorMessage = signal('');
   isLoading = signal(true);
-  displayedColumns: string[] = ['name', 'owner', 'created', 'active', 'menu'];
+  displayedColumns: string[] = ['projectName', 'owner', 'createdAt', 'active', 'menu'];
 
   dataSource = new MatTableDataSource<Project>([]);
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor() {
     effect(() => {
@@ -50,19 +53,22 @@ export class ProjectListComponent implements OnInit {
     });
   }
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-
   ngOnInit() {
     this.getProjects();
   }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   getProjects() {
@@ -147,21 +153,42 @@ export class ProjectListComponent implements OnInit {
   }
 
   deleteProject(project: Project) {
-    this.projectService.deleteProject(project.projectId).subscribe(
-      {
-        next: () => {
-          this.projects.update(value => {
-            let indexOfUpdatedProject = value.findIndex(item => item.projectId === project.projectId);
-            value.splice(indexOfUpdatedProject, 1);
-            return [...value];
-          });
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error(error);
-          this.errorMessage.set(error.error.message);
-        },
+
+    if(project.active) {
+      const dialogRef = this.dialog.open(InfoPopup, {
+        disableClose: false
+      });
+          dialogRef.componentInstance.title = "Error"
+      dialogRef.componentInstance.infoMessage = `Cannot delete active projects! Disable project before deleting.`
+      return;
+    }
+
+
+    const dialogRef = this.dialog.open(ConfirmationDialog, {
+      disableClose: false
+    });
+    dialogRef.componentInstance.title = "Delete project?"
+    dialogRef.componentInstance.confirmMessage = `Are you sure you want to delete project: "${project.projectName}"?
+                                                  This process cannot be undone!`
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        this.projectService.deleteProject(project.projectId).subscribe(
+          {
+            next: () => {
+              this.projects.update(value => {
+                let indexOfUpdatedProject = value.findIndex(item => item.projectId === project.projectId);
+                value.splice(indexOfUpdatedProject, 1);
+                return [...value];
+              });
+            },
+            error: (error: HttpErrorResponse) => {
+              console.error(error);
+              this.errorMessage.set(error.error.message);
+            },
+          }
+        )
       }
-    )
+    });
   }
 
   toggleProjectStatus(project: Project) {
@@ -179,6 +206,17 @@ export class ProjectListComponent implements OnInit {
         this.errorMessage.set(error.error.message);
       },
     })
+  }
+
+  openProjectTasks(project: Project) {
+    this.router.navigate(['tasks'], {
+      queryParams: {
+        projectId: project.projectId,
+        status: null,
+        priority: null,
+      },
+      queryParamsHandling: 'merge',
+    });
   }
 
   getUserName(id: string): Observable<any> {

@@ -144,3 +144,13 @@ span {
   align-items: center;
   justify-content: center;
 }
+
+.task-link {
+  cursor: pointer;
+  color: #669DF1;
+  text-decoration: none;
+}
+
+.task-link:hover {
+  text-decoration: underline;
+}
