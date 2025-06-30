@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import {MatIconModule} from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { Auth } from '../auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -32,6 +32,7 @@ export class Login {
         next: data => {
           let token = data.message;
           this.authService.setToken(token);
+          this.authService.setUsername(this.loginForm.value.username!);
           console.log("Login successful!!");
           console.log(this.authService.getToken());
           this.router.navigate(["/projects"]);

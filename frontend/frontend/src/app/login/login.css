@@ -11,17 +11,16 @@ input:-webkit-autofill:active {
 h1 {
   color: #dd326b;
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-  padding-bottom: 1rem;
+  padding: 1rem;
   font-size: 5rem;
 }
 
 .login-container {
+  width: 100%;
   display: flex;
-  justify-content: center;
   align-items: center;
   flex-direction: column;
-  min-height: 100vh;
-  width: 100%;
+  margin-top: 5rem;
 }
 
 .login-card {
