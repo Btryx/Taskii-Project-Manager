@@ -46,5 +46,11 @@ public class AuthController {
         }
     }
 
+    @GetMapping("/user/{id}")
+    public ResponseEntity<?> getUserNameById(@PathVariable String id) {
+        User user = userService.getUserById(id);
+        return ResponseEntity.ok(new AuthenticationResponse(user.getUsername()));
+    }
+
 }
 

@@ -10,6 +10,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {MatButtonModule} from '@angular/material/button';
 import {MatTableModule} from '@angular/material/table';
+import { Auth } from '../auth.service';
+import { User } from '../user';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-project-list',
@@ -24,8 +27,13 @@ throw new Error('Method not implemented.');
 }
 
   private projectService : ProjectService = inject(ProjectService);
+  private authService = inject(Auth);
   private dialog: MatDialog = inject(MatDialog);
+
   projects: WritableSignal<Project[]> = signal([]);
+  usernames = signal(new Map<string, string>);
+
+
   errorMessage = signal('');
   isLoading = signal(true);
   displayedColumns: string[] = ['name', 'owner', 'created', 'active', 'menu'];
@@ -34,11 +42,32 @@ throw new Error('Method not implemented.');
     this.getProjects();
   }
 
+
   getProjects() {
     this.projectService.getAllProjects().subscribe(
       {
         next: data => {
           this.projects.set(data)
+          const userIds = this.projects().map(p => p.userId);
+
+          userIds.forEach(id => {
+            this.getUserName(id).subscribe({
+              next: data => {
+                let username = data.message;
+
+                this.usernames.update(map => {
+                  let newMap = new Map(map);
+                  newMap.set(id, username);
+                  return newMap;
+                });
+              },
+              error: error => {
+                //do nothing, table column will remain empty
+                console.error(error.error.message);
+              }
+            })
+          });
+
         },
         error: (error: HttpErrorResponse) => {
           console.error(error);
@@ -129,5 +158,14 @@ throw new Error('Method not implemented.');
       },
     })
   }
+
+  getUserName(id: string): Observable<any> {
+    return this.authService.getUser(id);
+  }
+
+  getColorForUser(id: string): string {
+    return this.authService.getColorForUser(id);
+  }
+
 
 }

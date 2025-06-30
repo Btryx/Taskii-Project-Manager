@@ -1,5 +1,6 @@
 package com.webfejl.beadando.service;
 
+import com.webfejl.beadando.exception.UserNotFoundException;
 import com.webfejl.beadando.request.LoginRequest;
 import com.webfejl.beadando.auth.jwt.JwtManager;
 import com.webfejl.beadando.entity.User;
@@ -13,6 +14,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -71,5 +74,12 @@ public class UserService {
         } catch (AuthenticationException ex) {
             throw new BadCredentialsException("Invalid username or password", ex);
         }
+    }
+
+    public User getUserById(String userId) throws UserNotFoundException {
+        Optional<User> user = userRepository.findById(userId);
+        if(user.isEmpty()) throw new UserNotFoundException("This user does not exist!");
+
+        return user.get();
     }
 }

@@ -102,4 +102,21 @@ tr {
   background: #272727;
 }
 
+.ownerIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  font-size: 11px;
+  color: black;
+  margin-right: 10px;
+}
 
+.ownerDiv {
+  display: flex;
+  align-items: center;
+}
+span {
+  text-transform: capitalize;
+}
