@@ -3,6 +3,6 @@ export class Project {
   projectName!: string;
   createdAt!: Date;
   active!: boolean;
-  parentId!: string;
+  parentId: string | undefined;
   userId!: string;
 }

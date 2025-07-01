@@ -29,10 +29,15 @@
     </div>
   }
 
+  <!--Search bar-->
   <mat-form-field appearance="outline" [hidden]="projects().length==0"  class="project-filter">
     <mat-label>Search projects</mat-label>
     <input matInput (keyup)="applyFilter($event)" #input>
+    <button mat-icon-button matSuffix matTooltip="Type anything to filter for project name or description. Type 'Active' or 'Inactive' to filter for status. Type date in 'yyyy-mm-dd' format to filter for creation date." class="info-button">
+      <mat-icon>info</mat-icon>
+    </button>
   </mat-form-field>
+
 
   <!--Projects table-->
   <table mat-table [dataSource]="dataSource" matSort [hidden]="projects().length==0">
@@ -70,7 +75,8 @@
         <div class="project-status">
           <span class="status-indicator" [class.active]="project.active"></span>
           {{ project.active ? 'Active' : 'Inactive' }}
-      </div> </td>
+        </div>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="menu">
@@ -112,4 +118,4 @@
   showFirstLastButtons
   aria-label="Select page">
   </mat-paginator>
-
+</div>

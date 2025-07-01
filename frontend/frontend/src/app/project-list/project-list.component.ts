@@ -19,13 +19,14 @@ import { ConfirmationDialog } from '../comformation-dialog/comformation-dialog';
 import { InfoPopup } from '../info-popup/info-popup';
 import { Router } from '@angular/router';
 import {MatSort, MatSortModule} from '@angular/material/sort';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-project-list',
   templateUrl: './project-list.component.html',
   styleUrls: ['./project-list.component.css'],
   imports: [MatIconModule, MatMenu, MatMenuTrigger, CommonModule, MatProgressSpinnerModule, MatButtonModule,
-     MatPaginatorModule, MatMenuItem, MatPaginator, MatTableModule, MatInputModule, MatFormFieldModule, MatSort, MatSortModule],
+     MatPaginatorModule, MatMenuItem, MatPaginator, MatTableModule, MatInputModule, MatFormFieldModule, MatSort, MatSortModule, MatTooltipModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectListComponent implements OnInit {
@@ -65,6 +66,14 @@ export class ProjectListComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if(this.dataSource.filter == 'active') {
+      this.dataSource.filter = 'true';
+    }
+
+    if(this.dataSource.filter == 'inactive') {
+      this.dataSource.filter = 'false';
+    }
 
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
