@@ -18,7 +18,7 @@
         <mat-option [value]="true">Yes</mat-option>
         <mat-option [value]="false">No</mat-option>
       </mat-select>
-      @if(projectForm.get('projectName')?.errors?.['required']) {
+      @if(projectForm.get('status')?.errors?.['required']) {
         <mat-error>
           Status is required
         </mat-error>

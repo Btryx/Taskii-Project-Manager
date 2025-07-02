@@ -1,1 +1,54 @@
-<p>tasklist</p>
+<div class="tasks-container">
+  @if(isLoading()) {
+    <div  class="loading-state">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Loading tasks...</p>
+    </div>
+  }@else {
+    <div class="tasks-header">
+      <h1>{{project()?.projectName}}</h1>
+      <button mat-raised-button color="primary" (click)="createTasks()">
+        <mat-icon>add</mat-icon>
+        New Task
+      </button>
+    </div>
+  }
+  <div class="kanban-container">
+    <div cdkDropListGroup>
+      <div class="status-container">
+      @for (status of statuses(); let i = $index; track i) {
+          <div cdkDropList
+          [cdkDropListData]="taskMapByStatus().get(status.statusName) || []"
+          (cdkDropListDropped)="drop($event, status)" class="task-list">
+            <h2>{{status.statusName}}</h2>
+            @for (task of taskMapByStatus().get(status.statusName); track task.taskId) {
+
+              <mat-card class="task-card" cdkDrag>
+                <!--<i class="material-icons x" (click)="openDeleteTaskDialog(task)">close</i>-->
+
+                <mat-card-header>
+                  <div mat-card-avatar class="task-header-image-progress"></div>
+                  <mat-card-title>{{task.taskTitle | uppercase}}</mat-card-title>
+                  <mat-card-subtitle>PRIORITY: {{task.taskPriority}}</mat-card-subtitle>
+                </mat-card-header>
+
+                <mat-card-content>
+                  <p>{{task.taskDesc}}</p>
+                </mat-card-content>
+
+                <mat-card-actions>
+                  <div class="actions-container">
+                    <!-- <button mat-button style="background: grey" (click)="openEditTaskDialog(task)">EDIT</button>-->
+                    <button mat-button style="background: dodgerblue">{{task.taskDate | date : 'yyyy-MM-dd'}}</button>
+                  </div>
+                </mat-card-actions>
+              </mat-card>
+            }
+        </div>
+      }
+    </div>
+    </div>
+  </div>
+</div>
+
+

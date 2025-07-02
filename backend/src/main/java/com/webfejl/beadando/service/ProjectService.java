@@ -14,20 +14,12 @@ import com.webfejl.beadando.util.ProjectAccessUtil;
 import com.webfejl.beadando.util.ProjectMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.AccessDeniedException;
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
-import static com.webfejl.beadando.util.ProjectAccessUtil.checkIfUserIsLoggedIn;
-import static com.webfejl.beadando.util.ProjectAccessUtil.getUsername;
 
 @Service
 public class ProjectService {
@@ -129,6 +121,9 @@ public class ProjectService {
         }
         projectAccessUtil.checkAccess(id, user);
 
+        List<Status> statuses = statusRepository.findByProjectId(id);
+
+        statusRepository.deleteAll(statuses);
         projectRepository.deleteById(id);
     }
 }

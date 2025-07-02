@@ -162,7 +162,6 @@ export class ProjectListComponent implements OnInit {
   }
 
   deleteProject(project: Project) {
-
     if(project.active) {
       const dialogRef = this.dialog.open(InfoPopup, {
         disableClose: false

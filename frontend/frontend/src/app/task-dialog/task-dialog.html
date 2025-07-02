@@ -1,0 +1,62 @@
+<div class="container">
+  <h1 class="title">{{ data.title }}</h1>
+
+  <form (ngSubmit)="onSubmit()" [formGroup]="taskForm" >
+    <mat-form-field appearance="outline" class="input-field">
+      <mat-label>Task name</mat-label>
+      <input matInput formControlName="taskTitle" maxlength="100">
+      @if(taskForm.get('taskTitle')?.errors?.['required']) {
+          <mat-error>
+            Name is required
+          </mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="input-field">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="taskStatus">
+        @for (status of data.statuses; track status.statusId) {
+          <mat-option [value]="status.statusName">{{status.statusName}}</mat-option>
+        }
+      </mat-select>
+      @if(taskForm.get('status')?.errors?.['required']) {
+        <mat-error>
+          Status is required
+        </mat-error>
+    }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="input-field">
+      <mat-label>Priority</mat-label>
+      <mat-select formControlName="taskPriority">
+        @for(priority of priorities; track priority) {
+          <mat-option [value]="priority">
+            {{priority}}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="input-field">
+      <mat-label>Deadline</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="taskDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      @if(taskForm.get('taskDate')?.errors?.['required']) {
+        <mat-error>
+          Deadline is required
+        </mat-error>
+    }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="input-field">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="taskDesc" maxlength="500" rows="10"></textarea>
+    </mat-form-field>
+
+      <div class="actions-container">
+        <button mat-button type="button" (click)="onCancel()">Cancel</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="taskForm.invalid || taskForm.pristine">Save</button>
+      </div>
+  </form>
+</div>
