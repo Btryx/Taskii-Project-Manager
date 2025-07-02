@@ -20,28 +20,23 @@
           <div cdkDropList
           [cdkDropListData]="taskMapByStatus().get(status.statusName) || []"
           (cdkDropListDropped)="drop($event, status)" class="task-list">
-            <h2>{{status.statusName}}</h2>
+            <h2>{{status.statusName}}  {{taskMapByStatus().get(status.statusName)!.length > 0 ? taskMapByStatus().get(status.statusName)?.length : ''}}</h2>
             @for (task of taskMapByStatus().get(status.statusName); track task.taskId) {
 
               <mat-card class="task-card" cdkDrag>
                 <!--<i class="material-icons x" (click)="openDeleteTaskDialog(task)">close</i>-->
 
-                <mat-card-header>
-                  <div mat-card-avatar class="task-header-image-progress"></div>
-                  <mat-card-title>{{task.taskTitle | uppercase}}</mat-card-title>
-                  <mat-card-subtitle>PRIORITY: {{task.taskPriority}}</mat-card-subtitle>
+                <mat-card-header class="header">
+                  <mat-card-title class="mat-title">{{task.taskTitle}}</mat-card-title>
                 </mat-card-header>
 
-                <mat-card-content>
-                  <p>{{task.taskDesc}}</p>
+                <mat-card-content  class="content">
+                  <mat-card-subtitle>Priority: {{task.taskPriority}}</mat-card-subtitle>
+                  <div mat-card-avatar [ngClass]="i == statuses().length-1
+                  ? 'task-header-image'
+                  : i == 0 ? 'task-header-image-empty' : 'task-header-image-progress'"></div>
                 </mat-card-content>
 
-                <mat-card-actions>
-                  <div class="actions-container">
-                    <!-- <button mat-button style="background: grey" (click)="openEditTaskDialog(task)">EDIT</button>-->
-                    <button mat-button style="background: dodgerblue">{{task.taskDate | date : 'yyyy-MM-dd'}}</button>
-                  </div>
-                </mat-card-actions>
               </mat-card>
             }
         </div>

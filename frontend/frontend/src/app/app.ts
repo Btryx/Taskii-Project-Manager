@@ -22,6 +22,10 @@ export class App {
       return this.authService.isUserLoggedIn()
   }
 
+  navigateToProjects() {
+    this.router.navigate(["/projects"]);
+  }
+
   logOut() {
     this.authService.logOut()
     this.router.navigate(["/login"]);

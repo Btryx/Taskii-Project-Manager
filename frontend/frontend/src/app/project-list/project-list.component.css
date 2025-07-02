@@ -2,11 +2,17 @@
   padding: 24px;
   max-width: 80vw;
   margin: 0 auto;
-  color: #ffffff;
+  color: rgba(255, 255, 255, 0.774);
+}
+
+th {
+  background: rgb(20, 20, 20) !important;
+  font-size: 13px;
 }
 
 tr {
   background: #1e1e1e;
+  color: rgba(255, 255, 255, 0.774);
 }
 
 .projects-header {
@@ -20,7 +26,7 @@ tr {
   font-size: 28px;
   font-weight: bold;
   margin: 0;
-  color: #ffffff;
+  color: rgba(255, 255, 255, 0.774);
 }
 
 .project-status {
@@ -89,14 +95,7 @@ tr {
   overflow: hidden !important;
 }
 
-th {
-  background: rgb(20, 20, 20) !important;
-  font-size: 13px;
-}
 
-tr {
-  color: rgba(255, 255, 255, 0.774);
-}
 
 .mat-mdc-row:hover .mat-mdc-cell {
   background: #272727;

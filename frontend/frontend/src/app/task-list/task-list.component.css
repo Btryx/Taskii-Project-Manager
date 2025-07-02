@@ -5,7 +5,6 @@
   color: #e0e0e0;
 }
 
-
 .tasks-header {
   display: flex;
   justify-content: space-between;
@@ -14,69 +13,82 @@
 }
 
 .tasks-header h1 {
-  font-size: 28px;
+  font-size: 20px;
+  text-transform: uppercase;
   font-weight: bold;
   margin: 0;
   color: #e0e0e0;
 }
 
+h2 {
+  text-transform: uppercase;
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #e0e0e0;
+}
+
 .status-container {
-  width: 100%;
   display: flex;
+  height: 100%;
   gap: 20px;
 }
 
-h1 {
-  margin: 0 0 10px 0;
-  padding: 10px;
-  text-align: center;
-  color: #e0e0e0;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  font-weight: bold;
-  font-size: xx-large;
-}
-
 .task-list {
-  background: #4a4545;
+  background: #1e1e1e;
   border-radius: 4px;
   padding: 15px;
-  height: fit-content;
+  min-height: 350px;
+  height: stretch;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
 }
 
 .task-card {
   margin: 0 0 10px 0;
-  width: 350px;
+  width: 250px;
   min-width: unset;
-  padding: 1.5em;
-  box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.52);
+  box-shadow: 0 0 1px 1px rgba(70, 70, 70, 0.52);
   border-radius: 5px;
-  background: rgba(49, 45, 45, 0.87);
+  background: #383838;
   cursor: move;
+  align-self: center;
+  height: 100px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .task-header-image {
   background-image: url('assets/task-done-flat.png');
   background-size: cover;
+  width: 30px;
+  height: 30px;
+  margin-bottom: 0;
 }
 
 .task-header-image-empty {
   background-image: url('assets/task-empty-flat.png');
   background-size: cover;
+  width: 30px;
+  height: 30px;
+  margin-bottom: 0;
 }
 
 .task-header-image-progress {
   background-image: url('assets/task-progress-flat.png');
   background-size: cover;
+  width: 30px;
+  height: 30px;
+  margin-bottom: 0;
 }
 
 .task-header-image-warn {
   background-image: url('assets/task-warn-flat.png');
   background-size: cover;
-}
-
-.actions-container{
-  display: flex;
-  justify-content: space-between;
+  width: 30px;
+  height: 30px;
+  margin-bottom: 0;
 }
 
 .x {
@@ -104,4 +116,19 @@ h1 {
 
 .task-list.cdk-drop-list-dragging .task-card:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.mat-title {
+  font-size: 15px;
+}
+
+.header {
+  display: flex;
+   align-items: center;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
 }
