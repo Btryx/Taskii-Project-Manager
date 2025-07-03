@@ -138,8 +138,32 @@ export class TaskListComponent implements OnInit {
 
   createTasks() {
     const dialogRef = this.dialog.open(TaskDialog, {
-      width: '500px',
       data: { ...new Task(), title: 'Create task', statuses: this.statuses() },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        result.projectId = this.projectId;
+        this.projectService.createProjectTask(result).subscribe({
+          next: data => {
+            this.tasks.update(value => [...value, data]);
+          },
+          error: (error: HttpErrorResponse) => {
+            console.error(error);
+            this.errorMessage.set(error.error.message);
+          },
+        })
+      }
+    });
+  }
+
+  createTasksWithStatus(status : string) {
+    console.log(status)
+    let task : Task = new Task();
+    task.taskStatus = status;
+    console.log(task.taskStatus)
+    const dialogRef = this.dialog.open(TaskDialog, {
+      data: { task, title: 'Create task', statuses: this.statuses() },
     });
 
     dialogRef.afterClosed().subscribe((result) => {

@@ -49,6 +49,7 @@ export class TaskDialog {
       taskDesc: this.data.taskDesc,
       projectId: this.data.projectId
     });
+    console.log(this.data.taskStatus)
   }
 
   onSubmit(): void {

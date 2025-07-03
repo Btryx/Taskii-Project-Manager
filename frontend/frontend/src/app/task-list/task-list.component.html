@@ -39,6 +39,10 @@
 
               </mat-card>
             }
+            <button mat-button class="create-but" (click)="createTasksWithStatus(statuses()[i].statusName)">
+              <mat-icon>add</mat-icon>
+              Create
+            </button>
         </div>
       }
     </div>

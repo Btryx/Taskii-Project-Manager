@@ -132,3 +132,11 @@ h2 {
   justify-content: space-between;
   align-items: end;
 }
+
+.create-but {
+  width: 100px;
+  margin: 10px;
+  align-self: flex-end;
+  background-color: transparent;
+  border: none;
+}
