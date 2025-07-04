@@ -71,6 +71,8 @@ CREATE TABLE tasks (
     FOREIGN KEY (project_id) REFERENCES projects(project_id)
 );
 
+ALTER TABLE tasks MODIFY COLUMN task_date timestamp null;
+
 CREATE TABLE collaborators (
     collaborator_id VARCHAR(36) PRIMARY KEY,
     user_id VARCHAR(36) NOT NULL,
