@@ -72,6 +72,7 @@ CREATE TABLE tasks (
 );
 
 ALTER TABLE tasks MODIFY COLUMN task_date timestamp null;
+ALTER TABLE tasks MODIFY COLUMN task_desc TEXT null;
 
 CREATE TABLE collaborators (
     collaborator_id VARCHAR(36) PRIMARY KEY,
