@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {MatDatepickerModule} from '@angular/material/datepicker';
@@ -9,6 +9,9 @@ import {MatButtonModule} from '@angular/material/button';
 import { Task } from '../task';
 import { MatNativeDateModule } from '@angular/material/core';
 import { Status } from '../status';
+import {provideNativeDateAdapter} from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
+
 
 interface TaskDialogData extends Task {
   title: string;
@@ -17,9 +20,10 @@ interface TaskDialogData extends Task {
 
 @Component({
   selector: 'app-task-dialog',
-  imports: [MatFormFieldModule, MatSelectModule, ReactiveFormsModule, MatInputModule, MatButtonModule, MatDatepickerModule, MatNativeDateModule],
+  imports: [MatFormFieldModule, MatSelectModule, ReactiveFormsModule, MatInputModule, MatButtonModule, MatDatepickerModule, MatNativeDateModule, MatIconModule],
   templateUrl: './task-dialog.html',
-  styleUrl: './task-dialog.css'
+  styleUrl: './task-dialog.css',
+  providers: [provideNativeDateAdapter()],
 })
 export class TaskDialog {
   taskForm = new FormGroup({
@@ -31,7 +35,7 @@ export class TaskDialog {
     taskDesc: new FormControl(''),
     projectId: new FormControl(''),
   })
-  priorities = [1, 2, 3, 4, 5];
+  priorities = ["Lowest", "Low", "Medium", "High", "Highest"];
 
   constructor(
     private dialogRef: MatDialogRef<TaskDialog>,
@@ -40,6 +44,7 @@ export class TaskDialog {
   }
 
   ngOnInit(): void {
+
     this.taskForm.patchValue({
       taskId: this.data.taskId,
       taskStatus: this.data.taskStatus,

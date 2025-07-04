@@ -29,7 +29,7 @@ public class Task {
     @Column(name = "task_priority", nullable = false)
     private Integer taskPriority;
 
-    @Column(name = "task_date", nullable = false)
+    @Column(name = "task_date", nullable = true)
     private Timestamp taskDate;
 
     @Column(name = "task_desc")

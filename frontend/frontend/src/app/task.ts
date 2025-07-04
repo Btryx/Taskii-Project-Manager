@@ -3,7 +3,7 @@ export class Task {
   taskTitle!: string;
   taskStatus!: string;
   taskPriority: number = 3;
-  taskDate: Date = new Date();
+  taskDate: Date | undefined;
   taskDesc: string | undefined;
   projectId!: string;
 }

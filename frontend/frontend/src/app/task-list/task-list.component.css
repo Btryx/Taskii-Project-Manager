@@ -45,6 +45,10 @@ h2 {
   flex-direction: column;
 }
 
+.task-card:hover {
+  background: #4b4b4b;
+}
+
 .task-card {
   margin: 0 0 10px 0;
   width: 250px;
@@ -52,7 +56,7 @@ h2 {
   box-shadow: 0 0 1px 1px rgba(70, 70, 70, 0.52);
   border-radius: 5px;
   background: #383838;
-  cursor: move;
+  cursor: pointer;
   align-self: center;
   height: 100px;
   display: flex;

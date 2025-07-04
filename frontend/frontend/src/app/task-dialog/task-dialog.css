@@ -5,16 +5,12 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background-color: #1e1e1e;
   color: #e0e0e0;
-  height: 100vh;
-  width: 100vw;
 }
 
 .container {
   display: flex;
-  height: 80vh;
   background-color: #1e1e1e;
 }
 
@@ -25,22 +21,6 @@ body {
   border-radius: 4px;
   font-size: 12px;
   font-weight: 500;
-}
-
-.task-id {
-  background-color: #1e40af;
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.header-right {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 12px;
 }
 
 .icon-btn {
@@ -62,7 +42,6 @@ body {
 /* Main Content */
 .main-content {
   display: flex;
-
 }
 
 .content-area {
@@ -84,11 +63,12 @@ body {
   font-weight: 600;
   width: 100%;
   outline: none;
+  padding: 8px;
 }
 
+
 .task-title input:focus {
-  background-color: #374151;
-  padding: 8px;
+  background-color: #47484b;
   border-radius: 4px;
 }
 
@@ -102,6 +82,7 @@ body {
   font-size: 14px;
   font-weight: 500;
   margin-bottom: 8px;
+  padding: 8px;
 }
 
 .description-input {
@@ -112,12 +93,12 @@ body {
   font-size: 14px;
   outline: none;
   resize: none;
-  min-height: 60px;
+  min-height: 30vh;
+  padding: 8px;
 }
 
 .description-input:focus {
-  background-color: #374151;
-  padding: 12px;
+  background-color: #47484b;
   border-radius: 4px;
 }
 
@@ -211,35 +192,6 @@ body {
   padding: 24px;
 }
 
-.sidebar-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.todo-btn {
-  background-color: #374151;
-  border: none;
-  color: #e0e0e0;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 12px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.improve-btn {
-  background: none;
-  border: none;
-  color: #9ca3af;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 4px;
-}
-
 .improve-btn:hover {
   background-color: #374151;
 }
@@ -255,12 +207,43 @@ body {
   margin-bottom: 16px;
 }
 
+.date-input {
+  background-color: #2d2d2d;
+  border: 1px solid #404040;
+  border-radius: 2px;
+  color: #e0e0e0;
+  font-size: 14px;
+  outline: none;
+  margin-left: 20px;
+  padding: 5px;
+  height: 30px;
+  text-align: end;
+}
+
+.date-picker-toggle {
+  width: 35px;
+  margin-bottom: 5px;
+}
+
+.field-row-date {
+  display: flex;
+  margin-left: 20px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #404040;
+}
+
+.field-row-date:last-child {
+  border-bottom: none;
+}
+
 .field-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 0;
+  padding: 12px 0;
   border-bottom: 1px solid #404040;
+  max-height: 50px;
 }
 
 .field-row:last-child {
@@ -295,23 +278,14 @@ body {
   text-decoration: underline;
 }
 
-.pinned-fields {
-  background-color: #374151;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 24px;
+.priority-input {
+  min-width: 100px;
+  text-align: right;
 }
 
-.pinned-fields h3 {
-  color: #f9fafb;
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 12px;
-}
-
-.pinned-fields p {
-  color: #9ca3af;
-  font-size: 12px;
+.status-input {
+  min-width: 200px;
+  text-align: right;
 }
 
 .close-btn {
@@ -327,8 +301,8 @@ body {
 
 .actions-container {
   display: flex;
-  gap: 12px;
-  margin-top: 24px;
+  justify-content: space-evenly;
+  margin-top: 60px;
 }
 
 .btn {

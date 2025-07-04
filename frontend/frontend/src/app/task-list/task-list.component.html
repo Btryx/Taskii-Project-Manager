@@ -23,7 +23,7 @@
             <h2>{{status.statusName}}  {{taskMapByStatus().get(status.statusName)!.length > 0 ? taskMapByStatus().get(status.statusName)?.length : ''}}</h2>
             @for (task of taskMapByStatus().get(status.statusName); track task.taskId) {
 
-              <mat-card class="task-card" cdkDrag>
+              <mat-card class="task-card" (click)="editTask(task)" cdkDrag>
                 <!--<i class="material-icons x" (click)="openDeleteTaskDialog(task)">close</i>-->
 
                 <mat-card-header class="header">
@@ -31,7 +31,7 @@
                 </mat-card-header>
 
                 <mat-card-content  class="content">
-                  <mat-card-subtitle>Priority: {{task.taskPriority}}</mat-card-subtitle>
+                  <mat-card-subtitle>Priority: {{priorities[task.taskPriority - 1]}}</mat-card-subtitle>
                   <div mat-card-avatar [ngClass]="i == statuses().length-1
                   ? 'task-header-image'
                   : i == 0 ? 'task-header-image-empty' : 'task-header-image-progress'"></div>

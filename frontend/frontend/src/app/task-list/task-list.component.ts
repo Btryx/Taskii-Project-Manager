@@ -43,6 +43,7 @@ export class TaskListComponent implements OnInit {
 
   tasks: WritableSignal<Task[]> = signal([]);
   statuses: WritableSignal<Status[]> = signal([]);
+  priorities = ["Lowest", "Low", "Medium", "High", "Highest"];
 
   taskMapByStatus = computed(() => {
     const map = new Map<string, Task[]>();
@@ -163,7 +164,7 @@ export class TaskListComponent implements OnInit {
     task.taskStatus = status;
     console.log(task.taskStatus)
     const dialogRef = this.dialog.open(TaskDialog, {
-      data: { task, title: 'Create task', statuses: this.statuses() },
+      data: { ...task, title: 'Create task', statuses: this.statuses() },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -172,6 +173,31 @@ export class TaskListComponent implements OnInit {
         this.projectService.createProjectTask(result).subscribe({
           next: data => {
             this.tasks.update(value => [...value, data]);
+          },
+          error: (error: HttpErrorResponse) => {
+            console.error(error);
+            this.errorMessage.set(error.error.message);
+          },
+        })
+      }
+    });
+  }
+
+  editTask(task : Task) {
+    const dialogRef = this.dialog.open(TaskDialog, {
+      data: { ...task, title: 'Edit task', statuses: this.statuses() },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        result.projectId = this.projectId;
+        this.projectService.updateProjectTask(result).subscribe({
+          next: () => {
+            this.tasks.update(value => {
+              let indexOfUpdatedTask = value.findIndex(item => item.taskId === result.taskId);
+              value.splice(indexOfUpdatedTask, 1, result);
+              return [...value];
+            });
           },
           error: (error: HttpErrorResponse) => {
             console.error(error);
