@@ -21,6 +21,7 @@ export class ProjectDialog implements OnInit {
   projectForm = new FormGroup({
     projectId: new FormControl(''),
     projectName: new FormControl('', Validators.required),
+    projectDesc: new FormControl(''),
     createdAt: new FormControl(),
     active: new FormControl(false, Validators.required),
     parentId: new FormControl(''),
@@ -37,6 +38,7 @@ export class ProjectDialog implements OnInit {
     this.projectForm.patchValue({
       projectId: this.data.projectId,
       projectName: this.data.projectName,
+      projectDesc: this.data.projectDesc,
       createdAt: this.data.createdAt,
       active: this.data.active,
       parentId: this.data.parentId,

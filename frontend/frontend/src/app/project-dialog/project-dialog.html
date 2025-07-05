@@ -1,33 +1,23 @@
-<div class="container">
-  <h1 class="title">{{ data.title }}</h1>
+<form class="container" (ngSubmit)="onSubmit()" [formGroup]="projectForm">
+  <div class="main-content">
+    <div class="content-area" >
+        <div class="project-title">
+            <input type="text" placeholder="New project" formControlName="projectName" maxlength="100">
+        </div>
 
-  <form (ngSubmit)="onSubmit()" [formGroup]="projectForm" >
-    <mat-form-field appearance="outline" class="input-field">
-      <mat-label>Project Title</mat-label>
-      <input matInput formControlName="projectName" maxlength="100">
-      @if(projectForm.get('projectName')?.errors?.['required']) {
-          <mat-error>
-            Title is required
-          </mat-error>
-      }
-    </mat-form-field>
+        <div class="description-section">
+            <textarea class="description-input" formControlName="projectDesc" placeholder="Add a description..."></textarea>
+        </div>
 
-    <mat-form-field appearance="outline" class="input-field">
-      <mat-label>Active</mat-label>
-      <mat-select formControlName="active">
-        <mat-option [value]="true">Yes</mat-option>
-        <mat-option [value]="false">No</mat-option>
-      </mat-select>
-      @if(projectForm.get('status')?.errors?.['required']) {
-        <mat-error>
-          Status is required
-        </mat-error>
-      }
-    </mat-form-field>
+        <div class="active-section">
+          <input type="checkbox" id="active" class="checkbox-input" formControlName="active">
+          <label class="active-label" for="active"> Active </label>
+      </div>
 
       <div class="actions-container">
-        <button mat-button type="button" (click)="onCancel()">Cancel</button>
-        <button mat-raised-button color="primary" type="submit" [disabled]="projectForm.invalid || projectForm.pristine">Save</button>
+        <button class="btn btn-save" color="primary" type="submit" [disabled]="projectForm.invalid || projectForm.pristine">Save</button>
+        <button class="btn btn-cancel" type="button" (click)="onCancel()">Cancel</button>
       </div>
-  </form>
-</div>
+    </div>
+  </div>
+</form>

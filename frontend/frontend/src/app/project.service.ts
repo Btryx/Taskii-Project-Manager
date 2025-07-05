@@ -51,4 +51,8 @@ export class ProjectService {
     return this.http.put(`${this.taskUrl}/${task.taskId}`, task);
   }
 
+  deleteProjectTask(task: Task) : Observable<any> {
+    return this.http.delete(`${this.taskUrl}/${task.taskId}`);
+  }
+
 }

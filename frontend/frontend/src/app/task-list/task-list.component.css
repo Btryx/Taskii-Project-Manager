@@ -128,8 +128,20 @@ h2 {
 
 .header {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   margin-bottom: 20px;
+}
+
+.header-first-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.more-icon {
+  padding: 0;
+  margin: 0;
+  width: 25px;
+  height: 25px;
 }
 
 .content {
@@ -152,4 +164,16 @@ h2 {
   font-weight: bold;
   padding: 4px;
   border-radius: 3px;
+}
+
+.date {
+  font-size: 12px;
+  display: flex;
+  gap: 5px;
+}
+
+.date-icon {
+  width: 15px;
+  height: 15px;
+  font-size: 15px;
 }
