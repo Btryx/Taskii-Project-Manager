@@ -1,7 +1,7 @@
 import { ProjectService } from './../project.service';
 import { CommonModule  } from '@angular/common';
 import { Project } from '../project';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit, Signal, signal, ViewChild, WritableSignal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -12,20 +12,22 @@ import { Observable } from 'rxjs';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { ConfirmationDialog } from '../comformation-dialog/comformation-dialog';
-import { InfoPopup } from '../info-popup/info-popup';
+import { MatMenu, MatMenuTrigger, MatMenuItem } from '@angular/material/menu';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Task } from '../task';
 import { CdkDrag,  CdkDragDrop,  CdkDropList, CdkDropListGroup,  moveItemInArray,  transferArrayItem,} from '@angular/cdk/drag-drop';
 import { TaskDialog } from '../task-dialog/task-dialog';
 import { Status } from '../status';
 import {MatCardModule} from '@angular/material/card';
+import { FormsModule } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select'
 
 @Component({
   selector: 'app-task-list',
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.css'],
-  imports: [MatIconModule, CommonModule, MatProgressSpinnerModule, MatButtonModule,
-    MatCardModule, MatInputModule, MatFormFieldModule, CdkDropList, CdkDropListGroup, CdkDrag],
+  imports: [MatIconModule, CommonModule, MatProgressSpinnerModule, MatButtonModule, MatMenu, MatMenuTrigger, MatMenuItem,
+    MatCardModule, MatInputModule, MatFormFieldModule, CdkDropList, CdkDropListGroup, CdkDrag, FormsModule, MatSelectModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskListComponent implements OnInit {
@@ -41,14 +43,21 @@ export class TaskListComponent implements OnInit {
   status?: string;
   priority?: number;
 
+  searchValue?: WritableSignal<string> = signal('');
+  priorityFilterValue?: WritableSignal<number> = signal(0);
+
   tasks: WritableSignal<Task[]> = signal([]);
+
   statuses: WritableSignal<Status[]> = signal([]);
   priorities = ["Lowest", "Low", "Medium", "High", "Highest"];
 
   taskMapByStatus = computed(() => {
     const map = new Map<string, Task[]>();
     for (const status of this.statuses()) {
-      const filtered = this.tasks().filter(task => task.taskStatus === status.statusName);
+      const filtered = this.tasks()
+        .filter(task => this.filterByStatus(task, status))
+        .filter(t => this.filterBySearchBarValue(t))
+        .filter(t => this.filterByPriorityFilter(t));
       map.set(status.statusName, filtered);
     }
     return map;
@@ -83,6 +92,18 @@ export class TaskListComponent implements OnInit {
         })
       }
     })
+  }
+
+  private filterBySearchBarValue(t: Task): unknown {
+    return this.searchValue ? t.taskTitle.toLowerCase().includes(this.searchValue().toLowerCase()) : t;
+  }
+
+  private filterByStatus(task: Task, status: Status): unknown {
+    return task.taskStatus === status.statusName;
+  }
+
+  private filterByPriorityFilter(t: Task): unknown {
+    return this.priorityFilterValue && this.priorityFilterValue() > 0 ? t.taskPriority === this.priorityFilterValue() : t;
   }
 
   getTasks(projectid : string) {
@@ -158,7 +179,8 @@ export class TaskListComponent implements OnInit {
     });
   }
 
-  createTasksWithStatus(status : string) {
+  createTasksWithStatus(status : string, event : Event) {
+    event.stopPropagation();
     console.log(status)
     let task : Task = new Task();
     task.taskStatus = status;
@@ -183,19 +205,46 @@ export class TaskListComponent implements OnInit {
     });
   }
 
-  editTask(task : Task) {
+  editTask(task : Task, event : Event) {
+    event.stopPropagation();
     const dialogRef = this.dialog.open(TaskDialog, {
       data: { ...task, title: 'Edit task', statuses: this.statuses() },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        result.projectId = this.projectId;
         this.projectService.updateProjectTask(result).subscribe({
           next: () => {
             this.tasks.update(value => {
               let indexOfUpdatedTask = value.findIndex(item => item.taskId === result.taskId);
               value.splice(indexOfUpdatedTask, 1, result);
+              return [...value];
+            });
+          },
+          error: (error: HttpErrorResponse) => {
+            console.error(error);
+            this.errorMessage.set(error.error.message);
+          },
+        })
+      }
+    });
+  }
+
+  deleteTask(task : Task,  event : Event) {
+    event.stopPropagation();
+    const dialogRef = this.dialog.open(ConfirmationDialog, {
+      disableClose: false
+    });
+    dialogRef.componentInstance.title = "Delete task?"
+    dialogRef.componentInstance.confirmMessage = `Are you sure you want to delete task: "${task.taskTitle}"?
+                                                  This process cannot be undone!`
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        this.projectService.deleteProjectTask(task).subscribe({
+          next: () => {
+            this.tasks.update(value => {
+              let indexOfUpdatedTask = value.findIndex(item => item.taskId === task.taskId);
+              value.splice(indexOfUpdatedTask, 1);
               return [...value];
             });
           },
