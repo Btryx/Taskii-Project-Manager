@@ -11,6 +11,7 @@ public class ProjectMapper {
         return new ProjectDTO(
                 project.getProjectId(),
                 project.getProjectName(),
+                project.getProjectDesc(),
                 project.getCreatedAt(),
                 project.getActive(),
                 project.getParentId(),
@@ -24,6 +25,7 @@ public class ProjectMapper {
         project.setActive(projectDTO.active());
         project.setCreatedAt(projectDTO.createdAt());
         project.setParentId(projectDTO.parentId());
+        project.setProjectDesc(projectDTO.projectDesc());
 
         if (projectDTO.userId() == null) {
             String username = ProjectAccessUtil.getUsername();

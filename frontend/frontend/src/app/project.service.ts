@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Inject } from '@angular/core';
+import { Injectable, Inject, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Project } from './project';
 import { Task } from './task';
@@ -13,9 +13,7 @@ export class ProjectService {
   statusUrl : string = 'http://localhost:8082/api/statuses'
   taskUrl : string = 'http://localhost:8082/api/tasks';
 
-  constructor(
-    private http : HttpClient
-  ) {}
+  private http: HttpClient = inject(HttpClient);
 
   getAllProjects(): Observable<any[]> {
     return this.http.get<any>(this.projectUrl + "/all")

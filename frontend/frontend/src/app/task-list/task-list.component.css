@@ -58,7 +58,7 @@ h2 {
   background: #383838;
   cursor: pointer;
   align-self: center;
-  height: 100px;
+  height: fit-content;
   display: flex;
   justify-content: space-between;
 }
@@ -128,7 +128,8 @@ h2 {
 
 .header {
   display: flex;
-   align-items: center;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .content {
@@ -143,4 +144,12 @@ h2 {
   align-self: flex-end;
   background-color: transparent;
   border: none;
+}
+
+.priority {
+  border: 1px solid #669DF1;
+  color: #669DF1;
+  font-weight: bold;
+  padding: 4px;
+  border-radius: 3px;
 }

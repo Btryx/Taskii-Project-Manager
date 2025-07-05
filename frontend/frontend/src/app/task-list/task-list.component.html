@@ -31,8 +31,8 @@
                 </mat-card-header>
 
                 <mat-card-content  class="content">
-                  <mat-card-subtitle>Priority: {{priorities[task.taskPriority - 1]}}</mat-card-subtitle>
-                  <div mat-card-avatar [ngClass]="i == statuses().length-1
+                  <mat-card-subtitle class="priority" >Priority: {{priorities[task.taskPriority - 1]}}</mat-card-subtitle>
+                  <div mat-card-avatar [class]="i == statuses().length-1
                   ? 'task-header-image'
                   : i == 0 ? 'task-header-image-empty' : 'task-header-image-progress'"></div>
                 </mat-card-content>

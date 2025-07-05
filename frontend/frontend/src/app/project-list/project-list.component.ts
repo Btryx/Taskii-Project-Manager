@@ -117,7 +117,6 @@ export class ProjectListComponent implements OnInit {
 
   createProject() {
     const dialogRef = this.dialog.open(ProjectDialog, {
-      width: '500px',
       data: { ...new Project(), title: 'Create project' },
     });
 
@@ -138,7 +137,6 @@ export class ProjectListComponent implements OnInit {
 
   updateProject(project: Project) {
     const dialogRef = this.dialog.open(ProjectDialog, {
-      width: '500px',
       data: { ...project, title: 'Edit project' },
     });
 
