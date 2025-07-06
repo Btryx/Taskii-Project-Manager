@@ -46,7 +46,7 @@ export class Auth {
   }
 
   getUser(id: string) : Observable<any> {
-    return this.http.get<string>(`${this.userUrl}/${id}`);
+    return this.http.get<any>(`${this.userUrl}/${id}`);
   }
 
   getColorForUser(id: string): string {
@@ -75,7 +75,7 @@ export class Auth {
 
     let hash = 0;
     for (let i = 0; i < id.length; i++) {
-      hash = id.charCodeAt(i) + ((hash << 5) - hash);
+      hash = hash + id.charCodeAt(i) + ((hash << 5) - hash);
     }
 
     const index = Math.abs(hash) % COLORS.length;

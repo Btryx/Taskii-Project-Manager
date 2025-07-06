@@ -1,5 +1,5 @@
 export class User {
   userId!: string;
-  userName!: string;
+  username!: string;
   enabled!: boolean;
 }
