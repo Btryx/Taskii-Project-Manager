@@ -279,6 +279,10 @@ body {
   font-size: 14px;
 }
 
+.option {
+  padding: 15px;
+}
+
 .status-input {
   min-width: 200px; /* TODO: fix this to be dynamic to longest status string*/
   text-align: right;

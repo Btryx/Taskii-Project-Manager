@@ -29,10 +29,6 @@ public class User {
     @Column(name = "enabled", nullable = false)
     private Boolean enabled;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude
-    private List<Project> projects = new ArrayList<>();
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

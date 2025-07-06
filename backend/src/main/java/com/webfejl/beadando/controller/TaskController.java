@@ -2,16 +2,11 @@ package com.webfejl.beadando.controller;
 
 
 import com.webfejl.beadando.dto.TaskDTO;
-import com.webfejl.beadando.exception.AuthorizationException;
-import com.webfejl.beadando.exception.TaskNotFoundException;
 import com.webfejl.beadando.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.AccessDeniedException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/tasks")

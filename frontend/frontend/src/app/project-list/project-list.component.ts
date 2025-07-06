@@ -164,7 +164,7 @@ export class ProjectListComponent implements OnInit {
       const dialogRef = this.dialog.open(InfoPopup, {
         disableClose: false
       });
-          dialogRef.componentInstance.title = "Error"
+      dialogRef.componentInstance.title = "Error"
       dialogRef.componentInstance.infoMessage = `Cannot delete active projects! Disable project before deleting.`
       return;
     }

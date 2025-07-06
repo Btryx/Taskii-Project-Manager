@@ -106,11 +106,12 @@ h2 {
 
 .task-filter {
   width: 250px;
-  margin-right: 10px;
+  margin-right: 20px;
 }
 
 .task-filter-priority {
   width: 150px;
+  margin-right: 20px;
 }
 
 .cdk-drag-preview {
@@ -187,4 +188,27 @@ h2 {
   width: 15px;
   height: 15px;
   font-size: 15px;
+}
+
+.col-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  font-size: 15px;
+  color: black;
+  margin-right: -5px;
+  font-weight: bold;
+  margin-top: 12px;
+  border: 1px solid black;
+}
+
+.col-icon:hover {
+  width: 32px;
+  height: 32px;
+}
+
+.collaborators {
+  display: flex;
 }

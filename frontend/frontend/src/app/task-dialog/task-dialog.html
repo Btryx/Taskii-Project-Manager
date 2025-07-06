@@ -39,7 +39,7 @@
               <div>
                 <mat-select formControlName="taskStatus" class="status-input">
                   @for (status of data.statuses; track status.statusId) {
-                    <mat-option [value]="status.statusName">{{status.statusName}}</mat-option>
+                    <mat-option class="option" [value]="status.statusName">{{status.statusName}}</mat-option>
                   }
                 </mat-select>
               </div>
@@ -58,7 +58,7 @@
               <div>
                 <mat-select [disableOptionCentering]="true" formControlName="taskPriority" class="priority-input">
                   @for(priority of priorities; let i = $index; track i) {
-                    <mat-option [value]="i+1">
+                    <mat-option [value]="i+1" class="option">
                       {{priority}}
                     </mat-option>
                   }

@@ -8,7 +8,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { Auth } from '../auth.service';
-import { Observable } from 'rxjs';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { ConfirmationDialog } from '../comformation-dialog/comformation-dialog';
@@ -21,19 +20,23 @@ import { Status } from '../status';
 import {MatCardModule} from '@angular/material/card';
 import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select'
+import { User } from '../user';
+import { CollaboratorService } from '../collaborator.service';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-task-list',
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.css'],
   imports: [MatIconModule, CommonModule, MatProgressSpinnerModule, MatButtonModule, MatMenu, MatMenuTrigger, MatMenuItem,
-    MatCardModule, MatInputModule, MatFormFieldModule, CdkDropList, CdkDropListGroup, CdkDrag, FormsModule, MatSelectModule],
+    MatCardModule, MatInputModule, MatFormFieldModule, CdkDropList, CdkDropListGroup, CdkDrag, FormsModule, MatSelectModule, MatTooltipModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskListComponent implements OnInit {
 
   private projectService : ProjectService = inject(ProjectService);
   private authService = inject(Auth);
+  private collaboratorService = inject(CollaboratorService);
   private dialog: MatDialog = inject(MatDialog);
   private router : Router = inject(Router);
   private route : ActivatedRoute = inject(ActivatedRoute);
@@ -42,6 +45,8 @@ export class TaskListComponent implements OnInit {
   project: WritableSignal<Project | null> = signal(null);
   status?: string;
   priority?: number;
+  owner: WritableSignal<string> = signal('');
+  collaborators: WritableSignal<User[]> = signal([]);
 
   searchValue?: WritableSignal<string> = signal('');
   priorityFilterValue?: WritableSignal<number> = signal(0);
@@ -83,6 +88,8 @@ export class TaskListComponent implements OnInit {
               this.project.set(data);
               this.getTasks(this.projectId);
               this.getStatuses(this.projectId);
+              this.getOwner();
+              this.getCollaborators();
             }
           },
           error: (error: HttpErrorResponse) => {
@@ -110,7 +117,6 @@ export class TaskListComponent implements OnInit {
     this.projectService.getProjectTasks(projectid).subscribe({
       next: (data) => {
         this.tasks.set(data);
-        console.log(this.tasks());
       },
       error: (error: HttpErrorResponse) => {
         this.errorMessage.set(error.error.message);
@@ -124,7 +130,6 @@ export class TaskListComponent implements OnInit {
     this.projectService.getStatuses(projectId).subscribe({
       next: (data) => {
         this.statuses.set(data);
-        console.log(this.statuses());
       },
       error: (error: HttpErrorResponse) => {
         this.errorMessage.set(error.error.message);
@@ -256,5 +261,37 @@ export class TaskListComponent implements OnInit {
       }
     });
   }
+
+  getOwner()  {
+    this.authService.getUser(this.project()?.userId!).subscribe({
+      next: (result) => {
+        this.owner.set(result.message);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error(error);
+        this.errorMessage.set(error.error.message);
+        return error;
+      },
+    })
+  }
+
+  getCollaborators() {
+    console.log("result")
+    this.collaboratorService.getCollaborators(this.projectId).subscribe({
+      next: (result) => {
+        console.log(result)
+        this.collaborators.set(result);
+      },
+      error: (error: HttpErrorResponse) => {
+        this.errorMessage.set(error.error.message);
+        return error;
+      },
+    })
+  }
+
+  getColorForUser(id: string): string {
+    return this.authService.getColorForUser(id);
+  }
+
 
 }
