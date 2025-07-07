@@ -4,7 +4,9 @@ import com.webfejl.beadando.dto.TaskDTO;
 import com.webfejl.beadando.entity.Project;
 import com.webfejl.beadando.entity.Task;
 import com.webfejl.beadando.exception.ProjectNotFoundException;
+import com.webfejl.beadando.exception.UserNotFoundException;
 import com.webfejl.beadando.repository.ProjectRepository;
+import com.webfejl.beadando.repository.UserRepository;
 
 public class TaskMapper {
 
@@ -16,6 +18,8 @@ public class TaskMapper {
                 task.getTaskPriority(),
                 task.getTaskDate(),
                 task.getTaskDesc(),
+                task.getAssignee(),
+                task.getOrderNumber(),
                 task.getProject() != null ? task.getProject().getProjectId() : null
         );
     }
@@ -27,6 +31,8 @@ public class TaskMapper {
         task.setTaskPriority(taskDTO.taskPriority());
         task.setTaskDate(taskDTO.taskDate());
         task.setTaskDesc(taskDTO.taskDesc());
+        task.setOrderNumber(taskDTO.orderNumber());
+        task.setAssignee(taskDTO.assignee());
         Project project = projectRepository.findById(taskDTO.projectId()).orElseThrow(() -> new ProjectNotFoundException("Project not found"));
         task.setProject(project);
         return task;

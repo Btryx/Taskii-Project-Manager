@@ -20,6 +20,9 @@ public class Collaborator {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(name = "role")
+    private Role role;
+
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;

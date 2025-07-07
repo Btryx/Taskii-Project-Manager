@@ -39,6 +39,12 @@ public class Task {
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
+    @Column(name = "assignee")
+    private String assignee;
+
+    @Column(name = "order_number")
+    private Integer orderNumber;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

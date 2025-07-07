@@ -49,66 +49,66 @@
         </span>
       </div>
     </div>
+
+    <div class="kanban-container">
+      <div cdkDropListGroup>
+        <div class="status-container">
+        @for (status of statuses(); let i = $index; track i) {
+            <div cdkDropList
+            [cdkDropListData]="taskMapByStatus().get(status.statusName) || []"
+            (cdkDropListDropped)="drop($event, status)" class="task-list">
+              <h2>{{status.statusName}}  {{taskMapByStatus().get(status.statusName)!.length > 0 ? taskMapByStatus().get(status.statusName)?.length : ''}}</h2>
+              @for (task of taskMapByStatus().get(status.statusName); track task.taskId) {
+
+                <mat-card class="task-card" (click)="editTask(task, $event)" cdkDrag>
+
+                  <mat-card-header class="header">
+
+                    <div class="header-first-row">
+                      <mat-card-title class="mat-title">{{task.taskTitle}}</mat-card-title>
+                      <button class="more-icon" mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+                        <mat-icon >more_vert</mat-icon>
+                      </button>
+                      <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="editTask(task, $event)">
+                          <mat-icon>edit</mat-icon>
+                          <span>Edit</span>
+                        </button>
+                        <button mat-menu-item (click)="deleteTask(task, $event)">
+                          <mat-icon>delete</mat-icon>
+                          <span>Delete</span>
+                        </button>
+                      </mat-menu>
+                    </div>
+
+                    @if(task.taskDate) {
+                      <span class="date">
+                        <mat-icon class="date-icon">date_range</mat-icon>
+                        {{task.taskDate | date}}
+                      </span>
+                    }
+                  </mat-card-header>
+
+                  <mat-card-content  class="content">
+                    <mat-card-subtitle class="priority" >Priority: {{priorities[task.taskPriority - 1]}}</mat-card-subtitle>
+                    <div mat-card-avatar [class]="i == statuses().length-1
+                    ? 'task-header-image'
+                    : i == 0 ? 'task-header-image-empty' : 'task-header-image-progress'"></div>
+                  </mat-card-content>
+
+                </mat-card>
+              }
+              <button mat-button class="create-but" (click)="createTasksWithStatus(statuses()[i].statusName, $event)">
+                <mat-icon>add</mat-icon>
+                Create
+              </button>
+          </div>
+        }
+      </div>
+      </div>
+    </div>
   }
 
-
-  <div class="kanban-container">
-    <div cdkDropListGroup>
-      <div class="status-container">
-      @for (status of statuses(); let i = $index; track i) {
-          <div cdkDropList
-          [cdkDropListData]="taskMapByStatus().get(status.statusName) || []"
-          (cdkDropListDropped)="drop($event, status)" class="task-list">
-            <h2>{{status.statusName}}  {{taskMapByStatus().get(status.statusName)!.length > 0 ? taskMapByStatus().get(status.statusName)?.length : ''}}</h2>
-            @for (task of taskMapByStatus().get(status.statusName); track task.taskId) {
-
-              <mat-card class="task-card" (click)="editTask(task, $event)" cdkDrag>
-
-                <mat-card-header class="header">
-
-                  <div class="header-first-row">
-                    <mat-card-title class="mat-title">{{task.taskTitle}}</mat-card-title>
-                    <button class="more-icon" mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
-                      <mat-icon >more_vert</mat-icon>
-                    </button>
-                    <mat-menu #menu="matMenu">
-                      <button mat-menu-item (click)="editTask(task, $event)">
-                        <mat-icon>edit</mat-icon>
-                        <span>Edit</span>
-                      </button>
-                      <button mat-menu-item (click)="deleteTask(task, $event)">
-                        <mat-icon>delete</mat-icon>
-                        <span>Delete</span>
-                      </button>
-                    </mat-menu>
-                  </div>
-
-                  @if(task.taskDate) {
-                    <span class="date">
-                      <mat-icon class="date-icon">date_range</mat-icon>
-                      {{task.taskDate | date}}
-                    </span>
-                  }
-                </mat-card-header>
-
-                <mat-card-content  class="content">
-                  <mat-card-subtitle class="priority" >Priority: {{priorities[task.taskPriority - 1]}}</mat-card-subtitle>
-                  <div mat-card-avatar [class]="i == statuses().length-1
-                  ? 'task-header-image'
-                  : i == 0 ? 'task-header-image-empty' : 'task-header-image-progress'"></div>
-                </mat-card-content>
-
-              </mat-card>
-            }
-            <button mat-button class="create-but" (click)="createTasksWithStatus(statuses()[i].statusName, $event)">
-              <mat-icon>add</mat-icon>
-              Create
-            </button>
-        </div>
-      }
-    </div>
-    </div>
-  </div>
 </div>
 
 

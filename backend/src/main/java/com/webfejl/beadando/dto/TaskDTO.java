@@ -10,5 +10,7 @@ public record TaskDTO(
         int taskPriority,
         Timestamp taskDate,
         String taskDesc,
+        String assignee,
+        Integer orderNumber,
         String projectId) {
 }

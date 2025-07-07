@@ -5,6 +5,7 @@ import com.webfejl.beadando.entity.Project;
 import com.webfejl.beadando.entity.Task;
 import com.webfejl.beadando.repository.ProjectRepository;
 import com.webfejl.beadando.repository.TaskRepository;
+import com.webfejl.beadando.repository.UserRepository;
 import com.webfejl.beadando.util.TaskMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +40,7 @@ class TaskServiceTest {
 
     @BeforeEach
     void setup() {
-        taskDTO = new TaskDTO("task1", "Fix bug", "DONE", 1, new Timestamp(System.currentTimeMillis()), "Fix it", "project1");
+        taskDTO = new TaskDTO("task1", "Fix bug", "DONE", 1, new Timestamp(System.currentTimeMillis()), "Fix it", null, null, "project1");
         task = new Task();
         task.setTaskId("task1");
         task.setTaskTitle("Fix bug");
