@@ -49,6 +49,7 @@ CREATE TABLE users (
 );
 
 ALTER TABLE users ADD COLUMN email VARCHAR(128);
+ALTER TABLE `users` ADD UNIQUE `tasks_uq_email`(`email`);
 
 CREATE TABLE projects (
     project_id VARCHAR(36) PRIMARY KEY,
