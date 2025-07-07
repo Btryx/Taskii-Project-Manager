@@ -12,6 +12,7 @@ A full-stack Kanban-style project and task management application built with Ang
 
 ### Backend
 - **Spring Boot** - Java backend framework
+- **Spring MVC** - Web support
 - **Spring Security** - Authentication & authorization
 - **Spring Data JPA** - ORM with Hibernate
 - **JWT (JSON Web Tokens)** - Stateless authentication
