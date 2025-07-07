@@ -16,8 +16,9 @@ A full-stack Kanban-style project and task management application built with Ang
 - **Spring Security** - Authentication & authorization
 - **Spring Data JPA** - ORM with Hibernate
 - **JWT (JSON Web Tokens)** - Stateless authentication
-- **MySQL** - Relational database
+- **JUnit** - Unit testing
 - **Lombok** - Reduces boilerplate code in Java classes
+- **MySQL** - Relational database
 
 ## 🧰 Setup & Installation
 
