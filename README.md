@@ -22,7 +22,7 @@ A full-stack Kanban-style project and task management application built with Ang
 
 ### Prerequisites
 - Java 17
-- Node.js + Angular CLI (currently using 13.3.7, planning on update)
+- Node.js + Angular CLI (currently using 20.0.3)
 - MySQL server
 - Maven
 
