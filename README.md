@@ -111,6 +111,6 @@ CREATE TABLE statuses (
 
 ## 🧭 Future Plans
 
-- 👥 Collaboration features (invite users to work on projects)
+- 👥 Collaboration features (invite users to work on projects) (IN PROGRESS)
 - 🛡️ Role-based permissions within projects (e.g., Owner, Contributor, Viewer)
-- ⚙️ Upgrade Angular to the latest stable version for performance and security improvements
+- ⚙️ Upgrade Angular to the latest stable version for performance and security improvements (DONE: 13 -> 20)
