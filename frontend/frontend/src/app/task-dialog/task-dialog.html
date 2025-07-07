@@ -1,0 +1,84 @@
+<form class="container" [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+
+  <div class="main-content">
+      <!-- Content Area -->
+      <div class="content-area" >
+          <div class="task-title">
+              <input type="text" placeholder="What to do?" formControlName="taskTitle" maxlength="100">
+          </div>
+
+          <div class="description-section">
+              <textarea class="description-input" formControlName="taskDesc" placeholder="Add a description..."></textarea>
+          </div>
+
+          <div class="activity-section" [hidden]="data.taskId == null">
+              <div class="activity-tabs">
+                  <div class="activity-tab active">Comments</div>
+              </div>
+
+              <div class="comment-section">
+                  <div class="avatar">B</div>
+                  <div style="flex: 1;">
+                      <textarea class="comment-input" placeholder="Add a comment..."></textarea>
+                      <div class="comment-suggestions">
+                          <button class="suggestion-btn">Who is working on this...?</button>
+                          <button class="suggestion-btn">Can I get more info...?</button>
+                          <button class="suggestion-btn">Status update...</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+      <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-section">
+            <h3>Details</h3>
+            <div class="field-row">
+              <span class="field-label">Status</span>
+              <div>
+                <mat-select formControlName="taskStatus" class="status-input">
+                  @for (status of data.statuses; track status.statusId) {
+                    <mat-option class="option" [value]="status.statusName">{{status.statusName}}</mat-option>
+                  }
+                </mat-select>
+              </div>
+          </div>
+            <div class="field-row">
+                <span class="field-label">Assignee</span>
+                <span class="field-value unassigned">👤 Unassigned</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label"></span>
+                <span class="field-value assign-link">Assign to me</span>
+            </div>
+
+            <div class="field-row">
+              <span class="field-label">Priority</span>
+              <div>
+                <mat-select [disableOptionCentering]="true" formControlName="taskPriority" class="priority-input">
+                  @for(priority of priorities; let i = $index; track i) {
+                    <mat-option [value]="i+1" class="option">
+                      {{priority}}
+                    </mat-option>
+                  }
+                </mat-select>
+              </div>
+            </div>
+
+            <div class="field-row">
+              <mat-label class="field-label">Due at</mat-label>
+              <div class="field-row-date">
+              <input class="date-input" [matDatepicker]="picker" [disabled]="true" formControlName="taskDate">
+              <mat-datepicker-toggle matSuffix [for]="picker" class="date-picker-toggle"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              </div>
+            </div>
+        </div>
+
+        <div class="actions-container">
+          <button class="btn btn-save" color="primary" type="submit" [disabled]="taskForm.invalid || taskForm.pristine">Save</button>
+          <button class="btn btn-cancel" type="button" (click)="onCancel()">Cancel</button>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,159 @@
+.projects-container {
+  padding: 24px;
+  max-width: 80vw;
+  margin: 0 auto;
+  color: rgba(255, 255, 255, 0.774);
+}
+
+th {
+  background: rgb(20, 20, 20) !important;
+  font-size: 13px;
+}
+
+tr {
+  background: #1e1e1e;
+  color: rgba(255, 255, 255, 0.774);
+}
+
+.projects-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.projects-header h1 {
+  font-size: 28px;
+  font-weight: bold;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.774);
+}
+
+.project-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #e0e0e0;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #666;
+}
+
+.status-indicator.active {
+  background: #4caf50;
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  gap: 16px;
+}
+
+.loading-state p {
+  color: #e0e0e0;
+  font-size: 16px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  background: #1e1e1e;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.empty-state mat-icon {
+  font-size: 48px;
+  height: 48px;
+  width: 48px;
+  color: #e0e0e0;
+  margin-bottom: 16px;
+}
+
+.empty-state p {
+  color: #e0e0e0;
+  margin-bottom: 24px;
+}
+
+.mat-column-menu {
+  text-align: right;
+  justify-content: flex-end;
+}
+
+
+.mat-mdc-table {
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden !important;
+}
+
+
+
+.mat-mdc-row:hover .mat-mdc-cell {
+  background: #272727;
+}
+
+.ownerIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  font-size: 11px;
+  color: black;
+  margin-right: 10px;
+}
+
+.ownerDiv {
+  display: flex;
+  align-items: center;
+}
+
+span {
+  text-transform: capitalize;
+}
+
+.project-filter {
+  width: 25%;
+}
+
+.no-match-cell {
+  height: 120px;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 20px;
+
+  mat-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+    color: #888;
+  }
+}
+
+.no-match-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.task-link {
+  cursor: pointer;
+  color: #669DF1;
+  text-decoration: none;
+}
+
+.task-link:hover {
+  text-decoration: underline;
+}
+
+.info-button {
+  color: rgba(255, 255, 255, 0.7);
+}

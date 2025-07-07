@@ -1,0 +1,24 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; background: url("src/assets/bg.jpg"); background-size: 100% auto}
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+
+.no-task-card {
+  width: 400px;
+  min-width: 210px;
+  margin: 35vh auto;
+  padding: 1.5em;
+  box-shadow: 0 0 3px 5px rgba(0, 0, 0, 0.52);
+  border-radius: 5px;
+  background: rgba(49, 45, 45, 0.87);
+}
+
+.noTasksText{
+  text-align: center;
+  font-family: Roboto, sans-serif;
+  font-size: 1.4em;
+  margin: 10px;
+  padding: 5px;
+}

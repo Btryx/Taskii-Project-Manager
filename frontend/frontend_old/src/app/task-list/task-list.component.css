@@ -1,0 +1,141 @@
+.task-card {
+  margin: 0 0 10px 0;
+  width: calc(100% - 3em);
+  min-width: unset;
+  padding: 1.5em;
+  box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.52);
+  border-radius: 5px;
+  background: rgba(49, 45, 45, 0.87);
+  cursor: move;
+}
+
+.task-header-image {
+  background-image: url('src/assets/task-done-flat.png');
+  background-size: cover;
+}
+
+.task-header-image-empty {
+  background-image: url('src/assets/task-empty-flat.png');
+  background-size: cover;
+}
+
+.task-header-image-progress {
+  background-image: url('src/assets/task-progress-flat.png');
+  background-size: cover;
+}
+
+.task-header-image-warn {
+  background-image: url('src/assets/task-warn-flat.png');
+  background-size: cover;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  flex: 1 0 21%;
+}
+
+.actions-container{
+  display: flex;
+  justify-content: space-between;
+}
+
+.priority{
+  font-size: larger;
+}
+
+.x {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+}
+
+.kanban-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  gap: 25px;
+  height: calc(100vh - 100px);
+  overflow-x: auto;
+}
+
+.kanban-column {
+  flex: 1;
+  min-width: 200px;
+  background: #4a4545;
+  border-radius: 4px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.kanban-column h2 {
+  margin: 0 0 10px 0;
+  padding: 10px;
+  text-align: center;
+  background: #4a4545;
+  color: white;
+  border-radius: 4px;
+}
+
+h1 {
+  margin: 0 0 10px 0;
+  padding: 10px;
+  text-align: center;
+  color: white;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-weight: bold;
+  font-size: xx-large;
+}
+
+.task-list {
+  flex-grow: 1;
+  overflow-y: auto;
+  min-height: 100px;
+  background: #4a4545;
+  border-radius: 4px;
+  padding: 5px;
+  scrollbar-width: thin;  /* "thin" or "none" */
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;  /* thumb and track color */
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+              0 8px 10px 1px rgba(0, 0, 0, 0.14),
+              0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.task-list.cdk-drop-list-dragging .task-card:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* Webkit browsers (Chrome, Safari, newer Edge) scrollbars */
+.task-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.task-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.task-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.task-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
