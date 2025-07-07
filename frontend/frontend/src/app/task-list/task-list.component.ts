@@ -1,7 +1,7 @@
 import { ProjectService } from './../project.service';
 import { CommonModule  } from '@angular/common';
 import { Project } from '../project';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit, Signal, signal, ViewChild, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -144,7 +144,7 @@ export class TaskListComponent implements OnInit {
 
     if (event.previousContainer === event.container) {
       moveItemInArray(currList, event.previousIndex, event.currentIndex);
-      //TODO: persist morder inside kanban column
+      //TODO: persist order inside kanban column
     } else {
       transferArrayItem(prevList, currList, event.previousIndex, event.currentIndex);
 
