@@ -113,6 +113,7 @@ CREATE TABLE statuses (
 
 ## 🧭 Future Plans
 
-- 👥 Collaboration features (invite users to work on projects) (IN PROGRESS)
+- 👥 Collaboration features (invite users to work on projects), assignees on tasks (IN PROGRESS)
+- ⚙️ Add comments to tasks
 - 🛡️ Role-based permissions within projects (e.g., Owner, Contributor, Viewer)
 - ⚙️ Upgrade Angular to the latest stable version for performance and security improvements (DONE: 13 -> 20)
