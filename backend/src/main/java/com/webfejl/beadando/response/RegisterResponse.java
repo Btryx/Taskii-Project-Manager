@@ -1,4 +1,4 @@
-package com.webfejl.beadando.auth.response;
+package com.webfejl.beadando.response;
 
 import com.webfejl.beadando.entity.User;
 import lombok.Getter;

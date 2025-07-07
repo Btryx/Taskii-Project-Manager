@@ -4,9 +4,6 @@ import com.webfejl.beadando.dto.ProjectDTO;
 import com.webfejl.beadando.entity.Project;
 import com.webfejl.beadando.exception.UserNotFoundException;
 import com.webfejl.beadando.repository.UserRepository;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 
 public class ProjectMapper {
 
@@ -14,6 +11,7 @@ public class ProjectMapper {
         return new ProjectDTO(
                 project.getProjectId(),
                 project.getProjectName(),
+                project.getProjectDesc(),
                 project.getCreatedAt(),
                 project.getActive(),
                 project.getParentId(),
@@ -27,19 +25,16 @@ public class ProjectMapper {
         project.setActive(projectDTO.active());
         project.setCreatedAt(projectDTO.createdAt());
         project.setParentId(projectDTO.parentId());
+        project.setProjectDesc(projectDTO.projectDesc());
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = null;
-        if (authentication != null && authentication.isAuthenticated()) {
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof UserDetails) {
-                username = ((UserDetails) principal).getUsername();
-            } else {
-                username = principal.toString();
-            }
+        if (projectDTO.userId() == null) {
+            String username = ProjectAccessUtil.getUsername();
+            project.setUser(userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found")));
+            System.out.println("Current user: " + username);
+        } else {
+            project.setUser(userRepository.findById(projectDTO.userId()).orElseThrow(() -> new UserNotFoundException("User not found")));
         }
-        project.setUser(userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found")));
-        System.out.println("Current user: " + username);
+
         return project;
     }
 }

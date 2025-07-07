@@ -1,5 +1,6 @@
 package com.webfejl.beadando.service;
 
+import com.webfejl.beadando.exception.UserNotFoundException;
 import com.webfejl.beadando.request.LoginRequest;
 import com.webfejl.beadando.auth.jwt.JwtManager;
 import com.webfejl.beadando.entity.User;
@@ -10,10 +11,11 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -38,13 +40,20 @@ public class UserService {
         try {
             validateCreateUser(user);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            return userRepository.save(user);
+            User saved = userRepository.save(user);
+
+            userRepository.flush();
+
+            return saved;
         } catch (DataIntegrityViolationException e) {
-            throw new UserCreationException("Username already exists!");
+            throw new UserCreationException("Something went wrong!");
         }
     }
 
-    private static void validateCreateUser(User user) throws UserCreationException {
+    private void validateCreateUser(User user) throws UserCreationException {
+        if (user.getEmail() == null || user.getEmail().isEmpty() || !user.getEmail().contains("@")) {
+            throw new UserCreationException("Email field is empty or invalid!");
+        }
         if (user.getUsername() == null || user.getUsername().isEmpty() || user.getPassword() == null || user.getPassword().isEmpty()) {
             throw new UserCreationException("Username or password field is empty!");
         }
@@ -53,6 +62,12 @@ public class UserService {
         }
         if (!user.getPassword().matches(".*\\d.*")) {
             throw new UserCreationException("Password must contain at least one number!");
+        }
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new UserCreationException("This username already exists!");
+        }
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new UserCreationException("This email is already registered!");
         }
     }
 
@@ -68,5 +83,12 @@ public class UserService {
         } catch (AuthenticationException ex) {
             throw new BadCredentialsException("Invalid username or password", ex);
         }
+    }
+
+    public User getUserById(String userId) throws UserNotFoundException {
+        Optional<User> user = userRepository.findById(userId);
+        if(user.isEmpty()) throw new UserNotFoundException("This user does not exist!");
+
+        return user.get();
     }
 }

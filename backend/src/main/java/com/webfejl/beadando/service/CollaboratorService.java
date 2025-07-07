@@ -12,6 +12,7 @@ import com.webfejl.beadando.repository.UserRepository;
 import com.webfejl.beadando.util.ProjectAccessUtil;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @Service
@@ -29,7 +30,7 @@ public class CollaboratorService {
         this.projectAccessUtil = projectAccessUtil;
     }
 
-    public Collaborator createCollaborator(String projectId, String userId) throws AuthorizationException, UserNotFoundException, ProjectNotFoundException, IllegalArgumentException {
+    public Collaborator createCollaborator(String projectId, String userId) throws AuthorizationException {
         User user = projectAccessUtil.getAuthenticatedUser();
 
         Collaborator collaborator = new Collaborator();

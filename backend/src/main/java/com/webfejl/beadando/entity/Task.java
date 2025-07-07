@@ -29,7 +29,7 @@ public class Task {
     @Column(name = "task_priority", nullable = false)
     private Integer taskPriority;
 
-    @Column(name = "task_date", nullable = false)
+    @Column(name = "task_date", nullable = true)
     private Timestamp taskDate;
 
     @Column(name = "task_desc")
@@ -38,6 +38,12 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
+
+    @Column(name = "assignee")
+    private String assignee;
+
+    @Column(name = "order_number")
+    private Integer orderNumber;
 
     @Override
     public boolean equals(Object o) {

@@ -6,25 +6,18 @@ import com.webfejl.beadando.entity.Status;
 import com.webfejl.beadando.entity.User;
 import com.webfejl.beadando.exception.AuthorizationException;
 import com.webfejl.beadando.exception.ProjectNotFoundException;
-import com.webfejl.beadando.repository.ProjectRepository;
-import com.webfejl.beadando.repository.StatusRepository;
-import com.webfejl.beadando.repository.UserRepository;
+import com.webfejl.beadando.exception.UserCreationException;
+import com.webfejl.beadando.repository.*;
 import com.webfejl.beadando.util.ProjectAccessUtil;
 import com.webfejl.beadando.util.ProjectMapper;
 import jakarta.transaction.Transactional;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
-import static com.webfejl.beadando.util.ProjectAccessUtil.checkIfUserIsLoggedIn;
-import static com.webfejl.beadando.util.ProjectAccessUtil.getUsername;
 
 @Service
 public class ProjectService {
@@ -33,16 +26,21 @@ public class ProjectService {
     private final UserRepository userRepository;
     private final ProjectAccessUtil projectAccessUtil;
     private final StatusRepository statusRepository;
+    private final CollaboratorRepository collaboratorRepository;
+    private final TaskRepository taskRepository;
 
     public static final String TO_DO = "To do";
     public static final String IN_PROGRESS = "In progress";
     public static final String DONE = "Done";
 
-    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, ProjectAccessUtil projectAccessUtil, StatusRepository statusRepository) {
+    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, ProjectAccessUtil projectAccessUtil,
+                          StatusRepository statusRepository, CollaboratorRepository collaboratorRepository, TaskRepository taskRepository) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
         this.projectAccessUtil = projectAccessUtil;
         this.statusRepository = statusRepository;
+        this.collaboratorRepository = collaboratorRepository;
+        this.taskRepository = taskRepository;
     }
 
     public List<ProjectDTO> getAllAccessedProjects() throws AuthorizationException {
@@ -105,8 +103,17 @@ public class ProjectService {
 
         projectAccessUtil.checkAccess(id, user);
 
-        Project newProject = ProjectMapper.toEntity(projectDTO, project, userRepository);
-        return ProjectMapper.toDTO(projectRepository.save(newProject));
+        try{
+            Project newProject = ProjectMapper.toEntity(projectDTO, project, userRepository);
+            Project saved = projectRepository.save(newProject);
+            projectRepository.flush();
+
+            return ProjectMapper.toDTO(saved);
+        } catch (DataIntegrityViolationException e) {
+            throw new UserCreationException("You already have a project named: " + projectDTO.projectName());
+        }
+
+
     }
 
     @Transactional
@@ -116,6 +123,12 @@ public class ProjectService {
             throw new ProjectNotFoundException("Project not found with ID: " + id);
         }
         projectAccessUtil.checkAccess(id, user);
+
+        List<Status> statuses = statusRepository.findByProjectId(id);
+
+        statusRepository.deleteAll(statuses);
+        collaboratorRepository.deleteAllByProject_ProjectId(id);
+        taskRepository.deleteAllByProject_ProjectId(id);
 
         projectRepository.deleteById(id);
     }

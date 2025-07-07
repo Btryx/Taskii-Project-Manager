@@ -38,6 +38,7 @@ public class AuthControllerTest {
     void registerShouldReturnCreatedUser() throws Exception {
         User user = new User();
         user.setUsername("testuser");
+        user.setEmail("test@gmail.com");
         user.setPassword("password123");
 
         when(userService.createUser(any(User.class))).thenReturn(user);

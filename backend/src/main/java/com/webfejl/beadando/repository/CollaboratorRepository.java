@@ -20,4 +20,6 @@ public interface CollaboratorRepository extends JpaRepository<Collaborator, Stri
     List<Project> findProjectsByUserId(@Param("userId") String userId);
 
     boolean existsByProject_ProjectIdAndUser_UserId(String projectId, String userId);
+
+    void deleteAllByProject_ProjectId(String projectId);
 }

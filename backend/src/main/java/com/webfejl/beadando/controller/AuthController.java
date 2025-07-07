@@ -1,8 +1,9 @@
 package com.webfejl.beadando.controller;
 
-import com.webfejl.beadando.auth.response.AuthenticationResponse;
+import com.webfejl.beadando.response.AuthenticationResponse;
 import com.webfejl.beadando.request.LoginRequest;
-import com.webfejl.beadando.auth.response.RegisterResponse;
+import com.webfejl.beadando.response.ErrorResponse;
+import com.webfejl.beadando.response.RegisterResponse;
 import com.webfejl.beadando.entity.User;
 import com.webfejl.beadando.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +38,18 @@ public class AuthController {
             String token = userService.login(loginRequest);
             return ResponseEntity.ok(new AuthenticationResponse(token));
         } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Username or password is incorrect!");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), "Username or password is incorrect!"));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Login failed. Please try again later.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Login failed. Please try again later."));
         }
+    }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<?> getUserNameById(@PathVariable String id) {
+        User user = userService.getUserById(id);
+        return ResponseEntity.ok(new AuthenticationResponse(user.getUsername()));
     }
 
 }

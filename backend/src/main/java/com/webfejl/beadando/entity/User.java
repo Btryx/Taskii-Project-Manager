@@ -20,6 +20,9 @@ public class User {
     @Column(name = "user_id", updatable = false, nullable = false)
     private String userId;
 
+    @Column(name = "email", nullable = false)
+    private String email;
+
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
@@ -28,10 +31,6 @@ public class User {
 
     @Column(name = "enabled", nullable = false)
     private Boolean enabled;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude
-    private List<Project> projects = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {

@@ -36,5 +36,7 @@ public interface TaskRepository extends JpaRepository<Task, String> {
 
     @Query(value = "SELECT * FROM tasks ORDER BY task_date", nativeQuery = true)
     List<Task> sortByDate();
+
+    void deleteAllByProject_ProjectId(String id);
 }
 
