@@ -12,6 +12,16 @@
         }</mat-error>
 
         <mat-form-field appearance="outline">
+          <mat-label>E-mail</mat-label>
+          <input matInput
+                 placeholder="Enter your email address"
+                 name="email"
+                 formControlName="email"
+                 required>
+          <mat-icon matSuffix>email</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
           <mat-label>Username</mat-label>
           <input matInput
                  placeholder="Enter your username"
@@ -42,7 +52,7 @@
         <button
                 class="btn btn-primary"
                 type="submit"
-                [disabled]="anyFieldEmpty">
+                [disabled]="!registerForm.valid">
           Sign up
         </button>
       </form>

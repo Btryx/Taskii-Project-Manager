@@ -16,12 +16,11 @@ h1 {
 }
 
 .reg-container {
+  width: 100%;
   display: flex;
-  justify-content: center;
   align-items: center;
   flex-direction: column;
-  min-height: 100vh;
-  width: 100%;
+  margin-top: 2rem;
 }
 
 .reg-card {
