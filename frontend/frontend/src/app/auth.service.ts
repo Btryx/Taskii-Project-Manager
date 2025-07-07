@@ -16,8 +16,8 @@ export class Auth {
     return this.http.post<any>(this.loginUrl, {username, password});
   }
 
-  register(username: string, password: string): Observable<any> {
-    return this.http.post<any>(this.registerUrl, {username, password, enabled: true});
+  register(email: string, username: string, password: string): Observable<any> {
+    return this.http.post<any>(this.registerUrl, {email, username, password, enabled: true});
   }
 
   setToken(token: string) {

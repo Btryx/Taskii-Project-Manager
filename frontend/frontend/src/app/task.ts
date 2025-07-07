@@ -5,5 +5,7 @@ export class Task {
   taskPriority: number = 3;
   taskDate: Date | undefined;
   taskDesc: string | undefined;
+  assignee: string | undefined;
+  orderNumber: number | undefined;
   projectId!: string;
 }

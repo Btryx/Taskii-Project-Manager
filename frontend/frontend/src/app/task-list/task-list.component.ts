@@ -144,6 +144,7 @@ export class TaskListComponent implements OnInit {
 
     if (event.previousContainer === event.container) {
       moveItemInArray(currList, event.previousIndex, event.currentIndex);
+      //TODO: persist morder inside kanban column
     } else {
       transferArrayItem(prevList, currList, event.previousIndex, event.currentIndex);
 

@@ -46,11 +46,14 @@ public class UserService {
 
             return saved;
         } catch (DataIntegrityViolationException e) {
-            throw new UserCreationException("This username already exists!");
+            throw new UserCreationException("Something went wrong!");
         }
     }
 
-    private static void validateCreateUser(User user) throws UserCreationException {
+    private void validateCreateUser(User user) throws UserCreationException {
+        if (user.getEmail() == null || user.getEmail().isEmpty() || !user.getEmail().contains("@")) {
+            throw new UserCreationException("Email field is empty or invalid!");
+        }
         if (user.getUsername() == null || user.getUsername().isEmpty() || user.getPassword() == null || user.getPassword().isEmpty()) {
             throw new UserCreationException("Username or password field is empty!");
         }
@@ -59,6 +62,12 @@ public class UserService {
         }
         if (!user.getPassword().matches(".*\\d.*")) {
             throw new UserCreationException("Password must contain at least one number!");
+        }
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new UserCreationException("This username already exists!");
+        }
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new UserCreationException("This email is already registered!");
         }
     }
 
