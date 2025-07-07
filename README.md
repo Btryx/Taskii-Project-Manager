@@ -48,6 +48,8 @@ CREATE TABLE users (
     enabled BOOLEAN NOT NULL
 );
 
+ALTER TABLE users ADD COLUMN email VARCHAR(128);
+
 CREATE TABLE projects (
     project_id VARCHAR(36) PRIMARY KEY,
     project_name VARCHAR(100) NOT NULL,
@@ -74,6 +76,8 @@ CREATE TABLE tasks (
 
 ALTER TABLE tasks MODIFY COLUMN task_date timestamp null;
 ALTER TABLE tasks MODIFY COLUMN task_desc TEXT null;
+ALTER TABLE tasks ADD COLUMN assignee VARCHAR(36);
+ALTER TABLE tasks ADD COLUMN order_number INT UNSIGNED;
 
 CREATE TABLE collaborators (
     collaborator_id VARCHAR(36) PRIMARY KEY,
@@ -82,6 +86,8 @@ CREATE TABLE collaborators (
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (project_id) REFERENCES projects(project_id)
 );
+
+ALTER TABLE collaborators ADD COLUMN role VARCHAR(36);
 
 CREATE TABLE statuses (
     status_id VARCHAR(36) PRIMARY KEY,
