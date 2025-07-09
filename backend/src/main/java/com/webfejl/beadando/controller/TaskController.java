@@ -1,7 +1,7 @@
 package com.webfejl.beadando.controller;
 
 
-import com.webfejl.beadando.dto.TaskDTO;
+import com.webfejl.beadando.dto.TaskDto;
 import com.webfejl.beadando.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,14 +35,14 @@ public class TaskController {
     }
 
     @PostMapping("/all")
-    public ResponseEntity<?> createTask(@RequestBody TaskDTO task) {
+    public ResponseEntity<?> createTask(@RequestBody TaskDto task) {
         return ResponseEntity.ok(taskService.createTask(task));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateTask(
             @PathVariable String id,
-            @RequestBody TaskDTO task) {
+            @RequestBody TaskDto task) {
         return ResponseEntity.ok(taskService.updateTask(task, id));
     }
 

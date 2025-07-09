@@ -1,6 +1,6 @@
 package com.webfejl.beadando.service;
 
-import com.webfejl.beadando.dto.ProjectDTO;
+import com.webfejl.beadando.dto.ProjectDto;
 import com.webfejl.beadando.entity.Project;
 import com.webfejl.beadando.entity.Status;
 import com.webfejl.beadando.entity.User;
@@ -8,7 +8,7 @@ import com.webfejl.beadando.exception.AuthorizationException;
 import com.webfejl.beadando.exception.ProjectNotFoundException;
 import com.webfejl.beadando.exception.UserCreationException;
 import com.webfejl.beadando.repository.*;
-import com.webfejl.beadando.util.ProjectAccessUtil;
+import com.webfejl.beadando.util.AccessUtil;
 import com.webfejl.beadando.util.ProjectMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -24,7 +24,7 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
-    private final ProjectAccessUtil projectAccessUtil;
+    private final AccessUtil accessUtil;
     private final StatusRepository statusRepository;
     private final CollaboratorRepository collaboratorRepository;
     private final TaskRepository taskRepository;
@@ -33,38 +33,38 @@ public class ProjectService {
     public static final String IN_PROGRESS = "In progress";
     public static final String DONE = "Done";
 
-    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, ProjectAccessUtil projectAccessUtil,
+    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, AccessUtil accessUtil,
                           StatusRepository statusRepository, CollaboratorRepository collaboratorRepository, TaskRepository taskRepository) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
-        this.projectAccessUtil = projectAccessUtil;
+        this.accessUtil = accessUtil;
         this.statusRepository = statusRepository;
         this.collaboratorRepository = collaboratorRepository;
         this.taskRepository = taskRepository;
     }
 
-    public List<ProjectDTO> getAllAccessedProjects() throws AuthorizationException {
-        User user = projectAccessUtil.getAuthenticatedUser();
+    public List<ProjectDto> getAllAccessedProjects() throws AuthorizationException {
+        User user = accessUtil.getAuthenticatedUser();
 
-        List<ProjectDTO> ownProjects = projectAccessUtil.getOwnProjects(user);
-        List<ProjectDTO> collabProjects = projectAccessUtil.getCollabProjects(user);
+        List<ProjectDto> ownProjects = accessUtil.getOwnProjects(user);
+        List<ProjectDto> collabProjects = accessUtil.getCollabProjects(user);
 
         return Stream.concat(ownProjects.stream(), collabProjects.stream()).toList();
     }
 
-    public ProjectDTO findProject(String id) throws ProjectNotFoundException, AuthorizationException {
-        User user = projectAccessUtil.getAuthenticatedUser();
-        ProjectDTO project = projectRepository.findById(id)
+    public ProjectDto findProject(String id) throws ProjectNotFoundException, AuthorizationException {
+        User user = accessUtil.getAuthenticatedUser();
+        ProjectDto project = projectRepository.findById(id)
                 .map(ProjectMapper::toDTO)
                 .orElseThrow(() -> new ProjectNotFoundException("Project not found with ID: " + id));
 
-        projectAccessUtil.checkAccess(id, user);
+        accessUtil.checkAccess(id, user);
         return project;
     }
 
     @Transactional
-    public ProjectDTO createProject(ProjectDTO projectDTO) throws AuthorizationException {
-        projectAccessUtil.getAuthenticatedUser();
+    public ProjectDto createProject(ProjectDto projectDTO) throws AuthorizationException {
+        accessUtil.getAuthenticatedUser();
         Project project = ProjectMapper.toEntity(projectDTO, new Project(), userRepository);
         project.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         Project savedProject = projectRepository.save(project);
@@ -95,13 +95,13 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectDTO updateProject(ProjectDTO projectDTO, String id) throws AuthorizationException, ProjectNotFoundException {
-        User user = projectAccessUtil.getAuthenticatedUser();
+    public ProjectDto updateProject(ProjectDto projectDTO, String id) throws AuthorizationException, ProjectNotFoundException {
+        User user = accessUtil.getAuthenticatedUser();
 
         Project project = projectRepository.findById(id)
                 .orElseThrow(() -> new ProjectNotFoundException("Project not found with ID: " + id));
 
-        projectAccessUtil.checkAccess(id, user);
+        accessUtil.checkAccess(id, user);
 
         try{
             Project newProject = ProjectMapper.toEntity(projectDTO, project, userRepository);
@@ -118,11 +118,11 @@ public class ProjectService {
 
     @Transactional
     public void deleteProject(String id) throws AuthorizationException, ProjectNotFoundException {
-        User user = projectAccessUtil.getAuthenticatedUser();
+        User user = accessUtil.getAuthenticatedUser();
         if (!projectRepository.existsById(id)) {
             throw new ProjectNotFoundException("Project not found with ID: " + id);
         }
-        projectAccessUtil.checkAccess(id, user);
+        accessUtil.checkAccess(id, user);
 
         List<Status> statuses = statusRepository.findByProjectId(id);
 

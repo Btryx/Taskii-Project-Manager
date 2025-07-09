@@ -3,7 +3,7 @@ package com.webfejl.beadando.dto;
 import java.sql.Timestamp;
 
 
-public record TaskDTO(
+public record TaskDto(
         String taskId,
         String taskTitle,
         String taskStatus,

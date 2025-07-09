@@ -1,6 +1,6 @@
 package com.webfejl.beadando.service;
 
-import com.webfejl.beadando.dto.ProjectDTO;
+import com.webfejl.beadando.dto.ProjectDto;
 import com.webfejl.beadando.entity.Project;
 import com.webfejl.beadando.entity.User;
 import com.webfejl.beadando.repository.ProjectRepository;
@@ -55,8 +55,8 @@ public class ProjectServiceTest {
         setActive(true);
     }};
 
-    private final ProjectDTO mockDTO = new ProjectDTO(
-            PROJECT_ID, "Project Test",
+    private final ProjectDto mockDTO = new ProjectDto(
+            PROJECT_ID, "Project Test", "Project Test Desc",
             new Timestamp(System.currentTimeMillis()), true,
             null, USER_ID
     );
@@ -83,7 +83,7 @@ public class ProjectServiceTest {
         try (MockedStatic<ProjectMapper> mockedMapper = Mockito.mockStatic(ProjectMapper.class)) {
             mockedMapper.when(() -> ProjectMapper.toDTO(mockProject)).thenReturn(mockDTO);
 
-            List<ProjectDTO> result = projectService.getAllAccessedProjects();
+            List<ProjectDto> result = projectService.getAllAccessedProjects();
 
             assertEquals(1, result.size());
             assertEquals(PROJECT_ID, result.get(0).projectId());
@@ -97,7 +97,7 @@ public class ProjectServiceTest {
         try (MockedStatic<ProjectMapper> mockedMapper = Mockito.mockStatic(ProjectMapper.class)) {
             mockedMapper.when(() -> ProjectMapper.toDTO(mockProject)).thenReturn(mockDTO);
 
-            ProjectDTO result = projectService.findProject(PROJECT_ID);
+            ProjectDto result = projectService.findProject(PROJECT_ID);
             assertEquals(PROJECT_ID, result.projectId());
         }
     }
@@ -122,7 +122,7 @@ public class ProjectServiceTest {
 
             when(projectRepository.save(newProject)).thenReturn(mockProject);
 
-            ProjectDTO result = projectService.createProject(mockDTO);
+            ProjectDto result = projectService.createProject(mockDTO);
 
             assertEquals(PROJECT_ID, result.projectId());
             verify(projectRepository).save(newProject);
@@ -140,7 +140,7 @@ public class ProjectServiceTest {
 
             when(projectRepository.save(mockProject)).thenReturn(mockProject);
 
-            ProjectDTO result = projectService.updateProject(mockDTO, PROJECT_ID);
+            ProjectDto result = projectService.updateProject(mockDTO, PROJECT_ID);
 
             assertEquals(PROJECT_ID, result.projectId());
         }

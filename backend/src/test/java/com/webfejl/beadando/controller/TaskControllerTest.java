@@ -1,6 +1,6 @@
 package com.webfejl.beadando.controller;
 
-import com.webfejl.beadando.dto.TaskDTO;
+import com.webfejl.beadando.dto.TaskDto;
 import com.webfejl.beadando.service.TaskService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +30,15 @@ public class TaskControllerTest {
     @MockitoBean
     private TaskService taskService;
 
-    private final TaskDTO sampleTask = new TaskDTO(
+    private final TaskDto sampleTask = new TaskDto(
             "task123",
             "Sample Task",
             "IN_PROGRESS",
             2,
             Timestamp.valueOf("2024-01-01 10:00:00"),
             "Sample description",
+            null,
+            null,
             "project456"
     );
 
@@ -67,7 +69,7 @@ public class TaskControllerTest {
     @WithMockUser
     @Test
     void createTaskShouldReturnCreatedTask() throws Exception {
-        when(taskService.createTask(any(TaskDTO.class))).thenReturn(sampleTask);
+        when(taskService.createTask(any(TaskDto.class))).thenReturn(sampleTask);
 
         String json = """
                 {
@@ -91,7 +93,7 @@ public class TaskControllerTest {
     @WithMockUser
     @Test
     void updateTaskShouldReturnUpdatedTask() throws Exception {
-        when(taskService.updateTask(any(TaskDTO.class), eq("task123")))
+        when(taskService.updateTask(any(TaskDto.class), eq("task123")))
                 .thenReturn(sampleTask);
 
         String json = """

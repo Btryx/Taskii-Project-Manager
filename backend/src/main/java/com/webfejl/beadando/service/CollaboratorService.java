@@ -1,7 +1,6 @@
 package com.webfejl.beadando.service;
 
 import com.webfejl.beadando.entity.Collaborator;
-import com.webfejl.beadando.entity.Project;
 import com.webfejl.beadando.entity.User;
 import com.webfejl.beadando.exception.AuthorizationException;
 import com.webfejl.beadando.exception.ProjectNotFoundException;
@@ -9,10 +8,9 @@ import com.webfejl.beadando.exception.UserNotFoundException;
 import com.webfejl.beadando.repository.CollaboratorRepository;
 import com.webfejl.beadando.repository.ProjectRepository;
 import com.webfejl.beadando.repository.UserRepository;
-import com.webfejl.beadando.util.ProjectAccessUtil;
+import com.webfejl.beadando.util.AccessUtil;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @Service
@@ -21,21 +19,21 @@ public class CollaboratorService {
     private final CollaboratorRepository collaboratorRepository;
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
-    private final ProjectAccessUtil projectAccessUtil;
+    private final AccessUtil accessUtil;
 
-    public CollaboratorService(CollaboratorRepository collaboratorRepository, UserRepository userRepository, ProjectRepository projectRepository, ProjectAccessUtil projectAccessUtil) {
+    public CollaboratorService(CollaboratorRepository collaboratorRepository, UserRepository userRepository, ProjectRepository projectRepository, AccessUtil accessUtil) {
         this.collaboratorRepository = collaboratorRepository;
         this.userRepository = userRepository;
         this.projectRepository = projectRepository;
-        this.projectAccessUtil = projectAccessUtil;
+        this.accessUtil = accessUtil;
     }
 
     public Collaborator createCollaborator(String projectId, String userId) throws AuthorizationException {
-        User user = projectAccessUtil.getAuthenticatedUser();
+        User user = accessUtil.getAuthenticatedUser();
 
         Collaborator collaborator = new Collaborator();
         collaborator.setProject(projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("Project not found!")));
-        projectAccessUtil.checkAccess(projectId, user);
+        accessUtil.checkAccess(projectId, user);
 
         collaborator.setUser(userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found!")));
 
@@ -49,8 +47,8 @@ public class CollaboratorService {
     }
 
     public List<User> getCollaborators(String projectId) throws AuthorizationException {
-        User user = projectAccessUtil.getAuthenticatedUser();
-        projectAccessUtil.checkAccess(projectId, user);
+        User user = accessUtil.getAuthenticatedUser();
+        accessUtil.checkAccess(projectId, user);
         return collaboratorRepository.findUsersByProjectId(projectId);
     }
 }

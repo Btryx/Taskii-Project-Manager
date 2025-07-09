@@ -1,14 +1,14 @@
 package com.webfejl.beadando.util;
 
-import com.webfejl.beadando.dto.ProjectDTO;
+import com.webfejl.beadando.dto.ProjectDto;
 import com.webfejl.beadando.entity.Project;
 import com.webfejl.beadando.exception.UserNotFoundException;
 import com.webfejl.beadando.repository.UserRepository;
 
 public class ProjectMapper {
 
-    public static ProjectDTO toDTO(Project project) {
-        return new ProjectDTO(
+    public static ProjectDto toDTO(Project project) {
+        return new ProjectDto(
                 project.getProjectId(),
                 project.getProjectName(),
                 project.getProjectDesc(),
@@ -19,7 +19,7 @@ public class ProjectMapper {
         );
     }
 
-    public static Project toEntity(ProjectDTO projectDTO, Project project, UserRepository userRepository) {
+    public static Project toEntity(ProjectDto projectDTO, Project project, UserRepository userRepository) {
         project.setProjectId(projectDTO.projectId());
         project.setProjectName(projectDTO.projectName());
         project.setActive(projectDTO.active());
@@ -28,7 +28,7 @@ public class ProjectMapper {
         project.setProjectDesc(projectDTO.projectDesc());
 
         if (projectDTO.userId() == null) {
-            String username = ProjectAccessUtil.getUsername();
+            String username = AccessUtil.getUsername();
             project.setUser(userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found")));
             System.out.println("Current user: " + username);
         } else {

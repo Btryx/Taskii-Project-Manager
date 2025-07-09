@@ -1,7 +1,7 @@
 package com.webfejl.beadando.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.webfejl.beadando.dto.ProjectDTO;
+import com.webfejl.beadando.dto.ProjectDto;
 import com.webfejl.beadando.repository.ProjectRepository;
 import com.webfejl.beadando.service.ProjectService;
 import org.junit.jupiter.api.Test;
@@ -41,9 +41,10 @@ public class ProjectControllerTest {
     @WithMockUser(username = "testuser", roles = "USER")
     @Test
     void getAllProjectsShouldReturnList() throws Exception {
-        ProjectDTO project = new ProjectDTO(
+        ProjectDto project = new ProjectDto(
                 "1",
                 "Test Project",
+                "Test Project Desc",
                 Timestamp.from(Instant.now()),
                 true,
                 null,
@@ -62,9 +63,10 @@ public class ProjectControllerTest {
     @WithMockUser(username = "testuser", roles = "USER")
     @Test
     void getProjectByIdShouldReturnProject() throws Exception {
-        ProjectDTO project = new ProjectDTO(
+        ProjectDto project = new ProjectDto(
                 "1",
                 "Test Project",
+                "Test Project Desc",
                 Timestamp.from(Instant.now()),
                 true,
                 null,
@@ -83,24 +85,26 @@ public class ProjectControllerTest {
     @WithMockUser(username = "testuser", roles = "USER")
     @Test
     void createProjectShouldReturnCreatedProject() throws Exception {
-        ProjectDTO project = new ProjectDTO(
+        ProjectDto project = new ProjectDto(
                 null,
                 "New Project",
+                "Test Project Desc",
                 Timestamp.from(Instant.now()),
                 true,
                 null,
                 "user123"
         );
 
-        ProjectDTO createdProject = new ProjectDTO(
+        ProjectDto createdProject = new ProjectDto(
                 "123",
                 "New Project",
+                "Test Project Desc",
                 Timestamp.from(Instant.now()),
                 true,
                 null,
                 "user123"
         );
-        when(projectService.createProject(any(ProjectDTO.class))).thenReturn(createdProject);
+        when(projectService.createProject(any(ProjectDto.class))).thenReturn(createdProject);
 
         mockMvc.perform(post("/api/projects/all")
                         .contentType(MediaType.APPLICATION_JSON)

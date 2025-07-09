@@ -2,7 +2,7 @@ package com.webfejl.beadando.dto;
 
 import java.sql.Timestamp;
 
-public record ProjectDTO(
+public record ProjectDto(
         String projectId,
         String projectName,
         String projectDesc,

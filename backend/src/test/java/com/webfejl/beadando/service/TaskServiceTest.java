@@ -1,11 +1,10 @@
 package com.webfejl.beadando.service;
 
-import com.webfejl.beadando.dto.TaskDTO;
+import com.webfejl.beadando.dto.TaskDto;
 import com.webfejl.beadando.entity.Project;
 import com.webfejl.beadando.entity.Task;
 import com.webfejl.beadando.repository.ProjectRepository;
 import com.webfejl.beadando.repository.TaskRepository;
-import com.webfejl.beadando.repository.UserRepository;
 import com.webfejl.beadando.util.TaskMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,12 +34,12 @@ class TaskServiceTest {
     @InjectMocks
     private TaskService taskService;
 
-    private TaskDTO taskDTO;
+    private TaskDto taskDTO;
     private Task task;
 
     @BeforeEach
     void setup() {
-        taskDTO = new TaskDTO("task1", "Fix bug", "DONE", 1, new Timestamp(System.currentTimeMillis()), "Fix it", null, null, "project1");
+        taskDTO = new TaskDto("task1", "Fix bug", "DONE", 1, new Timestamp(System.currentTimeMillis()), "Fix it", null, null, "project1");
         task = new Task();
         task.setTaskId("task1");
         task.setTaskTitle("Fix bug");
@@ -58,7 +57,7 @@ class TaskServiceTest {
         try (MockedStatic<TaskMapper> mocked = mockStatic(TaskMapper.class)) {
             mocked.when(() -> TaskMapper.toDTO(task)).thenReturn(taskDTO);
 
-            List<TaskDTO> result = taskService.findAll("project1", "OPEN", 1);
+            List<TaskDto> result = taskService.findAll("project1", "OPEN", 1);
 
             assertEquals(1, result.size());
             assertEquals("task1", result.get(0).taskId());
@@ -72,7 +71,7 @@ class TaskServiceTest {
         try (MockedStatic<TaskMapper> mocked = mockStatic(TaskMapper.class)) {
             mocked.when(() -> TaskMapper.toDTO(task)).thenReturn(taskDTO);
 
-            TaskDTO result = taskService.findTask("task1");
+            TaskDto result = taskService.findTask("task1");
 
             assertEquals("task1", result.taskId());
         }
@@ -89,14 +88,14 @@ class TaskServiceTest {
     @Test
     void createTask_shouldSaveAndReturnTaskDTO() {
         try (MockedStatic<TaskMapper> mocked = mockStatic(TaskMapper.class)) {
-            mocked.when(() -> TaskMapper.toEntity(any(TaskDTO.class), any(Task.class), any(ProjectRepository.class)))
+            mocked.when(() -> TaskMapper.toEntity(any(TaskDto.class), any(Task.class), any(ProjectRepository.class)))
                     .thenReturn(task);
             mocked.when(() -> TaskMapper.toDTO(task))
                     .thenReturn(taskDTO);
 
             when(taskRepository.save(task)).thenReturn(task);
 
-            TaskDTO result = taskService.createTask(taskDTO);
+            TaskDto result = taskService.createTask(taskDTO);
 
             assertEquals("task1", result.taskId());
         }
@@ -111,7 +110,7 @@ class TaskServiceTest {
             mocked.when(() -> TaskMapper.toEntity(taskDTO, task, projectRepository)).thenReturn(task);
             mocked.when(() -> TaskMapper.toDTO(task)).thenReturn(taskDTO);
 
-            TaskDTO result = taskService.updateTask(taskDTO, "task1");
+            TaskDto result = taskService.updateTask(taskDTO, "task1");
 
             assertEquals("task1", result.taskId());
         }

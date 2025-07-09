@@ -38,7 +38,7 @@ export class Login {
           this.router.navigate(["/projects"]);
         },
         error: (error: HttpErrorResponse) => {
-          console.error(error);
+          console.error(error.error.message);
           this.errorMessage.set(error.error.message);
         }
       }

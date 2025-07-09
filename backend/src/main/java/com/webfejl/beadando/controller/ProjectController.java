@@ -1,7 +1,7 @@
 package com.webfejl.beadando.controller;
 
 import com.webfejl.beadando.request.CollaboratorRequest;
-import com.webfejl.beadando.dto.ProjectDTO;
+import com.webfejl.beadando.dto.ProjectDto;
 import com.webfejl.beadando.service.CollaboratorService;
 import com.webfejl.beadando.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +34,14 @@ public class ProjectController {
     }
 
     @PostMapping("/all")
-    public ResponseEntity<?> createProject(@RequestBody ProjectDTO project){
+    public ResponseEntity<?> createProject(@RequestBody ProjectDto project){
         return ResponseEntity.ok(projectService.createProject(project));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateProject(
             @PathVariable String id,
-            @RequestBody ProjectDTO project) {
+            @RequestBody ProjectDto project) {
         return ResponseEntity.ok(projectService.updateProject(project, id));
     }
 

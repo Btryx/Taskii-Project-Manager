@@ -1,17 +1,15 @@
 package com.webfejl.beadando.util;
 
-import com.webfejl.beadando.dto.TaskDTO;
+import com.webfejl.beadando.dto.TaskDto;
 import com.webfejl.beadando.entity.Project;
 import com.webfejl.beadando.entity.Task;
 import com.webfejl.beadando.exception.ProjectNotFoundException;
-import com.webfejl.beadando.exception.UserNotFoundException;
 import com.webfejl.beadando.repository.ProjectRepository;
-import com.webfejl.beadando.repository.UserRepository;
 
 public class TaskMapper {
 
-    public static TaskDTO toDTO(Task task) {
-        return new TaskDTO(
+    public static TaskDto toDTO(Task task) {
+        return new TaskDto(
                 task.getTaskId(),
                 task.getTaskTitle(),
                 task.getTaskStatus(),
@@ -24,7 +22,7 @@ public class TaskMapper {
         );
     }
 
-    public static Task toEntity(TaskDTO taskDTO, Task task, ProjectRepository projectRepository) {
+    public static Task toEntity(TaskDto taskDTO, Task task, ProjectRepository projectRepository) {
         task.setTaskId(taskDTO.taskId());
         task.setTaskTitle(taskDTO.taskTitle());
         task.setTaskStatus(taskDTO.taskStatus());

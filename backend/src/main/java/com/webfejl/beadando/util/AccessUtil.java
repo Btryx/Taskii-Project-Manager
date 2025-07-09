@@ -1,6 +1,6 @@
 package com.webfejl.beadando.util;
 
-import com.webfejl.beadando.dto.ProjectDTO;
+import com.webfejl.beadando.dto.ProjectDto;
 import com.webfejl.beadando.entity.User;
 import com.webfejl.beadando.exception.AuthorizationException;
 import com.webfejl.beadando.exception.ProjectAccessDenied;
@@ -13,17 +13,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.Optional;
 
 @Component
-public class ProjectAccessUtil {
+public class AccessUtil {
     private final ProjectRepository projectRepository;
     private final CollaboratorRepository collaboratorRepository;
     private final UserRepository userRepository;
 
-    public ProjectAccessUtil(ProjectRepository projectRepository, CollaboratorRepository collaboratorRepository, UserRepository userRepository) {
+    public AccessUtil(ProjectRepository projectRepository, CollaboratorRepository collaboratorRepository, UserRepository userRepository) {
         this.projectRepository = projectRepository;
         this.collaboratorRepository = collaboratorRepository;
         this.userRepository = userRepository;
@@ -41,14 +40,14 @@ public class ProjectAccessUtil {
         }
     }
 
-    public List<ProjectDTO> getOwnProjects(User user) {
+    public List<ProjectDto> getOwnProjects(User user) {
         return projectRepository.findByUserId(user.getUserId())
                 .stream()
                 .map(ProjectMapper::toDTO)
                 .toList();
     }
 
-    public List<ProjectDTO> getCollabProjects(User user) {
+    public List<ProjectDto> getCollabProjects(User user) {
         return collaboratorRepository.findProjectsByUserId(user.getUserId())
                 .stream()
                 .map(ProjectMapper::toDTO)
