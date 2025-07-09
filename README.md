@@ -99,6 +99,16 @@ CREATE TABLE statuses (
     project_id VARCHAR(36) NOT NULL
 );
 
+CREATE TABLE comments (
+    comment_id VARCHAR(36) PRIMARY KEY,
+    task_id VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    comment text NOT NULL,
+    user_id VARCHAR(36) NOT NULL,
+    FOREIGN KEY (task_id) REFERENCES tasks(task_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
 ```
 ## 🚀 Features
 
