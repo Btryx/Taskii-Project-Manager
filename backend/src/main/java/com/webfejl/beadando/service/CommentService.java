@@ -11,11 +11,13 @@ import com.webfejl.beadando.repository.TaskRepository;
 import com.webfejl.beadando.repository.UserRepository;
 import com.webfejl.beadando.util.AccessUtil;
 import com.webfejl.beadando.util.CommentMapper;
+import com.webfejl.beadando.util.TaskMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
@@ -59,8 +61,11 @@ public class CommentService {
         }
     }
 
-    public List<Comment> getCommentsByTask(String id) {
+    public List<CommentDto> getCommentsByTask(String id) {
         accessUtil.getAuthenticatedUser();
-        return commentRepository.findAllByTask_TaskId(id);
+        List<Comment> comments = commentRepository.findAllByTask_TaskIdOrderByCreatedAtDesc(id);
+        return comments.stream()
+                .map(CommentMapper::toDTO)
+                .collect(Collectors.toList());
     }
 }

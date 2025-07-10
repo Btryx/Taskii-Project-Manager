@@ -17,15 +17,46 @@
               </div>
 
               <div class="comment-section">
-                  <div class="avatar">B</div>
-                  <div style="flex: 1;">
-                      <textarea class="comment-input" placeholder="Add a comment..."></textarea>
-                      <div class="comment-suggestions">
-                          <button class="suggestion-btn">Who is working on this...?</button>
-                          <button class="suggestion-btn">Can I get more info...?</button>
-                          <button class="suggestion-btn">Status update...</button>
-                      </div>
+
+                <div class="comment-input-container">
+                  <div class="comment-avatar">
+                    <button mat-icon-button [style.backgroundColor]="getColorForUser(userId())" class="ownerIcon">
+                      {{getCurrentUserName().charAt(0).toUpperCase()}}
+                    </button>
                   </div>
+                  <div class="comment-input-wrapper">
+                    <textarea
+                      class="comment-input"
+                      placeholder="Add a comment..."
+                      [(ngModel)]="currentComment"
+                      [ngModelOptions]="{standalone: true}"
+                      (keydown.enter)="createComment($event)">
+                    </textarea>
+                    <div class="comment-suggestions">
+                      <button class="suggestion-btn" type="button" (click)="setCommentToSuggestion('Status update?')">Status update?</button>
+                      <button class="suggestion-btn" type="button" (click)="setCommentToSuggestion('Who is working on this?')">Who is working on this...?</button>
+                      <button class="suggestion-btn" type="button" (click)="setCommentToSuggestion('Can I get more info on this?')">Can I get more info...?</button>
+                    </div>
+                  </div>
+                </div>
+
+
+                @for (comment of comments(); track comment.commentId) {
+                  <div class="comment-item">
+                    <div class="comment-avatar">
+                      <button mat-icon-button [style.backgroundColor]="getColorForUser(comment.userId)" class="ownerIcon">
+                        {{comment.userName?.charAt(0)?.toUpperCase()}}
+                      </button>
+                    </div>
+                    <div class="comment-content">
+                      <div class="comment-header">
+                        <span class="comment-author">{{comment.userName}}</span>
+                        <span class="comment-time">{{comment.createdAt | date}}</span>
+                      </div>
+                      <div class="comment-text">{{comment.comment}}</div>
+                    </div>
+                  </div>
+                }
               </div>
           </div>
       </div>

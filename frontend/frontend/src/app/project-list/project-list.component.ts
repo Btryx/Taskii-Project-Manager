@@ -226,7 +226,7 @@ export class ProjectListComponent implements OnInit {
   }
 
   getUserName(id: string): Observable<any> {
-    return this.authService.getUser(id);
+    return this.authService.getUserNameById(id);
   }
 
   getColorForUser(id: string): string {

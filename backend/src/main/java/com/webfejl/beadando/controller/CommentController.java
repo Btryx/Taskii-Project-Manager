@@ -27,7 +27,7 @@ public class CommentController {
         return ResponseEntity.ok(commentService.createComment(commentDto));
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteProject(@PathVariable String id) {
         commentService.deleteComment(id);
         return ResponseEntity.noContent().build();

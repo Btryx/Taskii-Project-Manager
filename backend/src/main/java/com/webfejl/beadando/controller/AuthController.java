@@ -52,5 +52,11 @@ public class AuthController {
         return ResponseEntity.ok(new AuthenticationResponse(user.getUsername()));
     }
 
+    @GetMapping("/user/username/{username}")
+    public ResponseEntity<?> getUserByUsername(@PathVariable String username) {
+        User user = userService.getUserByUsername(username);
+        return ResponseEntity.ok(new AuthenticationResponse(user.getUserId()));
+    }
+
 }
 

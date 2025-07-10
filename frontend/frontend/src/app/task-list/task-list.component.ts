@@ -8,8 +8,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { Auth } from '../auth.service';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { ConfirmationDialog } from '../comformation-dialog/comformation-dialog';
 import { MatMenu, MatMenuTrigger, MatMenuItem } from '@angular/material/menu';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -22,7 +22,7 @@ import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select'
 import { User } from '../user';
 import { CollaboratorService } from '../collaborator.service';
-import {MatTooltipModule} from '@angular/material/tooltip';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-task-list',
@@ -264,7 +264,7 @@ export class TaskListComponent implements OnInit {
   }
 
   getOwner()  {
-    this.authService.getUser(this.project()?.userId!).subscribe({
+    this.authService.getUserNameById(this.project()?.userId!).subscribe({
       next: (result) => {
         this.owner.set(result.message);
       },

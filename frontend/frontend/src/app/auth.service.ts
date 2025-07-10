@@ -45,8 +45,12 @@ export class Auth {
     sessionStorage.removeItem('username');
   }
 
-  getUser(id: string) : Observable<any> {
+  getUserNameById(id: string) : Observable<any> {
     return this.http.get<any>(`${this.userUrl}/${id}`);
+  }
+
+  getUserIdByName(name: string) : Observable<any> {
+    return this.http.get<any>(`${this.userUrl}/username/${name}`);
   }
 
   getColorForUser(id: string): string {
