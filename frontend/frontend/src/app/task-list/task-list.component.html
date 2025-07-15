@@ -21,7 +21,7 @@
 
         <mat-form-field appearance="outline"   class="task-filter-priority">
           <mat-label>Priority filter</mat-label>
-          <mat-select class="priority-input" [(ngModel)]="priorityFilterValue">
+          <mat-select class="priority-input" [(ngModel)]="priorityFilterValue" >
             <mat-option [value]=0 >None</mat-option>
             @for(priority of priorities; let i = $index; track i) {
               <mat-option [value]="i+1">

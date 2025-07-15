@@ -49,9 +49,16 @@
                       </button>
                     </div>
                     <div class="comment-content">
-                      <div class="comment-header">
-                        <span class="comment-author">{{comment.userName}}</span>
-                        <span class="comment-time">{{comment.createdAt | date}}</span>
+                      <div class="comment-row">
+                        <div class="comment-header">
+                          <span class="comment-author">{{comment.userName}}</span>
+                          <span class="comment-time">{{comment.createdAt | date}}</span>
+                        </div>
+                        <span class="comment-delete">
+                          <button type="button" mat-button (click)="deleteComment(comment, $event)" [hidden]="userId() !== comment.userId">
+                            <mat-icon style="margin: 0;">delete</mat-icon>
+                          </button>
+                        </span>
                       </div>
                       <div class="comment-text">{{comment.comment}}</div>
                     </div>

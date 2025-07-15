@@ -1,6 +1,6 @@
 import { Component, inject, Inject, signal, WritableSignal } from '@angular/core';
 import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select'
@@ -17,8 +17,8 @@ import { FormsModule } from '@angular/forms';
 import { Comment } from '../comment';
 import { Auth } from '../auth.service';
 import { CommonModule  } from '@angular/common';
-import { User } from '../user';
 import { map, Observable } from 'rxjs';
+import { ConfirmationDialog } from '../comformation-dialog/comformation-dialog';
 
 interface TaskDialogData extends Task {
   title: string;
@@ -43,6 +43,8 @@ export class TaskDialog {
     projectId: new FormControl(''),
   })
   priorities = ["Lowest", "Low", "Medium", "High", "Highest"];
+
+  private dialog: MatDialog = inject(MatDialog);
 
   authService: Auth = inject(Auth);
   userId = signal("");
@@ -146,6 +148,31 @@ export class TaskDialog {
       }
     });
   }
+
+    deleteComment(comment : Comment,  event : Event) {
+      event.stopPropagation();
+      const dialogRef = this.dialog.open(ConfirmationDialog, {
+        disableClose: false
+      });
+      dialogRef.componentInstance.title = "Delete comment?"
+      dialogRef.afterClosed().subscribe(result => {
+        if(result) {
+          this.commentService.deleteComment(comment.commentId).subscribe({
+            next: () => {
+              this.comments.update(value => {
+                let indexOfUpdatedComment = value.findIndex(item => item.commentId === comment.commentId);
+                value.splice(indexOfUpdatedComment, 1);
+                return [...value];
+              });
+            },
+            error: (error: HttpErrorResponse) => {
+              console.error(error.error.message);
+            },
+          })
+        }
+      });
+    }
+
 
   getCurrentUserName() : string {
     return this.authService.getUsername()!;

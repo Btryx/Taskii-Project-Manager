@@ -132,7 +132,7 @@ body {
   color: #ffffff;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   height: 300px;
-  width: 500px;
+  width: 30vw;
   overflow-y: scroll;
 }
 
@@ -217,6 +217,7 @@ body {
 .comment-item {
   display: flex;
   padding: 10px;
+  padding-bottom: 15px;
   gap: 12px;
   margin-bottom: 15px;
 }
@@ -271,6 +272,11 @@ body {
 
 .comment-input::-webkit-scrollbar-thumb:hover {
   background: #666666;
+}
+
+.comment-row {
+  display: flex;
+  justify-content: space-between;
 }
 
 .suggestion-btn {
