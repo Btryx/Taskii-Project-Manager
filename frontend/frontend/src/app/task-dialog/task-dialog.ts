@@ -19,10 +19,12 @@ import { Auth } from '../auth.service';
 import { CommonModule  } from '@angular/common';
 import { map, Observable } from 'rxjs';
 import { ConfirmationDialog } from '../comformation-dialog/comformation-dialog';
+import { User } from '../user';
 
 interface TaskDialogData extends Task {
   title: string;
   statuses: Status[];
+  collaborators: User[];
 }
 
 @Component({
@@ -39,6 +41,7 @@ export class TaskDialog {
     taskDate: new FormControl(),
     taskStatus: new FormControl('', Validators.required),
     taskPriority: new FormControl(),
+    assignee: new FormControl(''),
     taskDesc: new FormControl(''),
     projectId: new FormControl(''),
   })
@@ -66,6 +69,7 @@ export class TaskDialog {
       taskTitle: this.data.taskTitle,
       taskPriority: this.data.taskPriority,
       taskDate: this.data.taskDate,
+      assignee: this.data.assignee ? this.data.assignee : '',
       taskDesc: this.data.taskDesc,
       projectId: this.data.projectId
     });
@@ -139,7 +143,6 @@ export class TaskDialog {
   getCommentUsername(comment: Comment): void {
     this.authService.getUserNameById(comment.userId).subscribe({
       next: (data) => {
-        console.log(comment.userId);
         comment.userName = data.message;
       },
       error: (error) => {
@@ -149,33 +152,39 @@ export class TaskDialog {
     });
   }
 
-    deleteComment(comment : Comment,  event : Event) {
-      event.stopPropagation();
-      const dialogRef = this.dialog.open(ConfirmationDialog, {
-        disableClose: false
-      });
-      dialogRef.componentInstance.title = "Delete comment?"
-      dialogRef.afterClosed().subscribe(result => {
-        if(result) {
-          this.commentService.deleteComment(comment.commentId).subscribe({
-            next: () => {
-              this.comments.update(value => {
-                let indexOfUpdatedComment = value.findIndex(item => item.commentId === comment.commentId);
-                value.splice(indexOfUpdatedComment, 1);
-                return [...value];
-              });
-            },
-            error: (error: HttpErrorResponse) => {
-              console.error(error.error.message);
-            },
-          })
-        }
-      });
-    }
+  deleteComment(comment : Comment,  event : Event) {
+    event.stopPropagation();
+    const dialogRef = this.dialog.open(ConfirmationDialog, {
+      disableClose: false
+    });
+    dialogRef.componentInstance.title = "Delete comment?"
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        this.commentService.deleteComment(comment.commentId).subscribe({
+          next: () => {
+            this.comments.update(value => {
+              let indexOfUpdatedComment = value.findIndex(item => item.commentId === comment.commentId);
+              value.splice(indexOfUpdatedComment, 1);
+              return [...value];
+            });
+          },
+          error: (error: HttpErrorResponse) => {
+            console.error(error.error.message);
+          },
+        })
+      }
+    });
+  }
 
 
   getCurrentUserName() : string {
     return this.authService.getUsername()!;
+  }
+
+  assignToMe() {
+    this.taskForm.patchValue({
+      assignee: this.userId(),
+    });
   }
 
 

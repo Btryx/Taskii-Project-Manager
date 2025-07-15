@@ -1,9 +1,7 @@
 package com.webfejl.beadando.service;
 
 import com.webfejl.beadando.dto.ProjectDto;
-import com.webfejl.beadando.entity.Project;
-import com.webfejl.beadando.entity.Status;
-import com.webfejl.beadando.entity.User;
+import com.webfejl.beadando.entity.*;
 import com.webfejl.beadando.exception.AuthorizationException;
 import com.webfejl.beadando.exception.ProjectNotFoundException;
 import com.webfejl.beadando.exception.UserCreationException;
@@ -70,8 +68,17 @@ public class ProjectService {
         Project savedProject = projectRepository.save(project);
 
         createDefaultStatuses(savedProject);
+        addOwnerAsCollaborator(project);
 
         return ProjectMapper.toDTO(savedProject);
+    }
+
+    private void addOwnerAsCollaborator(Project project) {
+        Collaborator collaborator = new Collaborator();
+        collaborator.setProject(project);
+        collaborator.setUser(project.getUser());
+        collaborator.setRole(Role.ADMIN);
+        collaboratorRepository.save(collaborator);
     }
 
     private void createDefaultStatuses(Project savedProject) {

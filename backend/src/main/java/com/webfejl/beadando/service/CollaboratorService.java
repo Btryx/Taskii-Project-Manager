@@ -1,6 +1,7 @@
 package com.webfejl.beadando.service;
 
 import com.webfejl.beadando.entity.Collaborator;
+import com.webfejl.beadando.entity.Role;
 import com.webfejl.beadando.entity.User;
 import com.webfejl.beadando.exception.AuthorizationException;
 import com.webfejl.beadando.exception.ProjectNotFoundException;
@@ -34,6 +35,8 @@ public class CollaboratorService {
         Collaborator collaborator = new Collaborator();
         collaborator.setProject(projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("Project not found!")));
         accessUtil.checkAccess(projectId, user);
+
+        collaborator.setRole(Role.CONTRIBUTOR);
 
         collaborator.setUser(userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found!")));
 

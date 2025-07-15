@@ -84,11 +84,16 @@
           </div>
             <div class="field-row">
                 <span class="field-label">Assignee</span>
-                <span class="field-value unassigned">👤 Unassigned</span>
+                <mat-select formControlName="assignee" class="status-input">
+                  <mat-option class="option" value="">👤 Unassigned</mat-option>
+                  @for (collaborator of data.collaborators; track collaborator.userId) {
+                    <mat-option class="option" [value]="collaborator.userId">{{collaborator.username}}</mat-option>
+                  }
+                </mat-select>
             </div>
             <div class="field-row">
                 <span class="field-label"></span>
-                <span class="field-value assign-link">Assign to me</span>
+                <span class="field-value assign-link" (click)="assignToMe()">Assign to me</span>
             </div>
 
             <div class="field-row">
@@ -115,7 +120,7 @@
         </div>
 
         <div class="actions-container">
-          <button class="btn btn-save" color="primary" type="submit" [disabled]="taskForm.invalid || taskForm.pristine">Save</button>
+          <button class="btn btn-save" color="primary" type="submit" [disabled]="taskForm.invalid">Save</button>
           <button class="btn btn-cancel" type="button" (click)="onCancel()">Cancel</button>
         </div>
     </div>

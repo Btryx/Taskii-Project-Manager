@@ -33,16 +33,13 @@
 
         <span class="collaborators">
           <span>
-            <button mat-icon-button style="background-color: gray;" class="col-icon" matTooltip="Unassigned">
-            </button>
-          </span>
-          <span>
-            <button mat-icon-button [style.backgroundColor]="getColorForUser(project()!.userId)" class="col-icon" matTooltip="{{owner()}}">
-              {{owner().charAt(0).toUpperCase()}}
+            <button mat-icon-button style="background-color: gray;" (click)="selectCollaboratorFilter('Unassigned')"
+             [class]="selectedCollaboratorFilterValue()=='Unassigned' ? 'col-icon-selected' : 'col-icon'" matTooltip="Unassigned">
             </button>
           </span>
           @for(coll of collaborators(); track coll.userId) {
-            <button mat-icon-button [style.backgroundColor]="getColorForUser(coll.userId)" matTooltip="{{coll.username}}" class="col-icon">
+            <button mat-icon-button (click)="selectCollaboratorFilter(coll.userId)" [style.backgroundColor]="getColorForUser(coll.userId)" matTooltip="{{coll.username}}"
+              [class]="selectedCollaboratorFilterValue()==coll.userId ? 'col-icon-selected' : 'col-icon'">
               {{coll.username.charAt(0).toUpperCase()}}
             </button>
           }
@@ -91,9 +88,17 @@
 
                   <mat-card-content  class="content">
                     <mat-card-subtitle class="priority" >Priority: {{priorities[task.taskPriority - 1]}}</mat-card-subtitle>
-                    <div mat-card-avatar [class]="i == statuses().length-1
-                    ? 'task-header-image'
-                    : i == 0 ? 'task-header-image-empty' : 'task-header-image-progress'"></div>
+                    @if(task.assignee && getAssigneeNameForTask(task)) {
+                      <button mat-icon-button [style.backgroundColor]="getColorForUser(task.assignee)" [matTooltip]="getAssigneeNameForTask(task)" class="col-icon-inside">
+                        {{getAssigneeNameForTask(task).charAt(0).toUpperCase()}}
+                      </button>
+                    } @else {
+                      <button mat-icon-button class="col-icon-inside">
+                        <div mat-card-avatar [class]="i == statuses().length-1
+                        ? 'task-header-image'
+                        : i == 0 ? 'task-header-image-empty' : 'task-header-image-progress'"></div>
+                      </button>
+                    }
                   </mat-card-content>
 
                 </mat-card>

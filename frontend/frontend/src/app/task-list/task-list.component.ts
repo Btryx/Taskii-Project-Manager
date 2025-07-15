@@ -1,3 +1,4 @@
+import { map, pipe } from 'rxjs';
 import { ProjectService } from './../project.service';
 import { CommonModule  } from '@angular/common';
 import { Project } from '../project';
@@ -38,16 +39,15 @@ export class TaskListComponent implements OnInit {
   private authService = inject(Auth);
   private collaboratorService = inject(CollaboratorService);
   private dialog: MatDialog = inject(MatDialog);
-  private router : Router = inject(Router);
   private route : ActivatedRoute = inject(ActivatedRoute);
 
   projectId!: string;
   project: WritableSignal<Project | null> = signal(null);
   status?: string;
   priority?: number;
-  owner: WritableSignal<string> = signal('');
   collaborators: WritableSignal<User[]> = signal([]);
 
+  selectedCollaboratorFilterValue: WritableSignal<string> = signal('');
   searchValue?: WritableSignal<string> = signal('');
   priorityFilterValue?: WritableSignal<number> = signal(0);
 
@@ -61,8 +61,9 @@ export class TaskListComponent implements OnInit {
     for (const status of this.statuses()) {
       const filtered = this.tasks()
         .filter(task => this.filterByStatus(task, status))
-        .filter(t => this.filterBySearchBarValue(t))
-        .filter(t => this.filterByPriorityFilter(t));
+        .filter(task => this.filterBySearchBarValue(task))
+        .filter(task => this.filterByPriorityFilter(task))
+        .filter(task => this.filterBySelectedCollaboratorValue(task));
       map.set(status.statusName, filtered);
     }
     return map;
@@ -86,10 +87,9 @@ export class TaskListComponent implements OnInit {
           next: (data) => {
             if(data) {
               this.project.set(data);
+              this.getCollaborators();
               this.getTasks(this.projectId);
               this.getStatuses(this.projectId);
-              this.getOwner();
-              this.getCollaborators();
             }
           },
           error: (error: HttpErrorResponse) => {
@@ -113,9 +113,33 @@ export class TaskListComponent implements OnInit {
     return this.priorityFilterValue && this.priorityFilterValue() > 0 ? t.taskPriority === this.priorityFilterValue() : t;
   }
 
+  private filterBySelectedCollaboratorValue(t: Task): unknown {
+    if(this.selectedCollaboratorFilterValue() === '') {
+      return t; //no filter
+    }
+    if(this.selectedCollaboratorFilterValue() === 'Unassigned') {
+      return t.assignee === null|| t.assignee === '';
+    }
+    return this.selectedCollaboratorFilterValue() === t.assignee;
+  }
+
+  selectCollaboratorFilter(filterValue: string) {
+    if(this.selectedCollaboratorFilterValue() === filterValue) {
+      this.selectedCollaboratorFilterValue.set(''); //unselect
+      return;
+    }
+    this.selectedCollaboratorFilterValue.set(filterValue);
+  }
+
   getTasks(projectid : string) {
-    this.projectService.getProjectTasks(projectid).subscribe({
+    this.projectService.getProjectTasks(projectid)
+    .pipe(map((taskArray) => taskArray.map((task: Task) => {
+      this.setAssigneeUsernameMap(task);
+      return task;
+    })))
+    .subscribe({
       next: (data) => {
+        console.log(data)
         this.tasks.set(data);
       },
       error: (error: HttpErrorResponse) => {
@@ -166,7 +190,7 @@ export class TaskListComponent implements OnInit {
 
   createTasks() {
     const dialogRef = this.dialog.open(TaskDialog, {
-      data: { ...new Task(), title: 'Create task', statuses: this.statuses() },
+      data: { ...new Task(), title: 'Create task', statuses: this.statuses(), collaborators: this.collaborators() },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -174,6 +198,7 @@ export class TaskListComponent implements OnInit {
         result.projectId = this.projectId;
         this.projectService.createProjectTask(result).subscribe({
           next: data => {
+            this.setAssigneeUsernameMap(data);
             this.tasks.update(value => [...value, data]);
           },
           error: (error: HttpErrorResponse) => {
@@ -192,7 +217,7 @@ export class TaskListComponent implements OnInit {
     task.taskStatus = status;
     console.log(task.taskStatus)
     const dialogRef = this.dialog.open(TaskDialog, {
-      data: { ...task, title: 'Create task', statuses: this.statuses() },
+      data: { ...task, title: 'Create task', statuses: this.statuses(), collaborators: this.collaborators() },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -200,6 +225,7 @@ export class TaskListComponent implements OnInit {
         result.projectId = this.projectId;
         this.projectService.createProjectTask(result).subscribe({
           next: data => {
+            this.setAssigneeUsernameMap(data);
             this.tasks.update(value => [...value, data]);
           },
           error: (error: HttpErrorResponse) => {
@@ -214,7 +240,7 @@ export class TaskListComponent implements OnInit {
   editTask(task : Task, event : Event) {
     event.stopPropagation();
     const dialogRef = this.dialog.open(TaskDialog, {
-      data: { ...task, title: 'Edit task', statuses: this.statuses() },
+      data: { ...task, title: 'Edit task', statuses: this.statuses(), collaborators: this.collaborators()  },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -222,6 +248,7 @@ export class TaskListComponent implements OnInit {
         this.projectService.updateProjectTask(result).subscribe({
           next: () => {
             this.tasks.update(value => {
+              this.setAssigneeUsernameMap(result);
               let indexOfUpdatedTask = value.findIndex(item => item.taskId === result.taskId);
               value.splice(indexOfUpdatedTask, 1, result);
               return [...value];
@@ -263,19 +290,6 @@ export class TaskListComponent implements OnInit {
     });
   }
 
-  getOwner()  {
-    this.authService.getUserNameById(this.project()?.userId!).subscribe({
-      next: (result) => {
-        this.owner.set(result.message);
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error(error);
-        this.errorMessage.set(error.error.message);
-        return error;
-      },
-    })
-  }
-
   getCollaborators() {
     console.log("result")
     this.collaboratorService.getCollaborators(this.projectId).subscribe({
@@ -288,6 +302,31 @@ export class TaskListComponent implements OnInit {
         return error;
       },
     })
+  }
+
+  setAssigneeUsernameMap(task: Task): void {
+    if(task.assignee &&!this.usernames().has(task.assignee)) {
+      this.authService.getUserNameById(task.assignee).subscribe({
+        next: (data) => {
+          this.usernames.update(map => {
+            const newMap = new Map(map);
+            newMap.set(task.assignee!, data.message);
+            return newMap;
+          })
+        },
+        error: () => {
+          this.usernames.update(map => {
+            const newMap = new Map(map);
+            newMap.set(task.assignee!, "");
+            return newMap;
+          })
+        }
+      });
+    }
+  }
+
+  getAssigneeNameForTask(task: Task) {
+    return task.assignee ? this.usernames().get(task.assignee) || '' : '';
   }
 
   getColorForUser(id: string): string {
