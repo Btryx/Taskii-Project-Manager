@@ -1,0 +1,57 @@
+<div class="modal-overlay" >
+  <div class="modal-container">
+    <!-- Header -->
+    <div class="modal-header">
+      <h2 class="modal-title">Add member to project</h2>
+      <div class="header-actions">
+        <button class="icon-button close-button" aria-label="Close" (click)="onCancel()">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M12.854 3.146a.5.5 0 0 1 0 .708L8.707 8l4.147 4.146a.5.5 0 0 1-.708.708L8 8.707l-4.146 4.147a.5.5 0 0 1-.708-.708L7.293 8 3.146 3.854a.5.5 0 1 1 .708-.708L8 7.293l4.146-4.147a.5.5 0 0 1 .708 0z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="modal-body">
+      <form [formGroup]="memberForm" (keydown.enter)="$event.preventDefault()">
+        <div class="form-group">
+          <label for="emails" class="form-label">
+            Type username and press enter <span class="required">*</span>
+          </label>
+          <input
+            type="text"
+            id="emails"
+            class="form-input"
+            placeholder="e.g., John123"
+            formControlName="member"
+            name="emails"
+            (keydown.enter)="checkIfUserExists($event)"
+          />
+          <span class="errorMessage">{{message()}}</span>
+          <span class="successMessage">{{successMessage()}}</span>
+        </div>
+
+        <!-- Role -->
+        <div class="form-group">
+          <label for="role" class="form-label">Role</label>
+          <div class="select-wrapper">
+            <select id="role" class="form-select" formControlName="selectedRole"  name="role">
+              <option value="Admin">Admin</option>
+              <option value="Contributor">Contributor</option>
+              <option value="Viewer">Viewer</option>
+            </select>
+            <svg class="select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="currentColor">
+              <path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-primary" [disabled]="!formValid()" (click)="onSubmit()">Add</button>
+    </div>
+  </div>
+</div>

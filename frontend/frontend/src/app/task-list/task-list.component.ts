@@ -227,6 +227,10 @@ export class TaskListComponent implements OnInit {
     });
   }
 
+  manageMembers() {
+    //todo
+  }
+
   createTasks() {
     const dialogRef = this.dialog.open(TaskDialog, {
       data: { ...new Task(), title: 'Create task', statuses: this.statuses(), collaborators: this.collaborators() },

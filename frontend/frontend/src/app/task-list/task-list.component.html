@@ -7,7 +7,22 @@
   }@else {
     <div>
       <div class="tasks-header">
-        <h1>{{project()?.projectName}}</h1>
+        <div class="header-row">
+          <h1>{{project()?.projectName}}</h1>
+          <button  mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()"  [hidden]="!isAdmin()">
+            <mat-icon >more_horiz</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu"  [hidden]="!isAdmin()">
+            <button mat-menu-item (click)="createMember()">
+              <mat-icon>add</mat-icon>
+              <span>Add member</span>
+            </button>
+            <button mat-menu-item (click)="manageMembers()">
+              <mat-icon>manage</mat-icon>
+              <span>Manage members</span>
+            </button>
+          </mat-menu>
+        </div>
         <button mat-raised-button color="primary" (click)="createTasks()">
           <mat-icon>add</mat-icon>
           Add Task

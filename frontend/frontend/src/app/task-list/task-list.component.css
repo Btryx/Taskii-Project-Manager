@@ -37,6 +37,12 @@ h2 {
   color: #e0e0e0;
 }
 
+.header-row {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
 .status-container {
   display: flex;
   height: 100%;
