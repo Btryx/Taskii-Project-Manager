@@ -38,6 +38,11 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.createProject(project));
     }
 
+    @GetMapping("/admin/{projectId}")
+    public ResponseEntity<?> getIsUserAdmin(@PathVariable String projectId){
+        return ResponseEntity.ok(projectService.isAdmin(projectId));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<?> updateProject(
             @PathVariable String id,
@@ -58,7 +63,7 @@ public class ProjectController {
 
     @PostMapping("/{id}/collaborator")
     public ResponseEntity<?> createCollaborator(@RequestBody CollaboratorRequest collaboratorRequest) {
-        return ResponseEntity.ok(collaboratorService.createCollaborator(collaboratorRequest.getProjectId(), collaboratorRequest.getUserId()));
+        return ResponseEntity.ok(collaboratorService.createCollaborator(collaboratorRequest.getProjectId(), collaboratorRequest.getUserId(), collaboratorRequest.getRole()));
     }
 }
 

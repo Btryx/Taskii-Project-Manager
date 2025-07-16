@@ -1,6 +1,7 @@
 package com.webfejl.beadando.util;
 
 import com.webfejl.beadando.dto.ProjectDto;
+import com.webfejl.beadando.entity.Role;
 import com.webfejl.beadando.entity.User;
 import com.webfejl.beadando.exception.AuthorizationException;
 import com.webfejl.beadando.exception.ProjectAccessDenied;
@@ -32,6 +33,10 @@ public class AccessUtil {
         boolean isOwner = projectRepository.existsByProjectIdAndUser_UserId(projectId, user.getUserId());
         boolean isCollaborator = collaboratorRepository.existsByProject_ProjectIdAndUser_UserId(projectId, user.getUserId());
         return isOwner || isCollaborator;
+    }
+
+    public boolean isAdmin(String projectId, String userId, Role role) {
+        return collaboratorRepository.isUserAdminOnProject(userId, projectId, role.name());
     }
 
     public void checkAccess(String projectId, User user) throws ProjectAccessDenied {

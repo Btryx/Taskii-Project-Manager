@@ -1,6 +1,6 @@
 import { CommonModule  } from '@angular/common';
-import { Project } from '../project';
-import { ProjectService } from './../project.service';
+import { Project } from '../model/project';
+import { ProjectService } from '../service/project.service';
 import { ChangeDetectionStrategy, Component, effect, inject, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { ProjectDialog } from '../project-dialog/project-dialog';
@@ -11,7 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
-import { Auth } from '../auth.service';
+import { Auth } from '../service/auth.service';
 import { Observable } from 'rxjs';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';

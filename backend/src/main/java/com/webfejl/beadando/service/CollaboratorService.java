@@ -3,9 +3,7 @@ package com.webfejl.beadando.service;
 import com.webfejl.beadando.entity.Collaborator;
 import com.webfejl.beadando.entity.Role;
 import com.webfejl.beadando.entity.User;
-import com.webfejl.beadando.exception.AuthorizationException;
-import com.webfejl.beadando.exception.ProjectNotFoundException;
-import com.webfejl.beadando.exception.UserNotFoundException;
+import com.webfejl.beadando.exception.*;
 import com.webfejl.beadando.repository.CollaboratorRepository;
 import com.webfejl.beadando.repository.ProjectRepository;
 import com.webfejl.beadando.repository.UserRepository;
@@ -29,14 +27,16 @@ public class CollaboratorService {
         this.accessUtil = accessUtil;
     }
 
-    public Collaborator createCollaborator(String projectId, String userId) throws AuthorizationException {
+    public Collaborator createCollaborator(String projectId, String userId, String role) throws AuthorizationException {
         User user = accessUtil.getAuthenticatedUser();
+
+        if(!accessUtil.isAdmin(projectId, user.getUserId(), Role.ADMIN)) {
+            throw new PermissionDeniedException("You don't have permission to add members!");
+        }
 
         Collaborator collaborator = new Collaborator();
         collaborator.setProject(projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("Project not found!")));
         accessUtil.checkAccess(projectId, user);
-
-        collaborator.setRole(Role.CONTRIBUTOR);
 
         collaborator.setUser(userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found!")));
 
@@ -45,6 +45,8 @@ public class CollaboratorService {
         if (alreadyCollaborator) {
             throw new IllegalArgumentException("This user is already a collaborator on the project.");
         }
+
+        collaborator.setRole(role);
 
         return collaboratorRepository.save(collaborator);
     }

@@ -44,10 +44,7 @@ public class ProjectService {
     public List<ProjectDto> getAllAccessedProjects() throws AuthorizationException {
         User user = accessUtil.getAuthenticatedUser();
 
-        List<ProjectDto> ownProjects = accessUtil.getOwnProjects(user);
-        List<ProjectDto> collabProjects = accessUtil.getCollabProjects(user);
-
-        return Stream.concat(ownProjects.stream(), collabProjects.stream()).toList();
+        return accessUtil.getCollabProjects(user);
     }
 
     public ProjectDto findProject(String id) throws ProjectNotFoundException, AuthorizationException {
@@ -73,11 +70,15 @@ public class ProjectService {
         return ProjectMapper.toDTO(savedProject);
     }
 
+    public Boolean isAdmin(String projectId) throws AuthorizationException {
+        return accessUtil.isAdmin(projectId, accessUtil.getAuthenticatedUser().getUserId(), Role.ADMIN);
+    }
+
     private void addOwnerAsCollaborator(Project project) {
         Collaborator collaborator = new Collaborator();
         collaborator.setProject(project);
         collaborator.setUser(project.getUser());
-        collaborator.setRole(Role.ADMIN);
+        collaborator.setRole(Role.ADMIN.name());
         collaboratorRepository.save(collaborator);
     }
 

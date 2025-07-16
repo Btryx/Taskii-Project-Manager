@@ -1,29 +1,31 @@
 import { map, pipe } from 'rxjs';
-import { ProjectService } from './../project.service';
+import { ProjectService } from '../service/project.service';
 import { CommonModule  } from '@angular/common';
-import { Project } from '../project';
+import { Project } from '../model/project';
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
-import { Auth } from '../auth.service';
+import { Auth } from '../service/auth.service';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ConfirmationDialog } from '../comformation-dialog/comformation-dialog';
 import { MatMenu, MatMenuTrigger, MatMenuItem } from '@angular/material/menu';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Task } from '../task';
+import { Task } from '../model/task';
 import { CdkDrag,  CdkDragDrop,  CdkDropList, CdkDropListGroup,  moveItemInArray,  transferArrayItem,} from '@angular/cdk/drag-drop';
 import { TaskDialog } from '../task-dialog/task-dialog';
-import { Status } from '../status';
+import { Status } from '../model/status';
 import {MatCardModule} from '@angular/material/card';
 import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select'
-import { User } from '../user';
-import { CollaboratorService } from '../collaborator.service';
+import { User } from '../model/user';
+import { CollaboratorService } from '../service/collaborator.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MemberDialog } from '../member-dialog/member-dialog';
+import { InfoPopup } from '../info-popup/info-popup';
 
 @Component({
   selector: 'app-task-list',
@@ -46,6 +48,7 @@ export class TaskListComponent implements OnInit {
   status?: string;
   priority?: number;
   collaborators: WritableSignal<User[]> = signal([]);
+  isAdmin = signal(false);
 
   selectedCollaboratorFilterValue: WritableSignal<string> = signal('');
   searchValue?: WritableSignal<string> = signal('');
@@ -90,6 +93,7 @@ export class TaskListComponent implements OnInit {
               this.getCollaborators();
               this.getTasks(this.projectId);
               this.getStatuses(this.projectId);
+              this.isUserAdmin();
             }
           },
           error: (error: HttpErrorResponse) => {
@@ -97,6 +101,14 @@ export class TaskListComponent implements OnInit {
             console.log(error);
           }
         })
+      }
+    })
+  }
+
+  isUserAdmin() {
+    this.projectService.isAdmin(this.projectId).subscribe({
+      next: (data : boolean) => {
+        this.isAdmin.set(data);
       }
     })
   }
@@ -186,6 +198,33 @@ export class TaskListComponent implements OnInit {
         error: (error) => this.errorMessage.set(error.error.message)
       })
     }
+  }
+
+  createMember() {
+    const dialogRef = this.dialog.open(MemberDialog, {
+      data: { member: "", role: "Contributor", collaborators: this.collaborators() },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.collaboratorService.createCollaborator(this.projectId, result.member, result.selectedRole).subscribe({
+          next: data => {
+            const dialogRef = this.dialog.open(InfoPopup, {
+              disableClose: false
+            });
+            dialogRef.componentInstance.title = "Successfully added member to project!"
+          },
+          error: (error: HttpErrorResponse) => {
+            this.errorMessage.set(error.error.message);
+            const dialogRef = this.dialog.open(InfoPopup, {
+              disableClose: false
+            });
+            dialogRef.componentInstance.title = "Error adding member to project!"
+            dialogRef.componentInstance.infoMessage = error.error.message;
+          },
+        })
+      }
+    });
   }
 
   createTasks() {

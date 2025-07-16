@@ -21,7 +21,7 @@ public class Collaborator {
     private User user;
 
     @Column(name = "role")
-    private Role role;
+    private String role;
 
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)

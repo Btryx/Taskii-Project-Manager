@@ -10,7 +10,7 @@
         <h1>{{project()?.projectName}}</h1>
         <button mat-raised-button color="primary" (click)="createTasks()">
           <mat-icon>add</mat-icon>
-          New Task
+          Add Task
         </button>
       </div>
       <div style="display: flex;">
@@ -43,6 +43,10 @@
               {{coll.username.charAt(0).toUpperCase()}}
             </button>
           }
+          <button mat-raised-button color="primary" class="add-member" (click)="createMember()" [hidden]="!isAdmin()">
+            <mat-icon>add</mat-icon>
+            Add Member
+          </button>
         </span>
       </div>
     </div>
