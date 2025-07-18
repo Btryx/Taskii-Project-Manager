@@ -26,6 +26,9 @@ import { CollaboratorService } from '../service/collaborator.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MemberDialog } from '../member-dialog/member-dialog';
 import { InfoPopup } from '../info-popup/info-popup';
+import { Member } from '../model/member';
+import { ManageMembersDialog } from '../../manage-members-dialog/manage-members-dialog';
+import { ErrorPopup } from '../error-popup/error-popup';
 
 @Component({
   selector: 'app-task-list',
@@ -47,7 +50,8 @@ export class TaskListComponent implements OnInit {
   project: WritableSignal<Project | null> = signal(null);
   status?: string;
   priority?: number;
-  collaborators: WritableSignal<User[]> = signal([]);
+  collaborators: WritableSignal<User[]> = signal([]); //getting it as users for better performance
+  members: WritableSignal<Member[]> = signal([]); //getting it as users for better performance
   isAdmin = signal(false);
 
   selectedCollaboratorFilterValue: WritableSignal<string> = signal('');
@@ -99,6 +103,10 @@ export class TaskListComponent implements OnInit {
           error: (error: HttpErrorResponse) => {
             this.errorMessage.set(error.error.message);
             console.log(error);
+          },
+          complete: () => {
+            this.isLoading.set(false);
+            this.getMembers(); // dont need to wait for this
           }
         })
       }
@@ -157,8 +165,7 @@ export class TaskListComponent implements OnInit {
       error: (error: HttpErrorResponse) => {
         this.errorMessage.set(error.error.message);
         console.log(error);
-      },
-      complete: () => this.isLoading.set(false)
+      }
     });
   }
 
@@ -198,37 +205,6 @@ export class TaskListComponent implements OnInit {
         error: (error) => this.errorMessage.set(error.error.message)
       })
     }
-  }
-
-  createMember() {
-    const dialogRef = this.dialog.open(MemberDialog, {
-      data: { member: "", role: "Contributor", collaborators: this.collaborators() },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.collaboratorService.createCollaborator(this.projectId, result.member, result.selectedRole).subscribe({
-          next: data => {
-            const dialogRef = this.dialog.open(InfoPopup, {
-              disableClose: false
-            });
-            dialogRef.componentInstance.title = "Successfully added member to project!"
-          },
-          error: (error: HttpErrorResponse) => {
-            this.errorMessage.set(error.error.message);
-            const dialogRef = this.dialog.open(InfoPopup, {
-              disableClose: false
-            });
-            dialogRef.componentInstance.title = "Error adding member to project!"
-            dialogRef.componentInstance.infoMessage = error.error.message;
-          },
-        })
-      }
-    });
-  }
-
-  manageMembers() {
-    //todo
   }
 
   createTasks() {
@@ -335,16 +311,75 @@ export class TaskListComponent implements OnInit {
 
   getCollaborators() {
     console.log("result")
-    this.collaboratorService.getCollaborators(this.projectId).subscribe({
-      next: (result) => {
-        console.log(result)
-        this.collaborators.set(result);
-      },
-      error: (error: HttpErrorResponse) => {
-        this.errorMessage.set(error.error.message);
-        return error;
-      },
-    })
+    this.collaboratorService.getCollaboratorsAsUsers(this.projectId)
+      .subscribe({
+        next: (result) => {
+          console.log(result)
+          this.collaborators.set(result);
+        },
+        error: (error: HttpErrorResponse) => {
+          this.errorMessage.set(error.error.message);
+          return error;
+        },
+      })
+  }
+
+  getMembers() {
+    console.log("result")
+    this.collaboratorService.getCollaborators(this.projectId)
+      .subscribe({
+        next: (result) => {
+          console.log(result)
+          console.log(result)
+          this.members.set(result)
+        },
+        error: (error: HttpErrorResponse) => {
+          this.errorMessage.set(error.error.message);
+        },
+      })
+  }
+
+  createMember() {
+    let member = new Member();
+    member.projectId = this.projectId;
+    const dialogRef = this.dialog.open(MemberDialog, {
+      data: { ...member, collaborators: this.collaborators() },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.collaboratorService.createCollaborator(result).subscribe({
+          next: data => {
+            const dialogRef = this.dialog.open(InfoPopup, {
+              disableClose: false
+            });
+            dialogRef.componentInstance.title = "Successfully added member to project!"
+            this.getCollaborators();
+            this.getMembers();
+          },
+          error: (error: HttpErrorResponse) => {
+            this.errorMessage.set(error.error.message);
+            const dialogRef = this.dialog.open(ErrorPopup, {
+              disableClose: false
+            });
+            dialogRef.componentInstance.title = "Error adding member to project!"
+            dialogRef.componentInstance.errorMessage = error.error.message;
+          },
+        })
+      }
+    });
+  }
+
+  manageMembers() {
+    const dialogRef = this.dialog.open(ManageMembersDialog, {
+      data: { collaborators: this.members() },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      this.getCollaborators();
+      this.members.set(result);
+      this.getTasks(this.projectId);
+    });
   }
 
   setAssigneeUsernameMap(task: Task): void {

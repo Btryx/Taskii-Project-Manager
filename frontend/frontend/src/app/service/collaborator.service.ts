@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from '../model/user';
+import { Member } from '../model/member';
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +13,20 @@ export class CollaboratorService {
 
   private http: HttpClient = inject(HttpClient);
 
-  getCollaborators(id: string): Observable<User[]> {
-    return this.http.get<User[]>(`${this.projectUrl}/${id}/collaborators`);
+  getCollaboratorsAsUsers(id: string): Observable<User[]> {
+    return this.http.get<User[]>(`${this.projectUrl}/${id}/users`);
   }
 
-  createCollaborator(projectId: string, userId: string, role: string): Observable<any> {
-    return this.http.post<any>(`${this.projectUrl}/${projectId}/collaborator`, {"projectId": projectId, "userId": userId, "role": role});
+  getCollaborators(id: string): Observable<Member[]> {
+    return this.http.get<Member[]>(`${this.projectUrl}/${id}/collaborators`);
+  }
+
+  createCollaborator(member : Member): Observable<any> {
+    return this.http.post<any>(`${this.projectUrl}/${member.projectId}/collaborator`, member);
+  }
+
+  deleteCollaborator(id : string): Observable<any> {
+    return this.http.delete<any>(`${this.projectUrl}/collaborator/${id}`);
   }
 
 }

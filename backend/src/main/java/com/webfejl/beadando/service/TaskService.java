@@ -1,9 +1,11 @@
 package com.webfejl.beadando.service;
 
 import com.webfejl.beadando.dto.TaskDto;
+import com.webfejl.beadando.entity.Comment;
 import com.webfejl.beadando.entity.Task;
 import com.webfejl.beadando.entity.User;
 import com.webfejl.beadando.exception.TaskNotFoundException;
+import com.webfejl.beadando.repository.CommentRepository;
 import com.webfejl.beadando.repository.ProjectRepository;
 import com.webfejl.beadando.repository.TaskRepository;
 import com.webfejl.beadando.util.AccessUtil;
@@ -20,11 +22,13 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
+    private final CommentRepository commentRepository;
     private final AccessUtil accessUtil;
 
-    public TaskService(TaskRepository taskRepository, ProjectRepository projectRepository, AccessUtil accessUtil) {
+    public TaskService(TaskRepository taskRepository, ProjectRepository projectRepository, CommentRepository commentRepository, AccessUtil accessUtil) {
         this.taskRepository = taskRepository;
         this.projectRepository = projectRepository;
+        this.commentRepository = commentRepository;
         this.accessUtil = accessUtil;
     }
 
@@ -81,6 +85,8 @@ public class TaskService {
 
         accessUtil.checkAccess(task.getProject().getProjectId(), user);
 
+        List<Comment> comments = commentRepository.findAllByTask_TaskIdOrderByCreatedAtDesc(id);
+        commentRepository.deleteAll(comments);
         taskRepository.deleteById(id);
     }
 }

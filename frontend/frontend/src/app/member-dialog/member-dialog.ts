@@ -6,24 +6,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select'
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { Task } from '../model/task';
 import { MatNativeDateModule } from '@angular/material/core';
-import { Status } from '../model/status';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
-import { CommentService } from '../service/comment.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { Comment } from '../model/comment';
 import { Auth } from '../service/auth.service';
 import { CommonModule  } from '@angular/common';
-import { map, Observable } from 'rxjs';
-import { ConfirmationDialog } from '../comformation-dialog/comformation-dialog';
 import { User } from '../model/user';
+import { Member } from '../model/member';
 
-interface MemberDialogData {
-  userId: string;
-  role: string;
+interface MemberDialogData extends Member {
   collaborators: User[];
 }
 
@@ -36,8 +28,11 @@ interface MemberDialogData {
 })
 export class MemberDialog {
   memberForm = new FormGroup({
-    member: new FormControl('', Validators.required),
-    selectedRole: new FormControl('Contributor', Validators.required),
+    collaboratorId: new FormControl(''),
+    userId: new FormControl(''),
+    userName: new FormControl(''),
+    projectId: new FormControl(''),
+    role: new FormControl('', Validators.required),
   })
 
   authService: Auth = inject(Auth);
@@ -53,43 +48,56 @@ export class MemberDialog {
 
   ngOnInit(): void {
     this.memberForm.patchValue({
-      member: this.data.userId,
-      selectedRole: this.data.role
+      collaboratorId: this.data.collaboratorId,
+      projectId: this.data.projectId,
+      userId: this.data.userId,
+      role: this.data.role
     });
   }
 
   checkIfUserExists(event: Event) {
     event.preventDefault();
-    if (this.memberForm.value.member) {
-      let name = this.memberForm.value.member;
-      if(this.isAlreadyMember(name)) {
-        this.successMessage.set( ``);
-        this.message.set( `This user is already a collaborator on the project.`)
-      } else {
-        this.authService.getUserIdByName(name).subscribe({
-          next: (data) => {
-            this.successMessage.set( `User found! Click save to add ${name} to the project`);
-            this.message.set( ``)
-            this.memberForm.value.member = data.message;
-            if(this.memberForm.value.selectedRole) {
-              this.formValid.set(true)
-            } else {
-              this.formValid.set(false)
-            }
-          },
-          error: () => {
-            this.formValid.set(false)
-            this.successMessage.set( ``);
-            this.message.set( `User not found! `)
-          }
-        })
-      }
 
+    if (this.memberForm.value.userName) {
+      let name = this.memberForm.value.userName;
+      this.authService.getUserIdByName(name).subscribe({
+        next: (data) => {
+          this.userIsFound(name, data);
+        },
+        error: () => {
+          this.userNotFound();
+        }
+      })
     }
   }
 
-  private isAlreadyMember(username: string) {
-    return this.data.collaborators.some(col => col.username === username);
+  private userIsFound(name: string, data: any) {
+    if (this.isAlreadyMember(name)) {
+      this.successMessage.set(``);
+      this.message.set(`This user is already a collaborator on the project.`);
+    } else {
+      this.successMessage.set(`User found! Click save to add ${name} to the project`);
+      this.message.set(``);
+      this.memberForm.patchValue({
+        userId: data.message
+      });
+    }
+
+    if (this.memberForm.value.role) {
+      this.formValid.set(true);
+    } else {
+      this.formValid.set(false);
+    }
+  }
+
+  private userNotFound() {
+    this.formValid.set(false);
+    this.successMessage.set(``);
+    this.message.set(`User not found! `);
+  }
+
+  private isAlreadyMember(userName: string) {
+    return this.data.collaborators.some(col => col.username === userName);
   }
 
   onSubmit(): void {

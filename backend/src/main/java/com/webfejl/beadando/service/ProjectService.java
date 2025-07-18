@@ -78,7 +78,7 @@ public class ProjectService {
         Collaborator collaborator = new Collaborator();
         collaborator.setProject(project);
         collaborator.setUser(project.getUser());
-        collaborator.setRole(Role.ADMIN.name());
+        collaborator.setRole(Role.ADMIN.getLabel());
         collaboratorRepository.save(collaborator);
     }
 

@@ -9,6 +9,7 @@ import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angula
 import { MatInputModule } from '@angular/material/input';
 import { InfoPopup } from '../info-popup/info-popup';
 import { MatDialog } from '@angular/material/dialog';
+import { ErrorPopup } from '../error-popup/error-popup';
 
 @Component({
   selector: 'app-register',
@@ -66,12 +67,19 @@ export class Register {
           dialogRef.afterClosed().subscribe(() => this.router.navigate(["/login"]));
 
         } else {
-          this.errorMessage.set(data.message);
+          const dialogRef = this.dialog.open(ErrorPopup, {
+            disableClose: false
+          });
+          dialogRef.componentInstance.title = "Registration error!"
+          dialogRef.componentInstance.errorMessage = data.message;
         }
       },
       error: (error: HttpErrorResponse) => {
-        console.error(error);
-        this.errorMessage.set(error.error.message);
+        const dialogRef = this.dialog.open(ErrorPopup, {
+          disableClose: false
+        });
+        dialogRef.componentInstance.title = "Registration error!"
+        dialogRef.componentInstance.errorMessage = error.error.message;
       }
     })
   }

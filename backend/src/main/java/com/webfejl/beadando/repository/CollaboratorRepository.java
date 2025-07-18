@@ -16,6 +16,9 @@ public interface CollaboratorRepository extends JpaRepository<Collaborator, Stri
     @Query("SELECT c.user FROM Collaborator c WHERE c.project.projectId = :projectId")
     List<User> findUsersByProjectId(@Param("projectId") String projectId);
 
+    @Query("SELECT c FROM Collaborator c WHERE c.project.projectId = :projectId")
+    List<Collaborator> findAllByProjectId(@Param("projectId") String projectId);
+
     @Query("SELECT c.project FROM Collaborator c WHERE c.user.userId = :userId")
     List<Project> findProjectsByUserId(@Param("userId") String userId);
 

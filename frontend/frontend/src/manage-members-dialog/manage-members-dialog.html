@@ -1,1 +1,64 @@
-<p>manage-members-dialog works!</p>
+<!-- add-people-modal.component.html -->
+<div class="modal-overlay" >
+  <div class="modal-container">
+    <!-- Header -->
+    <div class="modal-header">
+      <h2 class="modal-title">Manage members</h2>
+      <div class="header-actions">
+        <button class="icon-button close-button" aria-label="Close" (click)="onCancel()">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M12.854 3.146a.5.5 0 0 1 0 .708L8.707 8l4.147 4.146a.5.5 0 0 1-.708.708L8 8.707l-4.146 4.147a.5.5 0 0 1-.708-.708L7.293 8 3.146 3.854a.5.5 0 1 1 .708-.708L8 7.293l4.146-4.147a.5.5 0 0 1 .708 0z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+      @if(isLoading()) {
+        <div class="loading-state">
+          <mat-spinner diameter="40"></mat-spinner>
+          <p>Loading members...</p>
+        </div>
+      } @else {
+        <div class="members-list">
+          @for (collaborator of members(); track collaborator.userId) {
+            <div class="member-item">
+              <div class="ownerDiv">
+                <button mat-icon-button [style.backgroundColor]="getColorForUser(collaborator.userId)" class="ownerIcon">
+                  {{collaborator.userName!.charAt(0).toUpperCase()}}
+                </button>
+              </div>
+              <div class="member-info">
+                <div class="member-name">{{ collaborator.userName }}</div>
+              </div>
+              <div class="member-info">
+                <div class="member-role-badge" [class]="'role-' + collaborator.role.toLowerCase()">
+                  {{ collaborator.role }}
+                </div>
+              </div>
+              <button class="more-icon" mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+                <mat-icon >more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item>
+                  <mat-icon>edit</mat-icon>
+                  <span>Edit role</span>
+                </button>
+                <button mat-menu-item (click)="deleteMember(collaborator, $event)">
+                  <mat-icon>delete</mat-icon>
+                  <span>Remove member</span>
+                </button>
+              </mat-menu>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" (click)="onCancel()">Done</button>
+    </div>
+  </div>
+</div>

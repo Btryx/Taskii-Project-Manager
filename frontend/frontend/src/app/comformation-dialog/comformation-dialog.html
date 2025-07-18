@@ -1,9 +1,33 @@
-<div class="container">
-  <h1 class="title">{{title}}</h1>
+<div class="dialog-overlay">
+  <div class="container">
+    <div class="icon-container">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="warning-icon">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+    </div>
 
-  <div class="message" md-dialog-content>{{confirmMessage}}</div>
-  <div class="actions-container">
-    <button class="btn btn-success" (click)="dialogRef.close(true)">Confirm</button>
-    <button class="btn btn-danger" (click)="dialogRef.close(false)">Cancel</button>
+    <h1 class="title">{{title}}</h1>
+
+    <div class="message" md-dialog-content>
+      {{confirmMessage}}
+    </div>
+
+    <div class="actions-container">
+      <button class="btn btn-secondary" (click)="dialogRef.close(false)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+        Cancel
+      </button>
+      <button class="btn btn-primary" (click)="dialogRef.close(true)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20,6 9,17 4,12"></polyline>
+        </svg>
+        Confirm
+      </button>
+    </div>
   </div>
 </div>

@@ -2,16 +2,13 @@ package com.webfejl.beadando.service;
 
 import com.webfejl.beadando.dto.CommentDto;
 import com.webfejl.beadando.entity.Comment;
-import com.webfejl.beadando.entity.Status;
 import com.webfejl.beadando.entity.User;
 import com.webfejl.beadando.exception.AuthorizationException;
-import com.webfejl.beadando.exception.ProjectNotFoundException;
 import com.webfejl.beadando.repository.CommentRepository;
 import com.webfejl.beadando.repository.TaskRepository;
 import com.webfejl.beadando.repository.UserRepository;
 import com.webfejl.beadando.util.AccessUtil;
 import com.webfejl.beadando.util.CommentMapper;
-import com.webfejl.beadando.util.TaskMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 

@@ -10,4 +10,8 @@ public enum Role {
     }
 
     final String label;
+
+    public String getLabel() {
+        return label;
+    }
 }

@@ -15,12 +15,10 @@ import org.springframework.web.bind.annotation.*;
 public class ProjectController {
 
     private final ProjectService projectService;
-    private final CollaboratorService collaboratorService;
 
     @Autowired
-    public ProjectController(ProjectService projectService, CollaboratorService collaboratorService) {
+    public ProjectController(ProjectService projectService) {
         this.projectService = projectService;
-        this.collaboratorService = collaboratorService;
     }
 
     @GetMapping("/all")
@@ -54,16 +52,6 @@ public class ProjectController {
     public ResponseEntity<?> deleteProject(@PathVariable String id) {
         projectService.deleteProject(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/{id}/collaborators")
-    public ResponseEntity<?> getCollaborators(@PathVariable String id) {
-        return ResponseEntity.ok(collaboratorService.getCollaborators(id));
-    }
-
-    @PostMapping("/{id}/collaborator")
-    public ResponseEntity<?> createCollaborator(@RequestBody CollaboratorRequest collaboratorRequest) {
-        return ResponseEntity.ok(collaboratorService.createCollaborator(collaboratorRequest.getProjectId(), collaboratorRequest.getUserId(), collaboratorRequest.getRole()));
     }
 }
 

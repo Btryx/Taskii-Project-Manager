@@ -1,0 +1,216 @@
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal-container {
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  width: 480px;
+  max-width: 90vw;
+  max-height: 80vh;
+  color: #ffffff;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  border: 1px solid #333333;
+  overflow: hidden;
+  animation: slideIn 0.3s ease-out;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #333333;
+  background-color: #252525;
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+
+.icon-button {
+  background: none;
+  border: none;
+  color: #b0b0b0;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  width: 32px;
+  height: 32px;
+}
+
+.icon-button:hover {
+  background-color: #404040;
+  color: #ffffff;
+}
+
+.close-button:hover {
+  background-color: #e74c3c;
+  color: #ffffff;
+}
+
+.modal-body {
+  padding: 0;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  gap: 16px;
+}
+
+.loading-state p {
+  margin: 0;
+  color: #b0b0b0;
+  font-size: 14px;
+}
+
+.members-list {
+  padding: 12px 0;
+}
+
+.member-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 24px;
+  gap: 12px;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.member-item:last-child {
+  border-bottom: none;
+}
+
+.member-item:hover {
+  background-color: #2a2a2a;
+}
+
+.member-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.member-name {
+  font-weight: 500;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.member-role-badge {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 12px;
+  width: fit-content;
+  text-transform: capitalize;
+}
+
+.role-admin {
+  background-color: rgba(231, 76, 60, 0.2);
+  color: #ffbf6b;
+  border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+.role-contributor {
+  background-color: rgba(74, 158, 255, 0.2);
+  color: #4a9eff;
+  border: 1px solid rgba(74, 158, 255, 0.3);
+}
+
+.role-viewer {
+  background-color: rgba(5, 82, 24, 0.562);
+  color: #4aff71;
+  border: 1px solid rgba(80, 255, 74, 0.3);
+}
+
+.error-message {
+  background-color: rgba(231, 76, 60, 0.1);
+  color: #ff6b6b;
+  border: 1px solid rgba(231, 76, 60, 0.2);
+}
+
+.success-message {
+  background-color: rgba(39, 174, 96, 0.1);
+  color: #2ecc71;
+  border: 1px solid rgba(39, 174, 96, 0.2);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px 24px;
+  border-top: 1px solid #333333;
+  background-color: #252525;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  min-width: 80px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #4a9eff, #6b73ff);
+  color: #ffffff;
+  border: 1px solid #4a9eff;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #3a8eef, #5b63ef);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(74, 158, 255, 0.3);
+}
+
+.ownerIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  height: 35px;
+  font-size: 20px;
+  color: black;
+  margin-right: 10px;
+}
+
+.ownerDiv {
+  display: flex;
+  align-items: center;
+}

@@ -1,3 +1,4 @@
+import { ErrorPopup } from './../error-popup/error-popup';
 import { CommonModule  } from '@angular/common';
 import { Project } from '../model/project';
 import { ProjectService } from '../service/project.service';
@@ -16,7 +17,6 @@ import { Observable } from 'rxjs';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { ConfirmationDialog } from '../comformation-dialog/comformation-dialog';
-import { InfoPopup } from '../info-popup/info-popup';
 import { Router } from '@angular/router';
 import {MatSort, MatSortModule} from '@angular/material/sort';
 import {MatTooltipModule} from '@angular/material/tooltip';
@@ -161,11 +161,11 @@ export class ProjectListComponent implements OnInit {
 
   deleteProject(project: Project) {
     if(project.active) {
-      const dialogRef = this.dialog.open(InfoPopup, {
+      const dialogRef = this.dialog.open(ErrorPopup, {
         disableClose: false
       });
       dialogRef.componentInstance.title = "Error"
-      dialogRef.componentInstance.infoMessage = `Cannot delete active projects! Disable project before deleting.`
+      dialogRef.componentInstance.errorMessage = `Cannot delete active projects! Disable project before deleting.`
       return;
     }
 
