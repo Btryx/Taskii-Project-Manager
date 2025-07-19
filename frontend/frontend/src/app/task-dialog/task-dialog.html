@@ -77,7 +77,7 @@
               <div>
                 <mat-select formControlName="taskStatus" class="status-input">
                   @for (status of data.statuses; track status.statusId) {
-                    <mat-option class="option" [value]="status.statusName">{{status.statusName}}</mat-option>
+                    <mat-option class="option" [value]="status.statusName">{{status.statusName.toUpperCase()}}</mat-option>
                   }
                 </mat-select>
               </div>

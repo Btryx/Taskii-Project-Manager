@@ -27,9 +27,9 @@ public class ProjectService {
     private final CollaboratorRepository collaboratorRepository;
     private final TaskRepository taskRepository;
 
-    public static final String TO_DO = "To do";
-    public static final String IN_PROGRESS = "In progress";
-    public static final String DONE = "Done";
+    public static final String TO_DO = "TO DO";
+    public static final String IN_PROGRESS = "IN PROGRESS";
+    public static final String DONE = "DONE";
 
     public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, AccessUtil accessUtil,
                           StatusRepository statusRepository, CollaboratorRepository collaboratorRepository, TaskRepository taskRepository) {

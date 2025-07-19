@@ -29,12 +29,67 @@
   color: #e0e0e0;
 }
 
+.status-input {
+  text-transform: uppercase;
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #e0e0e0;
+  background-color: #1e1e1e;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+  padding: 5px;
+}
+
 h2 {
   text-transform: uppercase;
   font-size: 15px;
   font-weight: bold;
   margin-bottom: 30px;
   color: #e0e0e0;
+  display: inline;
+  width: fit-content;
+  margin-right: 15px;
+  padding: 5px;
+}
+
+.status-input:hover {
+  background-color: #383838;
+}
+
+.status-input-add {
+  text-transform: uppercase;
+  font-size: 15px;
+  font-weight: bold;
+  margin-top: 2px;
+  color: #e0e0e0;
+  background-color: #1e1e1e;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+  padding: 5px;
+  height: 30px;
+}
+
+.status-input-add:hover {
+  background-color: #383838;
+}
+
+.add-status-button {
+  background-color: #1e1e1e;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(245, 245, 220, 0.096);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+.add-status-button:hover {
+  background-color: #383838;
 }
 
 .header-row {
@@ -162,6 +217,13 @@ h2 {
   height: 25px;
 }
 
+.delete-icon {
+  padding: 0;
+  width: 25px;
+  height: 25px;
+  margin-right: 10px;
+}
+
 .content {
   display: flex;
   justify-content: space-between;
@@ -170,7 +232,7 @@ h2 {
 
 .create-but {
   width: 100px;
-  margin: 10px;
+  margin: 6px;
   align-self: flex-end;
   background-color: transparent;
   border: none;

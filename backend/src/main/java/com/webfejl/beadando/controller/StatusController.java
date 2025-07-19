@@ -30,16 +30,17 @@ public class StatusController {
         return ResponseEntity.ok(service.createStatus(statusDto));
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteStatus(@PathVariable String id) {
-        service.deleteStatus(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/create")
+    @PutMapping("/update/{id}")
     public ResponseEntity<?> updateStatus(
             @PathVariable String id,
             @RequestBody StatusDto statusDto) {
         return ResponseEntity.ok(service.updateStatus(statusDto, id));
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteStatus(@PathVariable String id) {
+        service.deleteStatus(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

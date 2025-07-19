@@ -73,8 +73,19 @@
             <div cdkDropList
             [cdkDropListData]="taskMapByStatus().get(status.statusName) || []"
             (cdkDropListDropped)="drop($event, status)" class="task-list">
-              <h2>{{status.statusName}}  {{taskMapByStatus().get(status.statusName)!.length > 0 ? taskMapByStatus().get(status.statusName)?.length : ''}}</h2>
-              @for (task of taskMapByStatus().get(status.statusName); track task.taskId) {
+
+            <div style="display: flex; justify-content: space-between;">
+              <input class="status-input" [(ngModel)]="status.statusName" (keydown.enter)="updateStatus(status, $event)" maxlength="18" matTooltip="Rename column">
+              @if(taskMapByStatus().get(status.statusName) && taskMapByStatus().get(status.statusName)!.length > 0) {
+                <h2>{{taskMapByStatus().get(status.statusName)?.length}}</h2>
+              } @else {
+                <button class="delete-icon" mat-icon-button  (click)="deleteStatus(status, $event)">
+                  <mat-icon  matTooltip="Delete column">delete</mat-icon>
+                </button>
+              }
+            </div>
+
+            @for (task of taskMapByStatus().get(status.statusName); track task.taskId) {
 
                 <mat-card class="task-card" (click)="editTask(task, $event)" cdkDrag>
 
@@ -128,6 +139,16 @@
               </button>
           </div>
         }
+        <button class="add-status-button" (click)="toggleCreateStatusInputVisible()" [hidden]="createStatusInputVisible()" matTooltip="Create new column">
+          <mat-icon>add</mat-icon>
+        </button>
+        <input #statusInput class="status-input-add" [hidden]="!createStatusInputVisible()" (keydown.enter)="createStatus()" maxlength="18" [(ngModel)]="newStatusName">
+        <button class="add-status-button" (click)="createStatus()" [hidden]="!createStatusInputVisible()">
+          <mat-icon>check</mat-icon>
+        </button>
+        <button class="add-status-button" (click)="toggleCreateStatusInputVisible()" [hidden]="!createStatusInputVisible()">
+          <mat-icon>close</mat-icon>
+        </button>
       </div>
       </div>
     </div>

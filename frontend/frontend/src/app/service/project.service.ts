@@ -10,7 +10,6 @@ import { Task } from '../model/task';
 export class ProjectService {
 
   projectUrl : string = 'http://localhost:8082/api/projects';
-  statusUrl : string = 'http://localhost:8082/api/statuses'
   taskUrl : string = 'http://localhost:8082/api/tasks';
 
   private http: HttpClient = inject(HttpClient);
@@ -33,10 +32,6 @@ export class ProjectService {
 
   deleteProject(projectId: string) : Observable<Object> {
     return this.http.delete<Project>(`${this.projectUrl}/${projectId}`);
-  }
-
-  getStatuses(projectId: string) : Observable<any> {
-    return this.http.get<any>(`${this.statusUrl}/${projectId}/all`);
   }
 
   getProjectTasks(projectId: string) : Observable<any> {

@@ -2,7 +2,7 @@ import { map, pipe } from 'rxjs';
 import { ProjectService } from '../service/project.service';
 import { CommonModule  } from '@angular/common';
 import { Project } from '../model/project';
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -29,6 +29,7 @@ import { InfoPopup } from '../info-popup/info-popup';
 import { Member } from '../model/member';
 import { ManageMembersDialog } from '../../manage-members-dialog/manage-members-dialog';
 import { ErrorPopup } from '../error-popup/error-popup';
+import { StatusService } from '../service/status.service';
 
 @Component({
   selector: 'app-task-list',
@@ -41,6 +42,7 @@ import { ErrorPopup } from '../error-popup/error-popup';
 export class TaskListComponent implements OnInit {
 
   private projectService : ProjectService = inject(ProjectService);
+  private statusService : StatusService = inject(StatusService);
   private authService = inject(Auth);
   private collaboratorService = inject(CollaboratorService);
   private dialog: MatDialog = inject(MatDialog);
@@ -53,6 +55,8 @@ export class TaskListComponent implements OnInit {
   collaborators: WritableSignal<User[]> = signal([]); //getting it as users for better performance
   members: WritableSignal<Member[]> = signal([]); //getting it as users for better performance
   isAdmin = signal(false);
+  createStatusInputVisible = signal(false);
+  newStatusName = signal("");
 
   selectedCollaboratorFilterValue: WritableSignal<string> = signal('');
   searchValue?: WritableSignal<string> = signal('');
@@ -63,6 +67,8 @@ export class TaskListComponent implements OnInit {
   statuses: WritableSignal<Status[]> = signal([]);
   priorities = ["Lowest", "Low", "Medium", "High", "Highest"];
 
+  @ViewChild('statusInput') statusInput!: ElementRef;
+
   taskMapByStatus = computed(() => {
     const map = new Map<string, Task[]>();
     for (const status of this.statuses()) {
@@ -70,7 +76,12 @@ export class TaskListComponent implements OnInit {
         .filter(task => this.filterByStatus(task, status))
         .filter(task => this.filterBySearchBarValue(task))
         .filter(task => this.filterByPriorityFilter(task))
-        .filter(task => this.filterBySelectedCollaboratorValue(task));
+        .filter(task => this.filterBySelectedCollaboratorValue(task))
+        .sort((a: Task, b: Task) => {
+          if(b.orderNumber == null) b.orderNumber = 0;
+          if(a.orderNumber == null) a.orderNumber = 0;
+          return a.orderNumber - b.orderNumber
+        })
       map.set(status.statusName, filtered);
     }
     return map;
@@ -119,6 +130,17 @@ export class TaskListComponent implements OnInit {
         this.isAdmin.set(data);
       }
     })
+  }
+
+  toggleCreateStatusInputVisible() {
+    this.createStatusInputVisible.set(!this.createStatusInputVisible());
+    this.newStatusName.set("");
+
+    if(this.createStatusInputVisible()) {
+      setTimeout(() => {
+        this.statusInput.nativeElement.focus()
+      }, 200)
+    }
   }
 
   private filterBySearchBarValue(t: Task): unknown {
@@ -170,7 +192,7 @@ export class TaskListComponent implements OnInit {
   }
 
   getStatuses(projectId: string) {
-    this.projectService.getStatuses(projectId).subscribe({
+    this.statusService.getStatuses(projectId).subscribe({
       next: (data) => {
         this.statuses.set(data);
       },
@@ -181,29 +203,103 @@ export class TaskListComponent implements OnInit {
     })
   }
 
+  updateStatus(status: Status, event: Event) {
+    let name = (event.target as HTMLInputElement).value;
+    if (name) {
+      this.statusService.updateStatus(status).subscribe({
+        next: (data) => {
+          this.statuses.update(value => {
+            let indexOfUpdatedStatus = value.findIndex(item => item.statusId === data.statusId);
+            value.splice(indexOfUpdatedStatus, 1, data);
+            return [...value];
+          })
+          this.getTasks(this.projectId);
+          if (event) {
+            (event.target as HTMLInputElement).blur();
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+          (event.target as HTMLInputElement).value = status.statusName;
+          this.errorMessage.set(error.error.message);
+          const dialogRef = this.dialog.open(ErrorPopup, {
+            disableClose: false
+          });
+          dialogRef.componentInstance.title = "Error renaming column!"
+          dialogRef.componentInstance.errorMessage = error.error.message;
+          this.getStatuses(this.projectId);
+        },
+      })
+    }
+  }
+
+  createStatus() {
+    if (this.newStatusName()) {
+      let status: Status = new Status();
+      status.statusName = this.newStatusName();
+      console.log(this.statuses().length + 1);
+      status.orderNumber  = this.statuses().length + 1;
+      status.projectId = this.projectId;
+      this.statusService.createStatus(status).subscribe({
+        next: (data) => {
+          this.statuses.update(value => {
+            return [...value, data];
+          })
+          this.createStatusInputVisible.set(false);
+          this.newStatusName.set("");
+        },
+        error: (error: HttpErrorResponse) => {
+          this.errorMessage.set(error.error.message);
+          const dialogRef = this.dialog.open(ErrorPopup, {
+            disableClose: false
+          });
+          dialogRef.componentInstance.title = "Error creating column!"
+          dialogRef.componentInstance.errorMessage = error.error.message;
+          this.newStatusName.set("");
+        },
+      })
+    }
+  }
+
+  deleteStatus(status: Status, event: Event) {
+    this.statusService.deleteStatus(status.statusId).subscribe({
+      next: () => {
+        this.statuses.update(value => {
+          let indexOfUpdatedStatus = value.findIndex(item => item.statusId === status.statusId);
+          value.splice(indexOfUpdatedStatus, 1);
+          return [...value];
+        })
+      },
+      error: (error: HttpErrorResponse) => {
+        this.errorMessage.set(error.error.message);
+        const dialogRef = this.dialog.open(ErrorPopup, {
+          disableClose: false
+        });
+        dialogRef.componentInstance.title = "Error deleting column!"
+        dialogRef.componentInstance.errorMessage = error.error.message;
+      },
+    })
+  }
+
   drop(event: CdkDragDrop<Task[]>, targetStatus: Status) {
     const prevList = event.previousContainer.data;
     const currList = event.container.data;
 
     if (event.previousContainer === event.container) {
       moveItemInArray(currList, event.previousIndex, event.currentIndex);
-      //TODO: persist order inside kanban column
+      currList.forEach((task, index) => {
+        task.orderNumber = index;
+        this.projectService.updateProjectTask(task).subscribe({})
+      });
     } else {
       transferArrayItem(prevList, currList, event.previousIndex, event.currentIndex);
 
       const movedTask = currList[event.currentIndex];
       movedTask.taskStatus = targetStatus.statusName;
 
-      //trigger Angular Signal to refresh computed map, and update the ui
-      this.tasks.update(tasks =>
-        tasks.map(t => t.taskId === movedTask.taskId ? { ...t, taskStatus: movedTask.taskStatus } : t)
-      );
-
-      //send update to backend
-      this.projectService.updateProjectTask(movedTask).subscribe({
-        next: () => {console.log('Task moved!');},
-        error: (error) => this.errorMessage.set(error.error.message)
-      })
+      currList.forEach((task, index) => {
+        task.orderNumber = index;
+        this.projectService.updateProjectTask(task).subscribe({})
+      });
     }
   }
 
@@ -221,8 +317,12 @@ export class TaskListComponent implements OnInit {
             this.tasks.update(value => [...value, data]);
           },
           error: (error: HttpErrorResponse) => {
-            console.error(error);
             this.errorMessage.set(error.error.message);
+            const dialogRef = this.dialog.open(ErrorPopup, {
+              disableClose: false
+            });
+            dialogRef.componentInstance.title = "Error creating task!"
+            dialogRef.componentInstance.errorMessage = error.error.message;
           },
         })
       }
@@ -248,8 +348,12 @@ export class TaskListComponent implements OnInit {
             this.tasks.update(value => [...value, data]);
           },
           error: (error: HttpErrorResponse) => {
-            console.error(error);
             this.errorMessage.set(error.error.message);
+            const dialogRef = this.dialog.open(ErrorPopup, {
+              disableClose: false
+            });
+            dialogRef.componentInstance.title = "Error creating task!"
+            dialogRef.componentInstance.errorMessage = error.error.message;
           },
         })
       }
@@ -274,8 +378,12 @@ export class TaskListComponent implements OnInit {
             });
           },
           error: (error: HttpErrorResponse) => {
-            console.error(error);
             this.errorMessage.set(error.error.message);
+            const dialogRef = this.dialog.open(ErrorPopup, {
+              disableClose: false
+            });
+            dialogRef.componentInstance.title = "Error updating task!"
+            dialogRef.componentInstance.errorMessage = error.error.message;
           },
         })
       }

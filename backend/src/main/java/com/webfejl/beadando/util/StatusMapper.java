@@ -6,6 +6,8 @@ import com.webfejl.beadando.entity.Status;
 import com.webfejl.beadando.exception.ProjectNotFoundException;
 import com.webfejl.beadando.repository.ProjectRepository;
 
+import java.util.Locale;
+
 public class StatusMapper {
 
     public static StatusDto toDTO(Status status) {
@@ -19,8 +21,8 @@ public class StatusMapper {
 
     public static Status toEntity(StatusDto statusDto, Status status, ProjectRepository projectRepository) {
         status.setStatusId(statusDto.statusId());
-        status.setStatusName(statusDto.statusName());
-        status.setOrderNumber(status.getOrderNumber());
+        status.setStatusName(statusDto.statusName().toUpperCase(Locale.ROOT));
+        status.setOrderNumber(statusDto.orderNumber());
         Project project = projectRepository.findById(statusDto.projectId()).orElseThrow(() -> new ProjectNotFoundException("Project not found"));
         status.setProject(project);
         return status;
