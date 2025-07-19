@@ -75,7 +75,7 @@
             (cdkDropListDropped)="drop($event, status)" class="task-list">
 
             <div style="display: flex; justify-content: space-between;">
-              <input class="status-input" [(ngModel)]="status.statusName" (keydown.enter)="updateStatus(status, $event)" maxlength="18" matTooltip="Rename column">
+              <input class="status-input" value="{{status.statusName}}" (keydown.enter)="updateStatus(status, $event)" maxlength="18" matTooltip="Rename column">
               @if(taskMapByStatus().get(status.statusName) && taskMapByStatus().get(status.statusName)!.length > 0) {
                 <h2>{{taskMapByStatus().get(status.statusName)?.length}}</h2>
               } @else {

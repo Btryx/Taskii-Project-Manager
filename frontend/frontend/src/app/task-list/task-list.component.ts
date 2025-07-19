@@ -116,7 +116,7 @@ export class TaskListComponent implements OnInit {
             console.log(error);
           },
           complete: () => {
-            this.isLoading.set(false);
+            setTimeout(() => {this.isLoading.set(false)}, 1000)
             this.getMembers(); // dont need to wait for this
           }
         })
@@ -204,16 +204,19 @@ export class TaskListComponent implements OnInit {
   }
 
   updateStatus(status: Status, event: Event) {
+    this.isLoading.set(true);
     let name = (event.target as HTMLInputElement).value;
     if (name) {
+      status.statusName = name.toUpperCase();
+      console.log(status)
       this.statusService.updateStatus(status).subscribe({
         next: (data) => {
+          this.getTasks(this.projectId);
           this.statuses.update(value => {
             let indexOfUpdatedStatus = value.findIndex(item => item.statusId === data.statusId);
             value.splice(indexOfUpdatedStatus, 1, data);
             return [...value];
           })
-          this.getTasks(this.projectId);
           if (event) {
             (event.target as HTMLInputElement).blur();
           }
@@ -228,8 +231,10 @@ export class TaskListComponent implements OnInit {
           dialogRef.componentInstance.errorMessage = error.error.message;
           this.getStatuses(this.projectId);
         },
+        complete: () => setTimeout(() => {this.isLoading.set(false)}, 1000)
       })
     }
+    setTimeout(() => {this.isLoading.set(false)}, 1000)
   }
 
   createStatus() {

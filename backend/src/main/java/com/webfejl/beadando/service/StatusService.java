@@ -47,8 +47,7 @@ public class StatusService {
         User user = accessUtil.getAuthenticatedUser();
         Status status = StatusMapper.toEntity(statusDto, new Status(), projectRepository);
 
-        List<Task> tasks = taskRepository.findAllByStatus(status.getStatusName())
-                .stream().filter(task -> Objects.equals(task.getProject().getProjectId(), statusDto.projectId())).toList();
+        List<Task> tasks = taskRepository.findAllByStatusAndProjectId(status.getStatusName(), statusDto.projectId());
 
         if(!tasks.isEmpty()) {
             throw new ColumnManagementException("A column already exists with this name!");
@@ -69,15 +68,14 @@ public class StatusService {
 
         //If the name changed, check that it is unique
         if(!status.getStatusName().equalsIgnoreCase(statusDto.statusName())) {
-            List<Task> tasks = taskRepository.findAllByStatus(statusDto.statusName())
-                    .stream().filter(task -> Objects.equals(task.getProject().getProjectId(), statusDto.projectId())).toList();
+            List<Task> tasks = taskRepository.findAllByStatusAndProjectId(statusDto.statusName(), statusDto.projectId());
 
             if(!tasks.isEmpty()) {
                 throw new ColumnManagementException("A column already exists with this name!");
             }
         }
 
-        List<Task> tasks = taskRepository.findAllByStatus(status.getStatusName());
+        List<Task> tasks = taskRepository.findAllByStatusAndProjectId(status.getStatusName(), statusDto.projectId());
 
         for (Task task : tasks) {
             task.setTaskStatus(statusDto.statusName());
@@ -93,7 +91,7 @@ public class StatusService {
     public void deleteStatus(String id) throws AuthorizationException, ProjectNotFoundException {
         User user = accessUtil.getAuthenticatedUser();
         Status status = statusRepository.findById(id).get();
-        List<Task> tasks = taskRepository.findAllByStatus(status.getStatusName());
+        List<Task> tasks = taskRepository.findAllByStatusAndProjectId(status.getStatusName(), status.getProject().getProjectId());
 
         if(!tasks.isEmpty()) {
             throw new ColumnManagementException("Can't delete column with tasks inside!");
