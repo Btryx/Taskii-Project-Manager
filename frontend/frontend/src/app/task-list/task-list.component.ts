@@ -204,13 +204,21 @@ export class TaskListComponent implements OnInit {
   }
 
   updateStatus(status: Status, event: Event) {
-    this.isLoading.set(true);
     let name = (event.target as HTMLInputElement).value;
     if (name) {
+      if (!this.checkIfNameUnique(name)) {
+        const dialogRef = this.dialog.open(InfoPopup, {
+          disableClose: false
+        });
+        dialogRef.componentInstance.title = "This name is already being used in this project.";
+        (event.target as HTMLInputElement).value = status.statusName;
+        return;
+      }
       status.statusName = name.toUpperCase();
       console.log(status)
       this.statusService.updateStatus(status).subscribe({
         next: (data) => {
+          this.isLoading.set(true);
           this.getTasks(this.projectId);
           this.statuses.update(value => {
             let indexOfUpdatedStatus = value.findIndex(item => item.statusId === data.statusId);
@@ -239,30 +247,43 @@ export class TaskListComponent implements OnInit {
 
   createStatus() {
     if (this.newStatusName()) {
-      let status: Status = new Status();
-      status.statusName = this.newStatusName();
-      console.log(this.statuses().length + 1);
-      status.orderNumber  = this.statuses().length + 1;
-      status.projectId = this.projectId;
-      this.statusService.createStatus(status).subscribe({
-        next: (data) => {
-          this.statuses.update(value => {
-            return [...value, data];
-          })
-          this.createStatusInputVisible.set(false);
-          this.newStatusName.set("");
-        },
-        error: (error: HttpErrorResponse) => {
-          this.errorMessage.set(error.error.message);
-          const dialogRef = this.dialog.open(ErrorPopup, {
+      if (!this.checkIfNameUnique(this.newStatusName())) {
+          const dialogRef = this.dialog.open(InfoPopup, {
             disableClose: false
           });
-          dialogRef.componentInstance.title = "Error creating column!"
-          dialogRef.componentInstance.errorMessage = error.error.message;
+          dialogRef.componentInstance.title = "This name is already being used in this project."
           this.newStatusName.set("");
-        },
-      })
+      } else {
+        let status: Status = new Status();
+        status.statusName = this.newStatusName();
+        console.log(this.statuses().length + 1);
+        status.orderNumber  = this.statuses().length + 1;
+        status.projectId = this.projectId;
+        this.statusService.createStatus(status).subscribe({
+          next: (data) => {
+            this.statuses.update(value => {
+              return [...value, data];
+            })
+            this.createStatusInputVisible.set(false);
+            this.newStatusName.set("");
+          },
+          error: (error: HttpErrorResponse) => {
+            this.errorMessage.set(error.error.message);
+            const dialogRef = this.dialog.open(ErrorPopup, {
+              disableClose: false
+            });
+            dialogRef.componentInstance.title = "Error creating column!"
+            dialogRef.componentInstance.errorMessage = error.error.message;
+            this.newStatusName.set("");
+          },
+        })
+      }
     }
+  }
+
+
+  checkIfNameUnique(name: string) {
+    return !this.statuses().map(s=> s.statusName.toLowerCase()).includes(name.toLowerCase());;
   }
 
   deleteStatus(status: Status, event: Event) {

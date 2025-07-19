@@ -1,4 +1,4 @@
-import { Component, inject, Inject, signal, WritableSignal } from '@angular/core';
+import { Component, inject, Inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -34,7 +34,7 @@ interface TaskDialogData extends Task {
   styleUrl: './task-dialog.css',
   providers: [provideNativeDateAdapter()],
 })
-export class TaskDialog {
+export class TaskDialog  implements OnInit {
   taskForm = new FormGroup({
     taskId: new FormControl(''),
     taskTitle: new FormControl('', Validators.required),
@@ -50,7 +50,7 @@ export class TaskDialog {
   private dialog: MatDialog = inject(MatDialog);
 
   authService: Auth = inject(Auth);
-  userId = signal("");
+  user : WritableSignal<User> = signal(new User());
 
   commentService: CommentService = inject(CommentService);
   comments : WritableSignal<Comment[]> = signal([]);
@@ -74,16 +74,16 @@ export class TaskDialog {
       projectId: this.data.projectId
     });
     console.log(this.data.taskStatus)
-    this.getUserId();
+    this.getUser();
     this.getComments();
   }
 
-  getUserId() {
+  getUser() {
     let username = this.authService.getUsername();
 
-    this.authService.getUserIdByName(username!).subscribe({
+    this.authService.getUserByName(username!).subscribe({
       next: (data) => {
-        this.userId.set(data.message);
+        this.user.set(data);
       }
     })
   }
@@ -94,11 +94,11 @@ export class TaskDialog {
       comment.comment = this.currentComment();
       comment.taskId = this.data.taskId;
       comment.createdAt = new Date();
-      comment.userId = this.userId();
+      comment.userId = this.user().userId;
 
       this.commentService.createComment(comment).subscribe({
         next: (data) => {
-          data.userName = this.getCurrentUserName();
+          data.userName = this.user().username;
           this.comments.update(value => [data, ...value]);
           this.currentComment.set("");
           if (event) {
@@ -176,14 +176,9 @@ export class TaskDialog {
     });
   }
 
-
-  getCurrentUserName() : string {
-    return this.authService.getUsername()!;
-  }
-
   assignToMe() {
     this.taskForm.patchValue({
-      assignee: this.userId(),
+      assignee: this.user().userId,
     });
   }
 

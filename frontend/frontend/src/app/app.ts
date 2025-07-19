@@ -1,10 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Auth } from './service/auth.service';
 import {MatButtonModule} from '@angular/material/button';
 import { MatMenu, MatMenuTrigger, MatMenuItem } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
+import { User } from './model/user';
 
 @Component({
   selector: 'app-root',
@@ -12,11 +13,16 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
+export class App  implements OnInit {
 
   protected title = 'Taskii';
   private authService = inject(Auth);
   private router = inject(Router);
+  user = signal(new User());
+
+  ngOnInit() {
+    this.getUser();
+  }
 
   isLoggedIn() : boolean {
       return this.authService.isUserLoggedIn()
@@ -34,4 +40,22 @@ export class App {
   getColorForUser(id: string): string {
     return this.authService.getColorForUser(id);
   }
+
+  getUser() {
+    let username = this.authService.getUsername();
+    this.authService.getUserByName(username!).subscribe({
+      next: (data) => {
+        this.user.set(data);
+      }
+    })
+  }
+
+  getUserName() : string {
+    return this.user().username;
+  }
+
+  getEmail() : string {
+    return this.user().email;
+  }
+
 }

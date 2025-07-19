@@ -20,8 +20,8 @@
 
                 <div class="comment-input-container">
                   <div class="comment-avatar">
-                    <button mat-icon-button [style.backgroundColor]="getColorForUser(userId())" class="ownerIcon">
-                      {{getCurrentUserName().charAt(0).toUpperCase()}}
+                    <button mat-icon-button [style.backgroundColor]="getColorForUser(user().userId)" class="ownerIcon">
+                      {{this.user().username.charAt(0).toUpperCase()}}
                     </button>
                   </div>
                   <div class="comment-input-wrapper">
@@ -55,7 +55,7 @@
                           <span class="comment-time">{{comment.createdAt | date}}</span>
                         </div>
                         <span class="comment-delete">
-                          <button type="button" mat-button (click)="deleteComment(comment, $event)" [hidden]="userId() !== comment.userId">
+                          <button type="button" mat-button (click)="deleteComment(comment, $event)" [hidden]="user().userId !== comment.userId">
                             <mat-icon style="margin: 0;">delete</mat-icon>
                           </button>
                         </span>

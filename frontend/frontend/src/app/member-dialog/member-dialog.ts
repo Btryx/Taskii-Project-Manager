@@ -60,9 +60,9 @@ export class MemberDialog {
 
     if (this.memberForm.value.userName) {
       let name = this.memberForm.value.userName;
-      this.authService.getUserIdByName(name).subscribe({
-        next: (data) => {
-          this.userIsFound(name, data);
+      this.authService.getUserByName(name).subscribe({
+        next: (user : User) => {
+          this.userIsFound(name, user);
         },
         error: () => {
           this.userNotFound();
@@ -71,7 +71,7 @@ export class MemberDialog {
     }
   }
 
-  private userIsFound(name: string, data: any) {
+  private userIsFound(name: string, user: User) {
     if (this.isAlreadyMember(name)) {
       this.successMessage.set(``);
       this.message.set(`This user is already a collaborator on the project.`);
@@ -79,7 +79,7 @@ export class MemberDialog {
       this.successMessage.set(`User found! Click save to add ${name} to the project`);
       this.message.set(``);
       this.memberForm.patchValue({
-        userId: data.message
+        userId: user.userId
       });
     }
 

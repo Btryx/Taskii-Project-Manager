@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { User } from '../model/user';
 
 @Injectable({
   providedIn: 'root'
@@ -49,8 +50,8 @@ export class Auth {
     return this.http.get<any>(`${this.userUrl}/${id}`);
   }
 
-  getUserIdByName(name: string) : Observable<any> {
-    return this.http.get<any>(`${this.userUrl}/username/${name}`);
+  getUserByName(name: string) : Observable<User> {
+    return this.http.get<User>(`${this.userUrl}/username/${name}`);
   }
 
   getColorForUser(id: string): string {
