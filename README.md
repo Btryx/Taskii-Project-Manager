@@ -99,6 +99,8 @@ CREATE TABLE statuses (
     project_id VARCHAR(36) NOT NULL
 );
 
+ALTER TABLE `statuses` ADD UNIQUE `statuses_uq_01`(`status_name`, `project_id`);
+
 CREATE TABLE comments (
     comment_id VARCHAR(36) PRIMARY KEY,
     task_id VARCHAR(100) NOT NULL,
