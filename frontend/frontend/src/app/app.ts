@@ -19,6 +19,7 @@ export class App  implements OnInit {
   private authService = inject(Auth);
   private router = inject(Router);
   user = signal(new User());
+  isLoading = signal(true);
 
   ngOnInit() {
     this.getUser();
@@ -46,7 +47,8 @@ export class App  implements OnInit {
     this.authService.getUserByName(username!).subscribe({
       next: (data) => {
         this.user.set(data);
-      }
+      },
+      complete: () => this.isLoading.set(false)
     })
   }
 

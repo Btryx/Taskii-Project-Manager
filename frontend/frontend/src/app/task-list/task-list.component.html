@@ -9,8 +9,8 @@
       <div class="tasks-header">
         <div class="header-row">
           <h1>{{project()?.projectName}}</h1>
-          <button  mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()"  [hidden]="!isAdmin()">
-            <mat-icon >more_horiz</mat-icon>
+          <button  mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()"  [hidden]="!isAdmin()" class="more-icon-one" >
+            <mat-icon>more_horiz</mat-icon>
           </button>
           <mat-menu #menu="matMenu"  [hidden]="!isAdmin()">
             <button mat-menu-item (click)="createMember()">
@@ -23,11 +23,14 @@
             </button>
           </mat-menu>
         </div>
-        <button mat-raised-button color="primary" (click)="createTasks()">
+        <button class="add-task" mat-raised-button color="primary" (click)="createTasks()">
           <mat-icon>add</mat-icon>
           Add Task
         </button>
       </div>
+      <button  mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()"  [hidden]="!isAdmin()" class="more-icon-two" >
+        <mat-icon>more_horiz</mat-icon>
+      </button>
       <div style="display: flex;">
         <mat-form-field appearance="outline"   class="task-filter">
           <mat-label>Search tasks</mat-label>
@@ -139,16 +142,19 @@
               </button>
           </div>
         }
-        <button class="add-status-button" (click)="toggleCreateStatusInputVisible()" [hidden]="createStatusInputVisible()" matTooltip="Create new column">
-          <mat-icon>add</mat-icon>
-        </button>
-        <input #statusInput class="status-input-add" [hidden]="!createStatusInputVisible()" (keydown.enter)="createStatus()" maxlength="18" [(ngModel)]="newStatusName">
-        <button class="add-status-button" (click)="createStatus()" [hidden]="!createStatusInputVisible()">
-          <mat-icon>check</mat-icon>
-        </button>
-        <button class="add-status-button" (click)="toggleCreateStatusInputVisible()" [hidden]="!createStatusInputVisible()">
-          <mat-icon>close</mat-icon>
-        </button>
+        <div style="padding: 20px; display: flex; gap: 10px">
+          <button class="add-status-button" (click)="toggleCreateStatusInputVisible()" [hidden]="createStatusInputVisible()" matTooltip="Create new column">
+            <mat-icon>add</mat-icon>
+          </button>
+          <input #statusInput class="status-input-add" [hidden]="!createStatusInputVisible()" (keydown.enter)="createStatus()" maxlength="18" [(ngModel)]="newStatusName">
+          <button class="add-status-button" (click)="createStatus()" [hidden]="!createStatusInputVisible()">
+            <mat-icon>check</mat-icon>
+          </button>
+          <button class="add-status-button" (click)="toggleCreateStatusInputVisible()" [hidden]="!createStatusInputVisible()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
       </div>
       </div>
     </div>

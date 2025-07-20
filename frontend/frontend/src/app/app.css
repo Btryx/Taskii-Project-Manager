@@ -16,17 +16,25 @@
 }
 
 .header {
-  display: flex;
+  padding: 15px;
 }
 
+.name {
+  font-weight: bold;
+  text-transform: capitalize;
+}
 
-.owner-icon {
-  display: inline-flex;
-  align-items: center;
+.icon {
+  color: black !important;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  display: flex;
   justify-content: center;
-  width: 30px;
-  height: 30px;
-  font-size: 15px;
-  color: black;
-  margin-right: 10px;
+  align-items: center;
+  padding: 20px;
+  border-radius: 30px;
+}
+
+.info {
+  display: inline-flex;
+  flex-direction: column;
 }

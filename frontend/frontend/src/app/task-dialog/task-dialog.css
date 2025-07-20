@@ -229,6 +229,7 @@ body {
 
 .comment-content {
   flex: 1;
+  overflow: auto;
 }
 
 .comment-header {
@@ -255,24 +256,63 @@ body {
   line-height: 1.4;
 }
 
-/* Dark scrollbar for textarea */
+/* Dark scrollbar for comments */
 .comment-input::-webkit-scrollbar {
-  width: 8px;
+  height: 5px;
 }
 
 .comment-input::-webkit-scrollbar-track {
-  background: #333333;
-  border-radius: 4px;
+  background: #2d2d2d;
+  border-radius: 6px;
 }
 
 .comment-input::-webkit-scrollbar-thumb {
   background: #555555;
-  border-radius: 4px;
+  border-radius: 6px;
+  border: 2px solid #2d2d2d;
 }
 
 .comment-input::-webkit-scrollbar-thumb:hover {
   background: #666666;
 }
+
+.comment-input::-webkit-scrollbar-thumb:active {
+  background: #777777;
+}
+
+/* Firefox scrollbar styling */
+.comment-section {
+  scrollbar-color: #777777 #2d2d2d;
+}
+
+.comment-section::-webkit-scrollbar {
+  height: 5px;
+}
+
+.comment-section::-webkit-scrollbar-track {
+  background: #2d2d2d;
+  border-radius: 6px;
+}
+
+.comment-section::-webkit-scrollbar-thumb {
+  background: #555555;
+  border-radius: 6px;
+  border: 2px solid #2d2d2d;
+}
+
+.comment-section::-webkit-scrollbar-thumb:hover {
+  background: #666666;
+}
+
+.comment-section::-webkit-scrollbar-thumb:active {
+  background: #777777;
+}
+
+/* Firefox scrollbar styling */
+.comment-section {
+  scrollbar-color: #777777 #2d2d2d;
+}
+
 
 .comment-row {
   display: flex;
@@ -445,4 +485,67 @@ body {
 .btn-save:disabled {
   background-color: #4b5563;
   cursor: not-allowed;
+}
+
+
+@media (max-width: 768px) {
+
+  .container {
+    flex-direction: column;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid #404040;
+    order: 2;
+  }
+
+  .main-content {
+    order: 1;
+  }
+
+  .comment-section {
+    width: 100%;
+    max-width: none;
+  }
+
+  .status-input {
+    min-width: 150px;
+  }
+
+  .date-input {
+    width: 90px;
+  }
+
+  .task-title {
+    font-size: 30px;
+  }
+
+  .task-title input {
+    font-size: 20px;
+  }
+
+  .description-input {
+    min-height: 20vh;
+  }
+
+  .comment-section {
+    height: 250px;
+  }
+
+  .comment-suggestions {
+    gap: 4px;
+  }
+
+  .suggestion-btn {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+
+  .actions-container {
+    margin-top: 40px;
+  }
 }

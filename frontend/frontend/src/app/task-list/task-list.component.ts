@@ -239,10 +239,10 @@ export class TaskListComponent implements OnInit {
           dialogRef.componentInstance.errorMessage = error.error.message;
           this.getStatuses(this.projectId);
         },
-        complete: () => setTimeout(() => {this.isLoading.set(false)}, 1000)
+        complete: () => setTimeout(() => {this.isLoading.set(false)}, 500)
       })
     }
-    setTimeout(() => {this.isLoading.set(false)}, 1000)
+    setTimeout(() => {this.isLoading.set(false)}, 500)
   }
 
   createStatus() {

@@ -110,7 +110,7 @@ export class ProjectListComponent implements OnInit {
           console.error(error);
           this.errorMessage.set(error.error.message);
         },
-        complete: () => this.isLoading.set(false)
+        complete: () => setTimeout(() => {this.isLoading.set(false)}, 500)
       }
     )
   }

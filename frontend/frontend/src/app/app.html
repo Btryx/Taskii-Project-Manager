@@ -1,28 +1,26 @@
 <mat-toolbar>
     <span style="margin-right: 50px;">{{title}}</span>
-    @if(isLoggedIn()){
+    @if(!isLoading() && isLoggedIn()){
       <button mat-raised-button (click)="navigateToProjects()">
         Projects
       </button>
     }
 
     <span class="toolbar-spacer"></span>
-    @if(isLoggedIn()){
+    @if(!isLoading() && isLoggedIn()){
       <div>
         <button mat-icon-button [style.backgroundColor]="getColorForUser(this.user().userId)" class="nav-button" [matMenuTriggerFor]="menu">
           {{getUserName().charAt(0).toUpperCase()}}
         </button>
         <mat-menu #menu="matMenu">
-          <div mat-menu-item class="header">
-            <button mat-icon-button [style.backgroundColor]="getColorForUser(this.user().userId)" class="owner-icon">
-              {{getUserName().charAt(0).toUpperCase()}}
-            </button>
-            <div>
-              <div>{{getUserName()}}</div>
-              <div>{{getEmail()}}</div>
-            </div>
-          </div>
-          <button mat-menu-item (click)="logOut()">
+          <button mat-menu-item class="header">
+            <mat-icon class="icon" [style.backgroundColor]="getColorForUser(this.user().userId)">B</mat-icon>
+            <span class="info">
+              <span class="name">{{getUserName()}}</span>
+              <span>{{getEmail()}}</span>
+            </span>
+          </button>
+          <button class="logout" mat-menu-item (click)="logOut()">
             <mat-icon>logout</mat-icon>
             <span>Log out</span>
           </button>
