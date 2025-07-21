@@ -121,7 +121,7 @@ CREATE TABLE comments (
 -  Drag-and-drop functionality for Kanban board task management
 -  Advanced search and filtering capabilities for tasks
 -  Responsive UI built with Angular Material
-- 🗄 Persistent data storage using MySQL database
+-  Persistent data storage using MySQL database
 
 ##  Future Plans
 
