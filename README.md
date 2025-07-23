@@ -119,13 +119,14 @@ CREATE TABLE comments (
 -  Full CRUD operations for projects (create, update, disable, delete)
 -  Complete task management (add, edit, delete tasks within projects)
 -  Drag-and-drop functionality for Kanban board task management
--  Advanced search and filtering capabilities for tasks
+-  Advanced search and filtering capabilities for tasks and projects
+-  Collaborator management: add/remove collaborators
+-  Add assignees to tasks
+-  Autherization based on collaborator roles
+-  Add/remove comments on tasks
 -  Responsive UI built with Angular Material
 -  Persistent data storage using MySQL database
 
 ##  Future Plans
 
--  Collaboration features (invite users to work on projects), assignees on tasks (IN PROGRESS)
--  Add comments to tasks
--  Role-based permissions within projects (e.g., Owner, Contributor, Viewer)
--  Upgrade Angular to the latest stable version for performance and security improvements (DONE: 13 -> 20)
+-  Implement keycloak auth
