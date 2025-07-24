@@ -10,17 +10,17 @@ A full-stack Kanban-style project and task management application built with Ang
 
 - User registration and login with secure authentication
 - JWT-based authentication with Spring Security
-- Full CRUD operations for projects (create, update, disable, delete)
-- Complete task management (add, edit, delete tasks within projects)
-- Drag-and-drop kanban board
-- Advanced search and filtering capabilities for tasks and projects
-- Add/Remove/Rename columns dynamically
-- Collaborator management: add/remove/manage members
-- Assign people to tasks
-- Autherization based on collaborator roles
-- Comment on tasks
-- Responsive UI built with Angular Material
-- Persistent data storage using MySQL database
+- Manage your projects
+- Manage project tasks
+- Drag-and-drop kanban board functionality, easy to use
+- Advanced search and filtering for tasks and projects
+- Add, remove or rename columns dynamically
+- Collaborator management: easily add or remove members as an admin
+- Assign people to different tasks
+- Autherization based on member roles
+- Comment on tasks, see what others wrote
+- Responsive UI
+- Persistent data storage using MySQL
 - Lightweight and fast
 
 
