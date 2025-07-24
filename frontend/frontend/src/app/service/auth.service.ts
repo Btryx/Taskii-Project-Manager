@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from '../model/user';
 
@@ -21,20 +21,31 @@ export class Auth {
     return this.http.post<any>(this.registerUrl, {email, username, password, enabled: true});
   }
 
-  setToken(token: string) {
-    sessionStorage.setItem('jwt', token)
-  }
-
-  setUsername(username: string) {
-    sessionStorage.setItem('username', username)
+  setUserData(username: string, token : string) {
+    localStorage.setItem('jwt', token)
+    localStorage.setItem('username', username)
+    this.getUserByName(username).subscribe({
+        next: (user : User) => {
+          localStorage.setItem('id', user.userId)
+          localStorage.setItem('email', user.email)
+        }
+      })
   }
 
   getToken(): string | null {
-    return sessionStorage.getItem('jwt');
+    return localStorage.getItem('jwt');
+  }
+
+  getId(): string | null {
+    return localStorage.getItem('id');
+  }
+
+  getEmail(): string | null {
+    return localStorage.getItem('email');
   }
 
   getUsername(): string | null {
-    return sessionStorage.getItem('username');
+    return localStorage.getItem('username');
   }
 
   isUserLoggedIn(): boolean {
@@ -42,8 +53,10 @@ export class Auth {
   }
 
   logOut() {
-    sessionStorage.removeItem('jwt');
-    sessionStorage.removeItem('username');
+    localStorage.removeItem('id');
+    localStorage.removeItem('email');
+    localStorage.removeItem('jwt');
+    localStorage.removeItem('username');
   }
 
   getUserNameById(id: string) : Observable<any> {

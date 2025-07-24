@@ -105,14 +105,9 @@ h2 {
   gap: 20px;
   max-width: 100vw;
   overflow-x: auto;
-  /* Flip the scroolbar */
-  transform: scaleY(-1);
 }
 
-/* Flip the content back */
-.status-container > * {
-  transform: scaleY(-1);
-}
+
 
 /* Dark theme scrollbar styling */
 .status-container::-webkit-scrollbar {

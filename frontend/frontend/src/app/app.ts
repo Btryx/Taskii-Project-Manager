@@ -18,11 +18,9 @@ export class App  implements OnInit {
   protected title = 'Taskii';
   private authService = inject(Auth);
   private router = inject(Router);
-  user = signal(new User());
   isLoading = signal(true);
 
   ngOnInit() {
-    this.getUser();
   }
 
   isLoggedIn() : boolean {
@@ -42,22 +40,17 @@ export class App  implements OnInit {
     return this.authService.getColorForUser(id);
   }
 
-  getUser() {
-    let username = this.authService.getUsername();
-    this.authService.getUserByName(username!).subscribe({
-      next: (data) => {
-        this.user.set(data);
-      },
-      complete: () => this.isLoading.set(false)
-    })
+
+  getId() : string | null {
+    return this.authService.getId();
   }
 
-  getUserName() : string {
-    return this.user().username;
+  getUserName() : string | null {
+    return this.authService.getUsername();
   }
 
-  getEmail() : string {
-    return this.user().email;
+  getEmail() : string | null {
+    return this.authService.getEmail();
   }
 
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -15,13 +15,19 @@ import { MatInputModule } from '@angular/material/input';
   styleUrl: './login.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Login {
+export class Login  implements OnInit {
   private authService = inject(Auth);
   private router = inject(Router);
   loginForm = new FormGroup({
     username: new FormControl('', Validators.required),
     password: new FormControl('', Validators.required),
   })
+
+  ngOnInit(): void {
+    if (this.authService.isUserLoggedIn()) {
+      this.router.navigate(["/projects"])
+    }
+  }
 
   errorMessage = signal('');
   hidePassword = signal(true);
@@ -31,16 +37,13 @@ export class Login {
       {
         next: data => {
           let token = data.message;
-          this.authService.setToken(token);
-          this.authService.setUsername(this.loginForm.value.username!);
-          console.log("Login successful!!");
-          console.log(this.authService.getToken());
-          this.router.navigate(["/projects"]);
+          this.authService.setUserData(this.loginForm.value.username!, token);
         },
         error: (error: HttpErrorResponse) => {
           console.error(error.error.message);
           this.errorMessage.set(error.error.message);
-        }
+        },
+        complete: () => this.router.navigate(["/projects"])
       }
     );
   };

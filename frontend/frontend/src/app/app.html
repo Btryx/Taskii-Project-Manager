@@ -7,14 +7,14 @@
     }
 
     <span class="toolbar-spacer"></span>
-    @if(!isLoading() && isLoggedIn()){
+    @if(getId() && isLoggedIn()){
       <div>
-        <button mat-icon-button [style.backgroundColor]="getColorForUser(this.user().userId)" class="nav-button" [matMenuTriggerFor]="menu">
-          {{getUserName().charAt(0).toUpperCase()}}
+        <button mat-icon-button [style.backgroundColor]="getColorForUser(getId()!)" class="nav-button" [matMenuTriggerFor]="menu">
+          {{getUserName()?.charAt(0)?.toUpperCase()}}
         </button>
         <mat-menu #menu="matMenu">
           <button mat-menu-item class="header">
-            <mat-icon class="icon" [style.backgroundColor]="getColorForUser(this.user().userId)">B</mat-icon>
+            <mat-icon class="icon" [style.backgroundColor]="getColorForUser(getId()!)">{{getUserName()?.charAt(0)}}</mat-icon>
             <span class="info">
               <span class="name">{{getUserName()}}</span>
               <span>{{getEmail()}}</span>
