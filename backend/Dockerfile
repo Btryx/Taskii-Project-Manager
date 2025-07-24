@@ -18,17 +18,8 @@ RUN mvn dependency:go-offline
 COPY src /workdir/server/src
 RUN mvn install -DskipTests
 
+RUN apt-get update
 
-RUN <<EOF
-apt-get update
-apt-get install -y git
-EOF
-
-RUN <<EOF
-useradd -s /bin/bash -m bea
-groupadd docker
-usermod -aG docker bea
-EOF
 # install Docker tools (cli, buildx, compose)
 COPY --from=gloursdocker/docker / /
 CMD ["mvn", "spring-boot:run"]
