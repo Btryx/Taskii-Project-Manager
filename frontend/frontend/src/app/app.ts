@@ -18,7 +18,6 @@ export class App  implements OnInit {
   protected title = 'Taskii';
   private authService = inject(Auth);
   private router = inject(Router);
-  isLoading = signal(true);
 
   ngOnInit() {
   }

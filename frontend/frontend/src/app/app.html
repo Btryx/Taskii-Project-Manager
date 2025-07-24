@@ -1,6 +1,6 @@
 <mat-toolbar>
     <span style="margin-right: 50px;">{{title}}</span>
-    @if(!isLoading() && isLoggedIn()){
+    @if(isLoggedIn()){
       <button mat-raised-button (click)="navigateToProjects()">
         Projects
       </button>
