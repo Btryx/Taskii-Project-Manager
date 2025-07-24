@@ -1,17 +1,18 @@
-import { CollaboratorService } from './../app/service/collaborator.service';
+
 import { Component, computed, inject, Inject, Signal, signal, WritableSignal } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { Auth } from '../app/service/auth.service';
-import { Member } from '../app/model/member';
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenu, MatMenuTrigger, MatMenuItem } from '@angular/material/menu';
-import { ConfirmationDialog } from '../app/comformation-dialog/comformation-dialog';
 import { HttpErrorResponse } from '@angular/common/http';
-import { InfoPopup } from '../app/info-popup/info-popup';
 import { CommonModule  } from '@angular/common';
-import { ErrorPopup } from '../app/error-popup/error-popup';
+import { Member } from '../model/member';
+import { CollaboratorService } from '../service/collaborator.service';
+import { Auth } from '../service/auth.service';
+import { ErrorPopup } from '../error-popup/error-popup';
+import { InfoPopup } from '../info-popup/info-popup';
+import { ConfirmationDialog } from '../comformation-dialog/comformation-dialog';
 
 interface ManageMembersData {
   collaborators: Member[];

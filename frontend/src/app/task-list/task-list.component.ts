@@ -27,7 +27,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MemberDialog } from '../member-dialog/member-dialog';
 import { InfoPopup } from '../info-popup/info-popup';
 import { Member } from '../model/member';
-import { ManageMembersDialog } from '../../manage-members-dialog/manage-members-dialog';
+import { ManageMembersDialog } from '../manage-members-dialog/manage-members-dialog';
 import { ErrorPopup } from '../error-popup/error-popup';
 import { StatusService } from '../service/status.service';
 
