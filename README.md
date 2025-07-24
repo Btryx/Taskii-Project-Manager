@@ -16,7 +16,7 @@ A full-stack Kanban-style project and task management application built with Ang
 - Advanced search and filtering capabilities for tasks and projects
 - Add/Remove/Rename columns dynamically
 - Collaborator management: add/remove/manage members
-- Add assignees to tasks
+- Assign people to tasks
 - Autherization based on collaborator roles
 - Comment on tasks
 - Responsive UI built with Angular Material
@@ -138,4 +138,4 @@ docker compose up --build
 cd Task-Management-System/frontend/frontend
 ng serve
 ```
-##
+
