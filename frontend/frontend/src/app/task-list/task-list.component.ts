@@ -330,8 +330,8 @@ export class TaskListComponent implements OnInit {
   }
 
   createTasks() {
-    const dialogRef = this.dialog.open(TaskDialog, {
-      data: { ...new Task(), title: 'Create task', statuses: this.statuses(), collaborators: this.collaborators() },
+    const dialogRef = this.dialog.open(TaskDialog,  {
+      disableClose: true, data: { ...new Task(), title: 'Create task', statuses: this.statuses(), collaborators: this.collaborators() },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -362,7 +362,7 @@ export class TaskListComponent implements OnInit {
     task.taskStatus = status;
     console.log(task.taskStatus)
     const dialogRef = this.dialog.open(TaskDialog, {
-      data: { ...task, title: 'Create task', statuses: this.statuses(), collaborators: this.collaborators() },
+      disableClose: true, data: { ...task, title: 'Create task', statuses: this.statuses(), collaborators: this.collaborators() },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -389,7 +389,7 @@ export class TaskListComponent implements OnInit {
   editTask(task : Task, event : Event) {
     event.stopPropagation();
     const dialogRef = this.dialog.open(TaskDialog, {
-      data: { ...task, title: 'Edit task', statuses: this.statuses(), collaborators: this.collaborators()  },
+      disableClose: true, data: { ...task, title: 'Edit task', statuses: this.statuses(), collaborators: this.collaborators()  },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
