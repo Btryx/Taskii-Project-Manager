@@ -34,23 +34,24 @@ A full-stack Kanban-style project and task management application built with Ang
 
 ## Technologies Used
 
-- **Angular (TypeScript)** - Frontend framework
-- **Angular Material** - UI components
-- **RxJS** - Reactive programming
-- **HTTP Interceptors** - Token handling
+Backend
+- **Spring Boot 3**
+- **Spring MVC**
+- **Spring Security 6**
+- **Spring Data JPA**
+- **JWT Token Authentication** 
+- **JUnit**
+- **Lombok**
+- **MySQL**
+- **Liquibase**
+- **Docker**
 
-- **Spring Boot** - Java backend framework
-- **Spring MVC** - Web support
-- **Spring Security** - Authentication & authorization
-- **Spring Data JPA** - ORM with Hibernate
-- **JWT (JSON Web Tokens)** - Stateless authentication
-- **JUnit** - Unit testing
-- **Lombok** - Reduces boilerplate code in Java classes
-
-- **MySQL** - Relational database
-- **Liquibase** - Database management
-- **Docker** - Containerization
-
+Frontend
+- **Angular**
+- **Angular Material**
+- **RxJS**
+- **HTTP Interceptors**
+- **Bootstrap**
 
 
 ## Setup & Installation
