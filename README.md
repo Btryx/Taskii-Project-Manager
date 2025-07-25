@@ -60,7 +60,7 @@ A full-stack Kanban-style project and task management application built with Ang
 - Node.js (currently using v22.17.1)
 - Angular CLI (currently using v20.0.3)
 - Maven 3 (currently using v3.8.5)
-- Docker
+- Docker (currently using v28.3.2)
 
 ### Configuration
 Add `.env` file in root folder with the following configuration:
