@@ -1,35 +1,35 @@
 import { map, pipe } from 'rxjs';
-import { ProjectService } from '../service/project.service';
+import { ProjectService } from '../../services/project.service';
 import { CommonModule  } from '@angular/common';
-import { Project } from '../model/project';
+import { Project } from '../../models/project';
 import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
-import { Auth } from '../service/auth.service';
+import { Auth } from '../../services/auth.service';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ConfirmationDialog } from '../comformation-dialog/comformation-dialog';
 import { MatMenu, MatMenuTrigger, MatMenuItem } from '@angular/material/menu';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Task } from '../model/task';
+import { Task } from '../../models/task';
 import { CdkDrag,  CdkDragDrop,  CdkDropList, CdkDropListGroup,  moveItemInArray,  transferArrayItem,} from '@angular/cdk/drag-drop';
 import { TaskDialog } from '../task-dialog/task-dialog';
-import { Status } from '../model/status';
+import { Status } from '../../models/status';
 import {MatCardModule} from '@angular/material/card';
 import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select'
-import { User } from '../model/user';
-import { CollaboratorService } from '../service/collaborator.service';
+import { User } from '../../models/user';
+import { CollaboratorService } from '../../services/collaborator.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MemberDialog } from '../member-dialog/member-dialog';
 import { InfoPopup } from '../info-popup/info-popup';
-import { Member } from '../model/member';
+import { Member } from '../../models/member';
 import { ManageMembersDialog } from '../manage-members-dialog/manage-members-dialog';
 import { ErrorPopup } from '../error-popup/error-popup';
-import { StatusService } from '../service/status.service';
+import { StatusService } from '../../services/status.service';
 
 @Component({
   selector: 'app-task-list',

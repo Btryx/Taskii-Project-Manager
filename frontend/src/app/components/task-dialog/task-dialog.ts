@@ -6,20 +6,20 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select'
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { Task } from '../model/task';
+import { Task } from '../../models/task';
 import { MatNativeDateModule } from '@angular/material/core';
-import { Status } from '../model/status';
+import { Status } from '../../models/status';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
-import { CommentService } from '../service/comment.service';
+import { CommentService } from '../../services/comment.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { Comment } from '../model/comment';
-import { Auth } from '../service/auth.service';
+import { Comment } from '../../models/comment';
+import { Auth } from '../../services/auth.service';
 import { CommonModule  } from '@angular/common';
 import { map, Observable } from 'rxjs';
 import { ConfirmationDialog } from '../comformation-dialog/comformation-dialog';
-import { User } from '../model/user';
+import { User } from '../../models/user';
 
 interface TaskDialogData extends Task {
   title: string;

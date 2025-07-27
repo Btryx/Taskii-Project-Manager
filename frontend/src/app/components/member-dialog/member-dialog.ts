@@ -10,10 +10,10 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import { Auth } from '../service/auth.service';
+import { Auth } from '../../services/auth.service';
 import { CommonModule  } from '@angular/common';
-import { User } from '../model/user';
-import { Member } from '../model/member';
+import { User } from '../../models/user';
+import { Member } from '../../models/member';
 
 interface MemberDialogData extends Member {
   collaborators: User[];

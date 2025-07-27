@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { Routes } from '@angular/router';
-import { Login } from './login/login';
-import { Register } from './register/register';
-import { ProjectListComponent } from './project-list/project-list.component';
-import { TaskListComponent } from './task-list/task-list.component';
+import { Login } from './components/login/login';
+import { Register } from './components/register/register';
+import { ProjectListComponent } from './components/project-list/project-list.component';
+import { TaskListComponent } from './components/task-list/task-list.component';
 
 
 export const routes: Routes = [

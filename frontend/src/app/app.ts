@@ -1,11 +1,11 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { Auth } from './service/auth.service';
+import { Auth } from './services/auth.service';
 import {MatButtonModule} from '@angular/material/button';
 import { MatMenu, MatMenuTrigger, MatMenuItem } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
-import { User } from './model/user';
+import { User } from './models/user';
 
 @Component({
   selector: 'app-root',
