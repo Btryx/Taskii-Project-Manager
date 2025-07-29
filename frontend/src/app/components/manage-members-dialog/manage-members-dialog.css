@@ -122,6 +122,7 @@
   font-weight: 500;
   color: #ffffff;
   font-size: 14px;
+  text-transform: capitalize
 }
 
 .member-role-badge {

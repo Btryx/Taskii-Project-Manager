@@ -1,3 +1,4 @@
+import { KeycloakService } from './../../services/keycloak.service.';
 import { map, pipe } from 'rxjs';
 import { ProjectService } from '../../services/project.service';
 import { CommonModule  } from '@angular/common';
@@ -8,7 +9,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
-import { Auth } from '../../services/auth.service';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ConfirmationDialog } from '../comformation-dialog/comformation-dialog';
@@ -43,7 +43,7 @@ export class TaskListComponent implements OnInit {
 
   private projectService : ProjectService = inject(ProjectService);
   private statusService : StatusService = inject(StatusService);
-  private authService = inject(Auth);
+  private keycloakService = inject(KeycloakService);
   private collaboratorService = inject(CollaboratorService);
   private dialog: MatDialog = inject(MatDialog);
   private route : ActivatedRoute = inject(ActivatedRoute);
@@ -53,7 +53,7 @@ export class TaskListComponent implements OnInit {
   status?: string;
   priority?: number;
   collaborators: WritableSignal<User[]> = signal([]); //getting it as users for better performance
-  members: WritableSignal<Member[]> = signal([]); //getting it as users for better performance
+  members: WritableSignal<Member[]> = signal([]);
   isAdmin = signal(false);
   createStatusInputVisible = signal(false);
   newStatusName = signal("");
@@ -287,23 +287,32 @@ export class TaskListComponent implements OnInit {
   }
 
   deleteStatus(status: Status, event: Event) {
-    this.statusService.deleteStatus(status.statusId).subscribe({
-      next: () => {
-        this.statuses.update(value => {
-          let indexOfUpdatedStatus = value.findIndex(item => item.statusId === status.statusId);
-          value.splice(indexOfUpdatedStatus, 1);
-          return [...value];
+     const dialogRef = this.dialog.open(ConfirmationDialog, {
+      disableClose: false
+    });
+    dialogRef.componentInstance.title = "Delete column?"
+    dialogRef.componentInstance.confirmMessage = `Are you sure you want to delete column: "${status.statusName.toLowerCase()}"?`
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        this.statusService.deleteStatus(status.statusId).subscribe({
+          next: () => {
+            this.statuses.update(value => {
+              let indexOfUpdatedStatus = value.findIndex(item => item.statusId === status.statusId);
+              value.splice(indexOfUpdatedStatus, 1);
+              return [...value];
+            })
+          },
+          error: (error: HttpErrorResponse) => {
+            this.errorMessage.set(error.error.message);
+            const dialogRef = this.dialog.open(ErrorPopup, {
+              disableClose: false
+            });
+            dialogRef.componentInstance.title = "Error deleting column!"
+            dialogRef.componentInstance.errorMessage = error.error.message;
+          },
         })
-      },
-      error: (error: HttpErrorResponse) => {
-        this.errorMessage.set(error.error.message);
-        const dialogRef = this.dialog.open(ErrorPopup, {
-          disableClose: false
-        });
-        dialogRef.componentInstance.title = "Error deleting column!"
-        dialogRef.componentInstance.errorMessage = error.error.message;
-      },
-    })
+      }
+    });
   }
 
   drop(event: CdkDragDrop<Task[]>, targetStatus: Status) {
@@ -518,11 +527,11 @@ export class TaskListComponent implements OnInit {
 
   setAssigneeUsernameMap(task: Task): void {
     if(task.assignee &&!this.usernames().has(task.assignee)) {
-      this.authService.getUserNameById(task.assignee).subscribe({
+       this.keycloakService.getUserById(task.assignee).subscribe({
         next: (data) => {
           this.usernames.update(map => {
             const newMap = new Map(map);
-            newMap.set(task.assignee!, data.message);
+            newMap.set(task.assignee!, data.username);
             return newMap;
           })
         },
@@ -542,7 +551,7 @@ export class TaskListComponent implements OnInit {
   }
 
   getColorForUser(id: string): string {
-    return this.authService.getColorForUser(id);
+    return this.keycloakService.getColorForUser(id);
   }
 
 

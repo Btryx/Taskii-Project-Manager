@@ -55,9 +55,9 @@
              [class]="selectedCollaboratorFilterValue()=='Unassigned' ? 'col-icon-selected' : 'col-icon'" matTooltip="Unassigned">
             </button>
           </span>
-          @for(coll of collaborators(); track coll.userId) {
-            <button mat-icon-button (click)="selectCollaboratorFilter(coll.userId)" [style.backgroundColor]="getColorForUser(coll.userId)" matTooltip="{{coll.username}}"
-              [class]="selectedCollaboratorFilterValue()==coll.userId ? 'col-icon-selected' : 'col-icon'">
+          @for(coll of collaborators(); track coll.id) {
+            <button mat-icon-button (click)="selectCollaboratorFilter(coll.id)" [style.backgroundColor]="getColorForUser(coll.id)" matTooltip="{{coll.username}}"
+              [class]="selectedCollaboratorFilterValue()==coll.id ? 'col-icon-selected' : 'col-icon'">
               {{coll.username.charAt(0).toUpperCase()}}
             </button>
           }

@@ -4,7 +4,7 @@
       <!-- Content Area -->
       <div class="content-area" >
           <div class="task-title">
-              <input type="text" placeholder="What to do?" formControlName="taskTitle" maxlength="100">
+              <input type="text" placeholder="What to do?" formControlName="taskTitle" maxlength="50">
           </div>
 
           <div class="description-section">
@@ -20,7 +20,7 @@
 
                 <div class="comment-input-container">
                   <div class="comment-avatar">
-                    <button mat-icon-button [style.backgroundColor]="getColorForUser(user().userId)" class="ownerIcon">
+                    <button mat-icon-button [style.backgroundColor]="getColorForUser(user().id)" class="ownerIcon">
                       {{this.user().username.charAt(0).toUpperCase()}}
                     </button>
                   </div>
@@ -55,7 +55,7 @@
                           <span class="comment-time">{{comment.createdAt | date}}</span>
                         </div>
                         <span class="comment-delete">
-                          <button type="button" mat-button (click)="deleteComment(comment, $event)" [hidden]="user().userId !== comment.userId">
+                          <button type="button" mat-button (click)="deleteComment(comment, $event)" [hidden]="user().id !== comment.userId">
                             <mat-icon style="margin: 0;">delete</mat-icon>
                           </button>
                         </span>
@@ -86,8 +86,8 @@
                 <span class="field-label">Assignee</span>
                 <mat-select formControlName="assignee" class="status-input">
                   <mat-option class="option" value="">👤 Unassigned</mat-option>
-                  @for (collaborator of data.collaborators; track collaborator.userId) {
-                    <mat-option class="option" [value]="collaborator.userId">{{collaborator.username}}</mat-option>
+                  @for (collaborator of data.collaborators; track collaborator.id) {
+                    <mat-option class="option" [value]="collaborator.id">{{collaborator.username}} </mat-option>
                   }
                 </mat-select>
             </div>

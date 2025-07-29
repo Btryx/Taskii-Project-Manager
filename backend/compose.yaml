@@ -8,19 +8,6 @@
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
 services:
-  backend:
-    container_name: taskii-spring
-    build: backend
-    env_file:
-      - .env
-    depends_on:
-      db:
-        condition: service_healthy
-    ports:
-      - 8082:8082
-    networks:
-      - spring-net
-
   db:
     image: mysql:8.0
     container_name: taskii-db
@@ -37,15 +24,19 @@ services:
       retries: 5
       start_period: 30s
     volumes:
-      - database:/data/db
+      - database:/var/lib/mysql
     networks:
       - spring-net
 
   keycloak:
     container_name: taskii-keycloak
     image: quay.io/keycloak/keycloak:26.3.2
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+      - ./keycloak/realm-export/taskii-realm.json:/opt/keycloak/data/import/taskii-realm.json:ro
+      - ./keycloak/themes:/opt/keycloak/themes
     ports:
-      - 9090:8080
+      - 8080:8080
     env_file:
       - .env
     environment:
@@ -54,12 +45,23 @@ services:
     networks:
       - spring-net
     command:
-      - "start-dev"
+      start-dev --import-realm --spi-theme-static-max-age=-1 --spi-theme-cache-themes=false --spi-theme-cache-templates=false
+
+
+  mail-dev:
+    container_name: mail-dev
+    image: maildev/maildev
+    ports:
+      - 1080:1080
+      - 1025:1025
+    networks:
+      - spring-net
 
 volumes:
   database:
-
+  keycloak_data:
 
 networks:
-  spring-net: {}
+  spring-net:
+    driver: bridge
 

@@ -3,7 +3,6 @@ package com.webfejl.beadando.service;
 import com.webfejl.beadando.dto.StatusDto;
 import com.webfejl.beadando.entity.Status;
 import com.webfejl.beadando.entity.Task;
-import com.webfejl.beadando.entity.User;
 import com.webfejl.beadando.exception.AuthorizationException;
 import com.webfejl.beadando.exception.ColumnManagementException;
 import com.webfejl.beadando.exception.ProjectNotFoundException;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 @Service
 public class StatusService {
@@ -37,14 +35,14 @@ public class StatusService {
     }
 
     public List<StatusDto> getStatusesForProject(String projectId) throws AuthenticationException {
-        User user = accessUtil.getAuthenticatedUser();
+        String user = accessUtil.getAuthenticatedUser();
         accessUtil.checkAccess(projectId, user);
         return statusRepository.findByProjectId(projectId).stream().map(StatusMapper::toDTO).toList();
     }
 
     @Transactional
     public StatusDto createStatus(StatusDto statusDto) throws AuthenticationException {
-        User user = accessUtil.getAuthenticatedUser();
+        String user = accessUtil.getAuthenticatedUser();
         Status status = StatusMapper.toEntity(statusDto, new Status(), projectRepository);
 
         List<Task> tasks = taskRepository.findAllByStatusAndProjectId(status.getStatusName(), statusDto.projectId());
@@ -60,7 +58,7 @@ public class StatusService {
 
     @Transactional
     public StatusDto updateStatus(StatusDto statusDto, String id) throws AuthenticationException {
-        User user = accessUtil.getAuthenticatedUser();
+        String user = accessUtil.getAuthenticatedUser();
         Status status = statusRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Status not found with ID: " + id));
 
@@ -89,7 +87,7 @@ public class StatusService {
 
     @Transactional
     public void deleteStatus(String id) throws AuthorizationException, ProjectNotFoundException {
-        User user = accessUtil.getAuthenticatedUser();
+        String user = accessUtil.getAuthenticatedUser();
         Status status = statusRepository.findById(id).get();
         List<Task> tasks = taskRepository.findAllByStatusAndProjectId(status.getStatusName(), status.getProject().getProjectId());
 

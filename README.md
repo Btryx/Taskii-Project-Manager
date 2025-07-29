@@ -64,25 +64,35 @@ Frontend
 - Docker (currently using v28.3.2)
 
 ### Configuration
-Add `.env` file in root folder with the following configuration:
+Add an `.env` file in the /backend folder with the following configuration:
 
 ```env
 MYSQL_PASSWORD=your-docker-db-password
 MYSQL_HOST=your-docker-db-host
-JWT_SECRET=your-jwt-key
+MYSQL_DATABASE=your-database-host
+KEYCLOAK_ADMIN=your-database-admin-name
+KEYCLOAK_PASSWORD=your-database-admin-password
 ```
-
+Both Keycloak and MySQL will be running in a docker container, so feel free to use 
+whatever values you want here. The compose file will read the values from the .env file.
 ### Run
 
-**Start backend:**
+**Backend:**
+
+- Start the database and keycloak container
 ```bash
-cd Task-Management-System
-docker compose up --build
+cd backend
+docker compose up
+```
+- Start the spring boot application
+```bash
+./mvnw spring-boot:run
 ```
 
-**Start frontend:**
+**Frontend:**
 ```bash
-cd Task-Management-System/frontend/frontend
+cd ..
+cd frontend/frontend
 ng serve
 ```
 

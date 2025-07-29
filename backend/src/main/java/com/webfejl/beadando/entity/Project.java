@@ -35,9 +35,8 @@ public class Project {
     @Column(name = "parent_id")
     private String parentId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id")
+    private String userId;
 
     @Override
     public boolean equals(Object o) {

@@ -430,6 +430,7 @@ body {
 
 .option {
   padding: 15px;
+  text-transform: capitalize
 }
 
 .status-input {

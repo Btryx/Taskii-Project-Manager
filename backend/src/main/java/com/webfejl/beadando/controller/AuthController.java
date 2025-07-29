@@ -1,62 +1,46 @@
 package com.webfejl.beadando.controller;
 
-import com.webfejl.beadando.response.AuthenticationResponse;
-import com.webfejl.beadando.request.LoginRequest;
-import com.webfejl.beadando.response.ErrorResponse;
-import com.webfejl.beadando.response.RegisterResponse;
-import com.webfejl.beadando.entity.User;
-import com.webfejl.beadando.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import com.webfejl.beadando.service.KeycloakService;
+import org.keycloak.admin.client.Keycloak;
+import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 @CrossOrigin(origins = "http://localhost:4200")
 public class AuthController {
 
-    @Autowired
-    private UserService userService;
+    private final KeycloakService keycloakService;
 
-    @PostMapping("/register")
-    public RegisterResponse register(@RequestBody User user) {
-        User createdUser;
-        try {
-            createdUser = userService.createUser(user);
-        } catch (Exception e) {
-            return new RegisterResponse(false, null, e.getMessage());
-        }
-        return new RegisterResponse(true, createdUser, "Registration successful!");
+    public AuthController(KeycloakService keycloakService) {
+        this.keycloakService = keycloakService;
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        try {
-            String token = userService.login(loginRequest);
-            return ResponseEntity.ok(new AuthenticationResponse(token));
-        } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), "Username or password is incorrect!"));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Login failed. Please try again later."));
-        }
+
+    @GetMapping("")
+    public ResponseEntity<List<UserRepresentation>> getUsers() {
+        List<UserRepresentation> users = keycloakService.getAllUsers();
+        return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/user/{id}")
-    public ResponseEntity<?> getUserNameById(@PathVariable String id) {
-        User user = userService.getUserById(id);
-        return ResponseEntity.ok(new AuthenticationResponse(user.getUsername()));
-    }
-
-    @GetMapping("/user/username/{username}")
-    public ResponseEntity<?> getUserByUsername(@PathVariable String username) {
-        User user = userService.getUserByUsername(username);
+    @GetMapping("/{id}")
+    public ResponseEntity<UserRepresentation> getUserById(@PathVariable String id) {
+        UserRepresentation user = keycloakService.getUserById(id);
         return ResponseEntity.ok(user);
     }
 
+    @GetMapping("/username/{name}")
+    public ResponseEntity<UserRepresentation> getUserByName(@PathVariable String name) {
+        List<UserRepresentation> users = keycloakService.getUserByName(name);
+
+        if (users.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(users.get(0));
+    }
 }
+
 

@@ -15,11 +15,11 @@ import { CommentService } from '../../services/comment.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Comment } from '../../models/comment';
-import { Auth } from '../../services/auth.service';
 import { CommonModule  } from '@angular/common';
 import { map, Observable } from 'rxjs';
 import { ConfirmationDialog } from '../comformation-dialog/comformation-dialog';
 import { User } from '../../models/user';
+import { KeycloakService } from '../../services/keycloak.service.';
 
 interface TaskDialogData extends Task {
   title: string;
@@ -49,7 +49,7 @@ export class TaskDialog  implements OnInit {
 
   private dialog: MatDialog = inject(MatDialog);
 
-  authService: Auth = inject(Auth);
+  keycloakService: KeycloakService = inject(KeycloakService);
   user : WritableSignal<User> = signal(new User());
 
   commentService: CommentService = inject(CommentService);
@@ -79,13 +79,12 @@ export class TaskDialog  implements OnInit {
   }
 
   getUser() {
-    let username = this.authService.getUsername();
-
-    this.authService.getUserByName(username!).subscribe({
-      next: (data) => {
-        this.user.set(data);
-      }
-    })
+    let profile = this.keycloakService.getProfile();
+    let user = new User();
+    user.email = profile.email;
+    user.username = profile.username;
+    user.id = profile.id;
+    this.user.set(user);
   }
 
   createComment(event?: Event) {
@@ -94,7 +93,7 @@ export class TaskDialog  implements OnInit {
       comment.comment = this.currentComment();
       comment.taskId = this.data.taskId;
       comment.createdAt = new Date();
-      comment.userId = this.user().userId;
+      comment.userId = this.user().id;
 
       this.commentService.createComment(comment).subscribe({
         next: (data) => {
@@ -137,13 +136,13 @@ export class TaskDialog  implements OnInit {
   }
 
   getColorForUser(id: string): string {
-    return this.authService.getColorForUser(id);
+    return this.keycloakService.getColorForUser(id);
   }
 
   getCommentUsername(comment: Comment): void {
-    this.authService.getUserNameById(comment.userId).subscribe({
+     this.keycloakService.getUserById(comment.userId).subscribe({
       next: (data) => {
-        comment.userName = data.message;
+        comment.userName = data.username;
       },
       error: (error) => {
         console.error('Error fetching user:', error);
@@ -178,7 +177,7 @@ export class TaskDialog  implements OnInit {
 
   assignToMe() {
     this.taskForm.patchValue({
-      assignee: this.user().userId,
+      assignee: this.user().id,
     });
   }
 

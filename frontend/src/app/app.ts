@@ -1,7 +1,7 @@
+import { KeycloakService } from './services/keycloak.service.';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { Auth } from './services/auth.service';
 import {MatButtonModule} from '@angular/material/button';
 import { MatMenu, MatMenuTrigger, MatMenuItem } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,40 +16,39 @@ import { User } from './models/user';
 export class App  implements OnInit {
 
   protected title = 'Taskii';
-  private authService = inject(Auth);
+  private keycloakService = inject(KeycloakService);
   private router = inject(Router);
 
   ngOnInit() {
   }
 
   isLoggedIn() : boolean {
-      return this.authService.isUserLoggedIn()
+      return this.keycloakService.getToken() ? true : false;
   }
 
   navigateToProjects() {
     this.router.navigate(["/projects"]);
   }
 
-  logOut() {
-    this.authService.logOut()
-    this.router.navigate(["/login"]);
+  async logOut() {
+    this.keycloakService.logout();
   }
 
   getColorForUser(id: string): string {
-    return this.authService.getColorForUser(id);
+    return this.keycloakService.getColorForUser(id);
   }
 
 
   getId() : string | null {
-    return this.authService.getId();
+    return this.keycloakService.getProfile().id;
   }
 
   getUserName() : string | null {
-    return this.authService.getUsername();
+     return this.keycloakService.getProfile().username;
   }
 
   getEmail() : string | null {
-    return this.authService.getEmail();
+    return this.keycloakService.getProfile().email;
   }
 
 }

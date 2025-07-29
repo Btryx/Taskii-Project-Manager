@@ -16,9 +16,8 @@ public class Collaborator {
     @Column(name = "collaborator_id", updatable = false, nullable = false)
     private String collaboratorId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id")
+    private String userId;
 
     @Column(name = "role")
     private String role;

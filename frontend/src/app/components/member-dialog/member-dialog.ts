@@ -10,10 +10,10 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import { Auth } from '../../services/auth.service';
 import { CommonModule  } from '@angular/common';
 import { User } from '../../models/user';
 import { Member } from '../../models/member';
+import { KeycloakService } from '../../services/keycloak.service.';
 
 interface MemberDialogData extends Member {
   collaborators: User[];
@@ -35,7 +35,7 @@ export class MemberDialog {
     role: new FormControl('', Validators.required),
   })
 
-  authService: Auth = inject(Auth);
+  keycloakService: KeycloakService = inject(KeycloakService);
   formValid = signal(false);
   message = signal("");
   successMessage = signal("");
@@ -60,7 +60,7 @@ export class MemberDialog {
 
     if (this.memberForm.value.userName) {
       let name = this.memberForm.value.userName;
-      this.authService.getUserByName(name).subscribe({
+      this.keycloakService.getUserByName(name).subscribe({
         next: (user : User) => {
           this.userIsFound(name, user);
         },
@@ -79,7 +79,7 @@ export class MemberDialog {
       this.successMessage.set(`User found! Click save to add ${name} to the project`);
       this.message.set(``);
       this.memberForm.patchValue({
-        userId: user.userId
+        userId: user.id
       });
     }
 

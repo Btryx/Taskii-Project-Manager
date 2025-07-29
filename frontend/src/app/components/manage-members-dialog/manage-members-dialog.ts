@@ -9,10 +9,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule  } from '@angular/common';
 import { Member } from '../../models/member';
 import { CollaboratorService } from '../../services/collaborator.service';
-import { Auth } from '../../services/auth.service';
 import { ErrorPopup } from '../error-popup/error-popup';
 import { InfoPopup } from '../info-popup/info-popup';
 import { ConfirmationDialog } from '../comformation-dialog/comformation-dialog';
+import { KeycloakService } from '../../services/keycloak.service.';
 
 interface ManageMembersData {
   collaborators: Member[];
@@ -26,7 +26,7 @@ interface ManageMembersData {
 })
 export class ManageMembersDialog {
 
-  authService: Auth = inject(Auth);
+  keycloakService: KeycloakService = inject(KeycloakService);
   formValid = signal(false);
   message = signal("");
   successMessage = signal("");
@@ -49,12 +49,13 @@ export class ManageMembersDialog {
     let count = 0;
     const length = this.data.collaborators.length - 1;
     this.data.collaborators.forEach(c => {
-      this.authService.getUserNameById(c.userId).subscribe({
+       this.keycloakService.getUserById(c.userId).subscribe({
         next: data => {
-          c.userName = data.message;
+          c.userName = data.username;
         },
         error: error => {
           console.error(error.error.message);
+          this.isLoading.set(false);
         },
         complete: () => {
           if(count++ == length) {
@@ -101,7 +102,7 @@ export class ManageMembersDialog {
   }
 
   getColorForUser(id: string): string {
-    return this.authService.getColorForUser(id);
+    return this.keycloakService.getColorForUser(id);
   }
 
   onCancel(): void {

@@ -14,7 +14,7 @@
         </button>
         <mat-menu #menu="matMenu">
           <button mat-menu-item class="header">
-            <mat-icon class="icon" [style.backgroundColor]="getColorForUser(getId()!)">{{getUserName()?.charAt(0)}}</mat-icon>
+            <mat-icon class="icon" [style.backgroundColor]="getColorForUser(getId()!)">{{getUserName()?.charAt(0).toUpperCase()}}</mat-icon>
             <span class="info">
               <span class="name">{{getUserName()}}</span>
               <span>{{getEmail()}}</span>

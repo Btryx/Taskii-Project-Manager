@@ -1,12 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { Auth } from '../../services/auth.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { KeycloakService } from '../../services/keycloak.service.';
 
 @Component({
   selector: 'app-login',
@@ -16,20 +15,17 @@ import { MatInputModule } from '@angular/material/input';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Login  implements OnInit {
-  private authService = inject(Auth);
+  private keyCloakService = inject(KeycloakService);
   private router = inject(Router);
-  loginForm = new FormGroup({
-    username: new FormControl('', Validators.required),
-    password: new FormControl('', Validators.required),
-  })
 
-  ngOnInit(): void {
-    if (this.authService.isUserLoggedIn()) {
+  async ngOnInit() {
+/*     if (this.keyCloakService.getToken()) {
       this.router.navigate(["/projects"])
-    }
+    } */
+    await this.keyCloakService.login();
   }
 
-  errorMessage = signal('');
+ /*  errorMessage = signal('');
   hidePassword = signal(true);
 
   submitLogin() {
@@ -55,5 +51,5 @@ export class Login  implements OnInit {
 
   navigateToRegister() {
     this.router.navigate(["/register"]);
-  }
+  } */
 }

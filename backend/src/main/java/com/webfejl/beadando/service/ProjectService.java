@@ -21,7 +21,6 @@ import java.util.stream.Stream;
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
-    private final UserRepository userRepository;
     private final AccessUtil accessUtil;
     private final StatusRepository statusRepository;
     private final CollaboratorRepository collaboratorRepository;
@@ -31,10 +30,9 @@ public class ProjectService {
     public static final String IN_PROGRESS = "IN PROGRESS";
     public static final String DONE = "DONE";
 
-    public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, AccessUtil accessUtil,
+    public ProjectService(ProjectRepository projectRepository, AccessUtil accessUtil,
                           StatusRepository statusRepository, CollaboratorRepository collaboratorRepository, TaskRepository taskRepository) {
         this.projectRepository = projectRepository;
-        this.userRepository = userRepository;
         this.accessUtil = accessUtil;
         this.statusRepository = statusRepository;
         this.collaboratorRepository = collaboratorRepository;
@@ -42,13 +40,12 @@ public class ProjectService {
     }
 
     public List<ProjectDto> getAllAccessedProjects() throws AuthorizationException {
-        User user = accessUtil.getAuthenticatedUser();
-
+        String user = accessUtil.getAuthenticatedUser();
         return accessUtil.getCollabProjects(user);
     }
 
     public ProjectDto findProject(String id) throws ProjectNotFoundException, AuthorizationException {
-        User user = accessUtil.getAuthenticatedUser();
+        String user = accessUtil.getAuthenticatedUser();
         ProjectDto project = projectRepository.findById(id)
                 .map(ProjectMapper::toDTO)
                 .orElseThrow(() -> new ProjectNotFoundException("Project not found with ID: " + id));
@@ -59,9 +56,10 @@ public class ProjectService {
 
     @Transactional
     public ProjectDto createProject(ProjectDto projectDTO) throws AuthorizationException {
-        accessUtil.getAuthenticatedUser();
-        Project project = ProjectMapper.toEntity(projectDTO, new Project(), userRepository);
+        String user = accessUtil.getAuthenticatedUser();
+        Project project = ProjectMapper.toEntity(projectDTO, new Project());
         project.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        project.setUserId(user);
         Project savedProject = projectRepository.save(project);
 
         createDefaultStatuses(savedProject);
@@ -71,13 +69,13 @@ public class ProjectService {
     }
 
     public Boolean isAdmin(String projectId) throws AuthorizationException {
-        return accessUtil.isAdmin(projectId, accessUtil.getAuthenticatedUser().getUserId(), Role.ADMIN);
+        return accessUtil.isAdmin(projectId, accessUtil.getAuthenticatedUser(), Role.ADMIN);
     }
 
     private void addOwnerAsCollaborator(Project project) {
         Collaborator collaborator = new Collaborator();
         collaborator.setProject(project);
-        collaborator.setUser(project.getUser());
+        collaborator.setUserId(project.getUserId());
         collaborator.setRole(Role.ADMIN.getLabel());
         collaboratorRepository.save(collaborator);
     }
@@ -104,7 +102,7 @@ public class ProjectService {
 
     @Transactional
     public ProjectDto updateProject(ProjectDto projectDTO, String id) throws AuthorizationException, ProjectNotFoundException {
-        User user = accessUtil.getAuthenticatedUser();
+        String user = accessUtil.getAuthenticatedUser();
 
         Project project = projectRepository.findById(id)
                 .orElseThrow(() -> new ProjectNotFoundException("Project not found with ID: " + id));
@@ -112,7 +110,7 @@ public class ProjectService {
         accessUtil.checkAccess(id, user);
 
         try{
-            Project newProject = ProjectMapper.toEntity(projectDTO, project, userRepository);
+            Project newProject = ProjectMapper.toEntity(projectDTO, project);
             Project saved = projectRepository.save(newProject);
             projectRepository.flush();
 
@@ -126,7 +124,7 @@ public class ProjectService {
 
     @Transactional
     public void deleteProject(String id) throws AuthorizationException, ProjectNotFoundException {
-        User user = accessUtil.getAuthenticatedUser();
+        String user = accessUtil.getAuthenticatedUser();
         if (!projectRepository.existsById(id)) {
             throw new ProjectNotFoundException("Project not found with ID: " + id);
         }

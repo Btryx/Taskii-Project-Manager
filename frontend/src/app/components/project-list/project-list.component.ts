@@ -12,7 +12,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
-import { Auth } from '../../services/auth.service';
 import { Observable } from 'rxjs';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -20,6 +19,8 @@ import { ConfirmationDialog } from '../comformation-dialog/comformation-dialog';
 import { Router } from '@angular/router';
 import {MatSort, MatSortModule} from '@angular/material/sort';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { KeycloakService } from '../../services/keycloak.service.';
+import { User } from '../../models/user';
 
 @Component({
   selector: 'app-project-list',
@@ -32,7 +33,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 export class ProjectListComponent implements OnInit {
 
   private projectService : ProjectService = inject(ProjectService);
-  private authService = inject(Auth);
+  private keycloakService = inject(KeycloakService);
   private dialog: MatDialog = inject(MatDialog);
   private router : Router = inject(Router);
 
@@ -40,6 +41,7 @@ export class ProjectListComponent implements OnInit {
   usernames = signal(new Map<string, string>);
 
   errorMessage = signal('');
+  //TODO: loading timeout
   isLoading = signal(true);
   displayedColumns: string[] = ['projectName', 'owner', 'createdAt', 'active', 'menu'];
 
@@ -88,9 +90,9 @@ export class ProjectListComponent implements OnInit {
           const userIds = this.projects().map(p => p.userId);
 
           userIds.forEach(id => {
-            this.getUserName(id).subscribe({
+            this.getUser(id).subscribe({
               next: data => {
-                let username = data.message;
+                let username = data.username;
 
                 this.usernames.update(map => {
                   let newMap = new Map(map);
@@ -108,7 +110,9 @@ export class ProjectListComponent implements OnInit {
         },
         error: (error: HttpErrorResponse) => {
           console.error(error);
-          this.errorMessage.set(error.error.message);
+          if(error && error.error.message) {
+            this.errorMessage.set(error.error.message);
+          }
         },
         complete: () => setTimeout(() => {this.isLoading.set(false)}, 500)
       }
@@ -124,7 +128,7 @@ export class ProjectListComponent implements OnInit {
       if (result) {
         this.projectService.createProject(result).subscribe({
           next: data => {
-            this.projects.update(value => [...value, data]);
+            this.getProjects();
           },
           error: (error: HttpErrorResponse) => {
             console.error(error);
@@ -208,7 +212,6 @@ export class ProjectListComponent implements OnInit {
         });
       },
       error: (error: HttpErrorResponse) => {
-        console.error(error);
         this.errorMessage.set(error.error.message);
       },
     })
@@ -225,12 +228,12 @@ export class ProjectListComponent implements OnInit {
     });
   }
 
-  getUserName(id: string): Observable<any> {
-    return this.authService.getUserNameById(id);
+  getUser(id: string): Observable<User> {
+    return this.keycloakService.getUserById(id);
   }
 
   getColorForUser(id: string): string {
-    return this.authService.getColorForUser(id);
+    return this.keycloakService.getColorForUser(id);
   }
 
 }

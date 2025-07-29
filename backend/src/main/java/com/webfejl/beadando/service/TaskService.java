@@ -3,7 +3,6 @@ package com.webfejl.beadando.service;
 import com.webfejl.beadando.dto.TaskDto;
 import com.webfejl.beadando.entity.Comment;
 import com.webfejl.beadando.entity.Task;
-import com.webfejl.beadando.entity.User;
 import com.webfejl.beadando.exception.TaskNotFoundException;
 import com.webfejl.beadando.repository.CommentRepository;
 import com.webfejl.beadando.repository.ProjectRepository;
@@ -33,7 +32,7 @@ public class TaskService {
     }
 
     public List<TaskDto> findAll(String projectId, String status, Integer priority) throws AuthenticationException {
-        User user = accessUtil.getAuthenticatedUser();
+        String user = accessUtil.getAuthenticatedUser();
         accessUtil.checkAccess(projectId, user);
 
         return taskRepository.filterTasks(projectId, status, priority)
@@ -43,7 +42,7 @@ public class TaskService {
     }
 
     public TaskDto findTask(String id) throws AuthenticationException, TaskNotFoundException {
-        User user = accessUtil.getAuthenticatedUser();
+        String user = accessUtil.getAuthenticatedUser();
         TaskDto task =  taskRepository.findById(id)
                 .map(TaskMapper::toDTO)
                 .orElseThrow(() -> new TaskNotFoundException("Task not found with ID: " + id));
@@ -55,7 +54,7 @@ public class TaskService {
 
     @Transactional
     public TaskDto createTask(TaskDto taskDTO) throws AuthenticationException {
-        User user = accessUtil.getAuthenticatedUser();
+        String user = accessUtil.getAuthenticatedUser();
         Task task = TaskMapper.toEntity(taskDTO, new Task(), projectRepository);
 
         accessUtil.checkAccess(task.getProject().getProjectId(), user);
@@ -66,7 +65,7 @@ public class TaskService {
 
     @Transactional
     public TaskDto updateTask(TaskDto taskDTO, String id) throws AuthenticationException, TaskNotFoundException {
-        User user = accessUtil.getAuthenticatedUser();
+        String user = accessUtil.getAuthenticatedUser();
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new TaskNotFoundException("Task not found with ID: " + id));
 
@@ -79,7 +78,7 @@ public class TaskService {
 
     @Transactional
     public void deleteTask(String id) throws AuthenticationException, TaskNotFoundException {
-        User user = accessUtil.getAuthenticatedUser();
+        String user = accessUtil.getAuthenticatedUser();
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new TaskNotFoundException("Task not found with ID: " + id));
 
