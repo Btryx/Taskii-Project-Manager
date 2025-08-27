@@ -60,7 +60,6 @@ Frontend
 - Java 17
 - Node.js (currently using v22.17.1)
 - Angular CLI (currently using v20.0.3)
-- Maven 3 (currently using v3.8.5)
 - Docker (currently using v28.3.2)
 
 ### Configuration
