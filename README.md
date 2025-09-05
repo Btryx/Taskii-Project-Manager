@@ -92,6 +92,7 @@ docker compose up
 ```bash
 cd ..
 cd frontend
+npm i
 ng serve
 ```
 
